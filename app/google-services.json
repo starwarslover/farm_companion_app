@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "208356492939",
+    "firebase_url": "https://licenceproject-909c0.firebaseio.com",
+    "project_id": "licenceproject-909c0",
+    "storage_bucket": "licenceproject-909c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:208356492939:android:6122e6e16de0deb0",
+        "android_client_info": {
+          "package_name": "com.licence.serban.farmcompanion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "208356492939-s8iutshoj5hjrct1lph78vgigs4q7ehg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5ELBCO8ttR23thGv_d1QUeKQVQ0rkJWY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
