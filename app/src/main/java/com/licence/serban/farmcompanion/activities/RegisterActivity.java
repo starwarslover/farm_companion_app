@@ -148,10 +148,13 @@ public class RegisterActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-                                String id = email.replace("@","_").replace(".","_");
-                                databaseReference.child(Utilities.Constants.DB_USERS).child(id).setValue(user);
+//                                DatabaseReference reference = databaseReference.child(Utilities.Constants.DB_USERS);
+//                                String userID = reference.push().getKey();
+//                                user.setId(userID);
+//                                reference.child(userID).setValue(user);
                                 Toast.makeText(RegisterActivity.this, getResources().getString(R.string.register_success), Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                                i.putExtra(Utilities.Constants.INTENT_USER,user);
                                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(i);
                                 RegisterActivity.this.finish();

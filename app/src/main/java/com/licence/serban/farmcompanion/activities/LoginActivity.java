@@ -17,7 +17,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.licence.serban.farmcompanion.R;
+import com.licence.serban.farmcompanion.classes.User;
 import com.licence.serban.farmcompanion.classes.Utilities;
 
 public class LoginActivity extends AppCompatActivity {
@@ -26,12 +30,15 @@ public class LoginActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
+    private User newUser;
+
     private EditText emailEditText;
     private EditText passEditText;
     private Button loginButton;
     private Button toResetPassButton;
     private Button toSignUpButton;
     private ProgressBar progressDialog;
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +52,8 @@ public class LoginActivity extends AppCompatActivity {
         passEditText = (EditText) findViewById(R.id.loginPasswordEditText);
         progressDialog = (ProgressBar) findViewById(R.id.loginProgressBar);
 
+        newUser = (User) getIntent().getSerializableExtra(Utilities.Constants.INTENT_USER);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         toResetPassButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +98,13 @@ public class LoginActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
+                                if (newUser != null) {
+                                    FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                                    String userID = firebaseUser.getUid();
+                                    newUser.setId(userID);
+                                    DatabaseReference reference = databaseReference.child(Utilities.Constants.DB_USERS);
+                                    reference.child(userID).setValue(newUser);
+                                }
                                 sharedPreferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
                                 editor = sharedPreferences.edit();
                                 editor.putString(Utilities.Constants.EMAIL, finalEmail);
