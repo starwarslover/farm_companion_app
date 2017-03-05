@@ -35,6 +35,9 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText nameEditText;
     private Button goToLoginButton;
     private Button signUpButton;
+    private EditText cityEditText;
+    private EditText zipCodeEditText;
+    private EditText countryEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         nameEditText = (EditText) findViewById(R.id.registerNameEditText);
         companyNameEditText = (EditText) findViewById(R.id.registerCompanyNameEditText);
+        cityEditText = (EditText) findViewById(R.id.registerCityEditText);
+        zipCodeEditText = (EditText) findViewById(R.id.registerZipCodeEditText);
+        countryEditText = (EditText) findViewById(R.id.registerCountryEditText);
         emailEditText = (EditText) findViewById(R.id.registerEmailEditText);
         confirmEmailEditText = (EditText) findViewById(R.id.registerConfirmEmailEditText);
         passwordEditText = (EditText) findViewById(R.id.registerPasswordEditText);
@@ -115,11 +121,22 @@ public class RegisterActivity extends AppCompatActivity {
                 final String email = emailEditText.getText().toString().trim();
                 String confEmail = confirmEmailEditText.getText().toString().trim();
                 String companyName = companyNameEditText.getText().toString().trim();
+                String country = countryEditText.getText().toString().trim();
+                String city = cityEditText.getText().toString().trim();
+                String zipCode = zipCodeEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString();
                 String confirmPass = confirmPassEditText.getText().toString();
 
                 if (name.isEmpty()) {
                     nameEditText.setError(getResources().getString(R.string.no_name_error));
+                    return;
+                }
+                if (country.isEmpty()) {
+                    countryEditText.setError(getResources().getString(R.string.no_country_error));
+                    return;
+                }
+                if (city.isEmpty()) {
+                    cityEditText.setError(getResources().getString(R.string.no_city_error));
                     return;
                 }
                 if (email.isEmpty()) {
@@ -142,19 +159,19 @@ public class RegisterActivity extends AppCompatActivity {
                 user.setName(name);
                 user.setCompanyName(companyName);
                 user.setEmail(email);
+                user.setCity(city);
+                user.setCountry(country);
+                user.setZipCode(zipCode);
 
                 firebaseAuth
                         .createUserWithEmailAndPassword(email, password)
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-//                                DatabaseReference reference = databaseReference.child(Utilities.Constants.DB_USERS);
-//                                String userID = reference.push().getKey();
-//                                user.setId(userID);
-//                                reference.child(userID).setValue(user);
+
                                 Toast.makeText(RegisterActivity.this, getResources().getString(R.string.register_success), Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                                i.putExtra(Utilities.Constants.INTENT_USER,user);
+                                i.putExtra(Utilities.Constants.INTENT_USER, user);
                                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(i);
                                 RegisterActivity.this.finish();

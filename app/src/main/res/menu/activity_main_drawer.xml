@@ -22,5 +22,9 @@
             android:id="@+id/nav_employees"
             android:icon="@drawable/ic_people_black_24dp"
             android:title="@string/nav_employees" />
+        <item
+            android:id="@+id/nav_activities"
+            android:icon="@drawable/ic_local_activity_black_24dp"
+            android:title="@string/nav_activities" />
     </group>
 </menu>

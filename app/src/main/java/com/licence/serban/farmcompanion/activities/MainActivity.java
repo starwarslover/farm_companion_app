@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,15 +26,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
+import com.licence.serban.farmcompanion.fragments.ActivitiesFragment;
+import com.licence.serban.farmcompanion.fragments.DashboardFragment;
+import com.licence.serban.farmcompanion.fragments.EmployeesFragment;
+import com.licence.serban.farmcompanion.fragments.EquipmentFragment;
+import com.licence.serban.farmcompanion.fragments.FieldsFragment;
+import com.licence.serban.farmcompanion.fragments.InputsFragment;
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.classes.User;
 import com.licence.serban.farmcompanion.classes.Utilities;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnAppTitleChange {
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
+    private FragmentManager fragmentManager;
+
 
     private String userID;
     private User currentUser;
@@ -41,7 +51,7 @@ public class MainActivity extends AppCompatActivity
     private TextView navNameTextView;
     private TextView navEmailTextView;
     private TextView navCompanyNameTextView;
-
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +62,8 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        fragmentManager = getSupportFragmentManager();
+        actionBar = getSupportActionBar();
 
         userID = firebaseAuth.getCurrentUser().getUid();
 
@@ -95,7 +107,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.content_main,new DashboardFragment()).commit();
     }
 
     @Override
@@ -110,19 +123,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
             FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
             firebaseAuth.signOut();
@@ -144,10 +152,36 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        switch (item.getItemId()) {
+            case R.id.nav_dash:
+                fragmentTransaction.replace(R.id.content_main, new DashboardFragment()).commit();
+                break;
+            case R.id.nav_inputs:
+                fragmentTransaction.replace(R.id.content_main, new InputsFragment()).commit();
+                break;
+            case R.id.nav_fields:
+                fragmentTransaction.replace(R.id.content_main, new FieldsFragment()).commit();
+                break;
+            case R.id.nav_equipment:
+                fragmentTransaction.replace(R.id.content_main, new EquipmentFragment()).commit();
+                break;
+            case R.id.nav_employees:
+                fragmentTransaction.replace(R.id.content_main, new EmployeesFragment()).commit();
+                break;
+            case R.id.nav_activities:
+                fragmentTransaction.replace(R.id.content_main, new ActivitiesFragment()).commit();
+                break;
+        }
         return true;
+    }
+
+
+    @Override
+    public void updateTitle(String title) {
+        actionBar.setTitle(title);
     }
 }

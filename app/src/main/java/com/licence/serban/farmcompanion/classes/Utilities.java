@@ -31,6 +31,7 @@ public final class Utilities {
         public static final String DB_USER_COUNT = "user_number";
         public static final String USER_ID = "user_id";
         public static final String INTENT_USER = "new_user";
+        public static final String BUNDLE_INPUT_TYPE = "input_type";
         public static String EMAIL = "email";
         public static String PASSWORD = "password";
         public static int SPLASH_TIMEOUT = 1500;
