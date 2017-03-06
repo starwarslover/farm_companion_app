@@ -153,48 +153,26 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onSuccess(AuthResult authResult) {
 
                                 Toast.makeText(RegisterActivity.this, getResources().getString(R.string.register_success), Toast.LENGTH_SHORT).show();
+                                String userID = authResult.getUser().getUid();
+                                user.setId(userID);
+                                DatabaseReference reference = databaseReference.child(Utilities.Constants.DB_USERS);
+                                reference.child(userID).setValue(user);
 
-                                firebaseAuth
-                                        .signInWithEmailAndPassword(email, finalPassword)
-                                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                                            @Override
-                                            public void onSuccess(AuthResult authResult) {
-                                                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                                                String userID = firebaseUser.getUid();
-                                                user.setId(userID);
-                                                DatabaseReference reference = databaseReference.child(Utilities.Constants.DB_USERS);
-                                                reference.child(userID).setValue(user);
+                                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                                i.putExtra(Utilities.Constants.INTENT_USER, user);
+                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(i);
+                                RegisterActivity.this.finish();
 
-                                                sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegisterActivity.this);
-                                                editor = sharedPreferences.edit();
-                                                editor.putString(Utilities.Constants.EMAIL, email);
-                                                editor.putString(Utilities.Constants.PASSWORD, finalPassword);
-                                                editor.apply();
-
-                                                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                                                intent.putExtra(Utilities.Constants.USER_ID, userID);
-                                                startActivity(intent);
-                                                RegisterActivity.this.finish();
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(RegisterActivity.this, getResources().getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
-
-                                            }
-                                        });
                             }
                         })
-                        .
-
-                                addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        e.printStackTrace();
-                                        Toast.makeText(RegisterActivity.this, getResources().getString(R.string.register_error), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(RegisterActivity.this, getResources().getString(R.string.register_error), Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
 
             }

@@ -40,9 +40,10 @@ import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.classes.User;
 import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
+import com.licence.serban.farmcompanion.interfaces.OnEmployeeAdded;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnAppTitleChange, OnDrawerMenuLock, OnAddEmployeeListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnAppTitleChange, OnDrawerMenuLock, OnAddEmployeeListener,OnEmployeeAdded {
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
@@ -229,5 +230,10 @@ public class MainActivity extends AppCompatActivity
         bundle.putString(Utilities.Constants.USER_ID, userID);
         addEmployeeFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.content_main, addEmployeeFragment).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void endFragment() {
+        fragmentManager.popBackStackImmediate();
     }
 }

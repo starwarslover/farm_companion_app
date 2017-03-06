@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,6 +24,7 @@ import com.licence.serban.farmcompanion.classes.User;
 import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
+import com.licence.serban.farmcompanion.interfaces.OnEmployeeAdded;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,6 +45,8 @@ public class AddEmployeeFragment extends Fragment {
 
     private OnAppTitleChange updateTitleCallback;
     private OnDrawerMenuLock lockDrawerMenuCallback;
+    private OnEmployeeAdded employeeAddedListener;
+
     private TextInputEditText nameEditText;
     private TextInputEditText persNumberEditText;
     private TextInputEditText idNumberEditText;
@@ -75,6 +79,12 @@ public class AddEmployeeFragment extends Fragment {
         } catch (ClassCastException ex) {
             throw new ClassCastException(context.toString()
                     + " must implement OnDrawerMenuLock");
+        }
+        try {
+            employeeAddedListener = (OnEmployeeAdded) context;
+        } catch (ClassCastException ex) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnEmployeeAdded");
         }
     }
 
@@ -182,13 +192,15 @@ public class AddEmployeeFragment extends Fragment {
                                 employeesReference.child(id).setValue(employee);
                                 userReference.child(Utilities.Constants.DB_EMPLOYEES).child(id).setValue(true);
                                 databaseReference.child(Utilities.Constants.DB_USERS).child(id).setValue(employeeUser);
+                                Toast.makeText(AddEmployeeFragment.this.getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                                employeeAddedListener.endFragment();
 
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-
+                                Toast.makeText(AddEmployeeFragment.this.getActivity(), "Failure", Toast.LENGTH_SHORT).show();
                             }
                         });
             }
