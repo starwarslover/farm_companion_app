@@ -9,11 +9,16 @@ import java.io.Serializable;
 public class User implements Serializable {
     private String id;
     private String name;
-    private String companyName;
-    private String city;
-    private String country;
-    private String zipCode;
     private String email;
+    private boolean isAdmin;
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
 
     public String getId() {
         return id;
@@ -23,29 +28,6 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
 
     public String getName() {
         return name;
@@ -53,14 +35,6 @@ public class User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
     }
 
     public String getEmail() {
@@ -79,11 +53,8 @@ public class User implements Serializable {
         return "User{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", companyName='" + companyName + '\'' +
-                ", city='" + city + '\'' +
-                ", country='" + country + '\'' +
-                ", zipCode='" + zipCode + '\'' +
                 ", email='" + email + '\'' +
+                ", isAdmin=" + isAdmin +
                 '}';
     }
 }

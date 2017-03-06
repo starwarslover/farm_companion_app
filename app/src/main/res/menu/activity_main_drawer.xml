@@ -27,4 +27,14 @@
             android:icon="@drawable/ic_local_activity_black_24dp"
             android:title="@string/nav_activities" />
     </group>
+
+    <item android:title="@string/general">
+        <menu>
+            <item
+                android:id="@+id/nav_company_info"
+                android:icon="@drawable/ic_work_black_24dp"
+                android:title="@string/nav_company_info" />
+        </menu>
+
+    </item>
 </menu>

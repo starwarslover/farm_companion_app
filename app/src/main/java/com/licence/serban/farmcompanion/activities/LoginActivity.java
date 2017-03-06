@@ -30,8 +30,6 @@ public class LoginActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
-    private User newUser;
-
     private EditText emailEditText;
     private EditText passEditText;
     private Button loginButton;
@@ -52,7 +50,6 @@ public class LoginActivity extends AppCompatActivity {
         passEditText = (EditText) findViewById(R.id.loginPasswordEditText);
         progressDialog = (ProgressBar) findViewById(R.id.loginProgressBar);
 
-        newUser = (User) getIntent().getSerializableExtra(Utilities.Constants.INTENT_USER);
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         toResetPassButton.setOnClickListener(new View.OnClickListener() {
@@ -98,13 +95,6 @@ public class LoginActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-                                if (newUser != null) {
-                                    FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                                    String userID = firebaseUser.getUid();
-                                    newUser.setId(userID);
-                                    DatabaseReference reference = databaseReference.child(Utilities.Constants.DB_USERS);
-                                    reference.child(userID).setValue(newUser);
-                                }
                                 sharedPreferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
                                 editor = sharedPreferences.edit();
                                 editor.putString(Utilities.Constants.EMAIL, finalEmail);
@@ -112,8 +102,6 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.apply();
 
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                String userID = email.replace(".", "_").replace("@", "_");
-                                intent.putExtra(Utilities.Constants.USER_ID, userID);
                                 startActivity(intent);
                             }
                         })

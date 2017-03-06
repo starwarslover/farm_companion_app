@@ -72,37 +72,6 @@
                 android:ems="12"
                 android:hint="@string/name" />
 
-            <EditText
-                android:id="@+id/registerCompanyNameEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:ems="12"
-                android:hint="@string/company_name" />
-
-            <EditText
-                android:id="@+id/registerCountryEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:ems="12"
-                android:hint="@string/country" />
-
-            <EditText
-                android:id="@+id/registerCityEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:ems="12"
-                android:hint="@string/city" />
-
-            <EditText
-                android:id="@+id/registerZipCodeEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:ems="12"
-                android:hint="@string/zip_code" />
 
             <EditText
                 android:id="@+id/registerEmailEditText"

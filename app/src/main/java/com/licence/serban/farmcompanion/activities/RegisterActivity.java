@@ -1,6 +1,8 @@
 package com.licence.serban.farmcompanion.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,13 +34,11 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText passwordEditText;
     private EditText confirmEmailEditText;
     private EditText emailEditText;
-    private EditText companyNameEditText;
     private EditText nameEditText;
     private Button goToLoginButton;
     private Button signUpButton;
-    private EditText cityEditText;
-    private EditText zipCodeEditText;
-    private EditText countryEditText;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +46,6 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         nameEditText = (EditText) findViewById(R.id.registerNameEditText);
-        companyNameEditText = (EditText) findViewById(R.id.registerCompanyNameEditText);
-        cityEditText = (EditText) findViewById(R.id.registerCityEditText);
-        zipCodeEditText = (EditText) findViewById(R.id.registerZipCodeEditText);
-        countryEditText = (EditText) findViewById(R.id.registerCountryEditText);
         emailEditText = (EditText) findViewById(R.id.registerEmailEditText);
         confirmEmailEditText = (EditText) findViewById(R.id.registerConfirmEmailEditText);
         passwordEditText = (EditText) findViewById(R.id.registerPasswordEditText);
@@ -120,23 +117,11 @@ public class RegisterActivity extends AppCompatActivity {
                 String name = nameEditText.getText().toString().trim();
                 final String email = emailEditText.getText().toString().trim();
                 String confEmail = confirmEmailEditText.getText().toString().trim();
-                String companyName = companyNameEditText.getText().toString().trim();
-                String country = countryEditText.getText().toString().trim();
-                String city = cityEditText.getText().toString().trim();
-                String zipCode = zipCodeEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString();
                 String confirmPass = confirmPassEditText.getText().toString();
 
                 if (name.isEmpty()) {
                     nameEditText.setError(getResources().getString(R.string.no_name_error));
-                    return;
-                }
-                if (country.isEmpty()) {
-                    countryEditText.setError(getResources().getString(R.string.no_country_error));
-                    return;
-                }
-                if (city.isEmpty()) {
-                    cityEditText.setError(getResources().getString(R.string.no_city_error));
                     return;
                 }
                 if (email.isEmpty()) {
@@ -157,11 +142,9 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 final User user = new User();
                 user.setName(name);
-                user.setCompanyName(companyName);
                 user.setEmail(email);
-                user.setCity(city);
-                user.setCountry(country);
-                user.setZipCode(zipCode);
+                user.setAdmin(true);
+                final String finalPassword = password;
 
                 firebaseAuth
                         .createUserWithEmailAndPassword(email, password)
@@ -170,20 +153,48 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onSuccess(AuthResult authResult) {
 
                                 Toast.makeText(RegisterActivity.this, getResources().getString(R.string.register_success), Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                                i.putExtra(Utilities.Constants.INTENT_USER, user);
-                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(i);
-                                RegisterActivity.this.finish();
+
+                                firebaseAuth
+                                        .signInWithEmailAndPassword(email, finalPassword)
+                                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                            @Override
+                                            public void onSuccess(AuthResult authResult) {
+                                                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                                                String userID = firebaseUser.getUid();
+                                                user.setId(userID);
+                                                DatabaseReference reference = databaseReference.child(Utilities.Constants.DB_USERS);
+                                                reference.child(userID).setValue(user);
+
+                                                sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegisterActivity.this);
+                                                editor = sharedPreferences.edit();
+                                                editor.putString(Utilities.Constants.EMAIL, email);
+                                                editor.putString(Utilities.Constants.PASSWORD, finalPassword);
+                                                editor.apply();
+
+                                                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                                intent.putExtra(Utilities.Constants.USER_ID, userID);
+                                                startActivity(intent);
+                                                RegisterActivity.this.finish();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(RegisterActivity.this, getResources().getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        });
                             }
                         })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                e.printStackTrace();
-                                Toast.makeText(RegisterActivity.this, getResources().getString(R.string.register_error), Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        .
+
+                                addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        e.printStackTrace();
+                                        Toast.makeText(RegisterActivity.this, getResources().getString(R.string.register_error), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
 
 
             }

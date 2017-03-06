@@ -17,7 +17,7 @@ import com.licence.serban.farmcompanion.R;
  */
 public class DashboardFragment extends Fragment {
 
-    OnAppTitleChange updateTitleCallback;
+    private OnAppTitleChange updateTitleCallback;
 
     public DashboardFragment() {
         // Required empty public constructor
