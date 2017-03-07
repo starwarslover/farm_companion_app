@@ -6,4 +6,6 @@ package com.licence.serban.farmcompanion.interfaces;
 
 public interface OnAddEmployeeListener {
     void openAddEmployeeUI();
+
+    void openEditEmployeeUI(String employeeId);
 }

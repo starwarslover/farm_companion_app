@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -101,6 +102,16 @@ public class EmployeesFragment extends Fragment {
 
         employeeAdapter = new EmployeeAdapter(getActivity(), R.layout.employee_row, employees);
         employeesListView.setAdapter(employeeAdapter);
+
+        employeesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Employee employee = employeeAdapter.getItem(position);
+                if (employee != null) {
+                    addEmployeeListener.openEditEmployeeUI(employee.getId());
+                }
+            }
+        });
 
         addEmployeeButton.setOnClickListener(new View.OnClickListener() {
             @Override

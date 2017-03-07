@@ -34,6 +34,7 @@ public final class Utilities {
         public static final String BUNDLE_INPUT_TYPE = "input_type";
         public static final String DB_COMPANY = "company";
         public static final String DB_EMPLOYEES = "employees";
+        public static final String EMPLOYEE_ID = "employee_id";
         public static String EMAIL = "email";
         public static String PASSWORD = "password";
         public static int SPLASH_TIMEOUT = 1500;

@@ -30,6 +30,12 @@ public class EmployeeAdapter extends ArrayAdapter<Employee> {
         this.myEmployees = objects;
     }
 
+    @Nullable
+    @Override
+    public Employee getItem(int position) {
+        return myEmployees.get(position);
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

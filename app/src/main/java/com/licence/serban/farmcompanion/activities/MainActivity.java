@@ -233,6 +233,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void openEditEmployeeUI(String employeeId) {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        AddEmployeeFragment addEmployeeFragment = new AddEmployeeFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Utilities.Constants.USER_ID, userID);
+        bundle.putString(Utilities.Constants.EMPLOYEE_ID,employeeId);
+        addEmployeeFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.content_main, addEmployeeFragment).addToBackStack(null).commit();
+    }
+
+    @Override
     public void endFragment() {
         fragmentManager.popBackStackImmediate();
     }
