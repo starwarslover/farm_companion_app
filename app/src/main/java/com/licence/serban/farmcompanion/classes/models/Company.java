@@ -1,4 +1,4 @@
-package com.licence.serban.farmcompanion.classes;
+package com.licence.serban.farmcompanion.classes.models;
 
 /**
  * Created by Serban on 06.03.2017.

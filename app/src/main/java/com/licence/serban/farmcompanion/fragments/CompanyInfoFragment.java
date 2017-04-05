@@ -20,7 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
-import com.licence.serban.farmcompanion.classes.Company;
+import com.licence.serban.farmcompanion.classes.models.Company;
 import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 

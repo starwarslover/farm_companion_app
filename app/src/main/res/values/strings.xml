@@ -77,4 +77,33 @@
     <string name="contract_number">Contract number</string>
     <string name="employee_account_email">Employee Account Email*</string>
     <string name="employee_account_password">Employee Account Password*</string>
+    <string name="confirm">Confirm</string>
+    <string name="add_field">Add Field</string>
+    <string name="no_field_message">There are no fields yet.</string>
+    <string name="field_name">Field Name*</string>
+    <string name="field_location">Location</string>
+    <string name="field_area">Area*</string>
+    <string name="ownership">Ownership</string>
+    <string name="field_notes">Notes</string>
+    <string name="no_field_name">Field name required!</string>
+    <string name="no_field_area_error">Field area required!</string>
+    <string name="invalid_area_error">Area must be a stricly positive number!</string>
+    <string name="unseeded_string">Unseeded</string>
+    <string name="field_name_label">Field Name</string>
+    <string name="area">Area</string>
+    <string name="crop_status">Crop status</string>
+    <string name="activity_history">Activity history</string>
+    <string name="delete">Del</string>
+    <string name="my_activities">My Activities</string>
+    <string name="my_tasks">My Tasks</string>
+    <string name="gps_not_found_title">Location disabled</string>
+    <string name="gps_not_found_message">Location is not enabled. Do you want to enable it?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string-array name="ownership">
+        <item>Own</item>
+        <item>Rent</item>
+        <item>Cropshare</item>
+    </string-array>
 </resources>

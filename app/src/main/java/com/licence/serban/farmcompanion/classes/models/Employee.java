@@ -1,4 +1,4 @@
-package com.licence.serban.farmcompanion.classes;
+package com.licence.serban.farmcompanion.classes.models;
 
 import java.util.Date;
 
@@ -8,10 +8,11 @@ import java.util.Date;
 
 public class Employee {
     private String id;
+    private String employerID;
     private String name;
     private String personalIdNumber;
     private String idNumber;
-    private Date startDate;
+    private long startDate;
     private String position;
     private double baseSalary;
     private String contractNumber;
@@ -57,11 +58,11 @@ public class Employee {
         this.idNumber = idNumber;
     }
 
-    public Date getStartDate() {
+    public long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(long startDate) {
         this.startDate = startDate;
     }
 
@@ -104,5 +105,13 @@ public class Employee {
                 ", baseSalary=" + baseSalary +
                 ", contractNumber='" + contractNumber + '\'' +
                 '}';
+    }
+
+    public String getEmployerID() {
+        return employerID;
+    }
+
+    public void setEmployerID(String employerID) {
+        this.employerID = employerID;
     }
 }

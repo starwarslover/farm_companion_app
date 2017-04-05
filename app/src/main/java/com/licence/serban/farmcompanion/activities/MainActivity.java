@@ -1,11 +1,17 @@
 package com.licence.serban.farmcompanion.activities;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -25,10 +31,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.licence.serban.farmcompanion.classes.Company;
+import com.licence.serban.farmcompanion.classes.models.Company;
 import com.licence.serban.farmcompanion.fragments.AddEmployeeFragment;
+import com.licence.serban.farmcompanion.fragments.AddFieldFragment;
 import com.licence.serban.farmcompanion.fragments.CompanyInfoFragment;
+import com.licence.serban.farmcompanion.fragments.DateFragment;
+import com.licence.serban.farmcompanion.fragments.EmployeeDashboardFragment;
+import com.licence.serban.farmcompanion.fragments.EmployeeWorkFragment;
+import com.licence.serban.farmcompanion.fragments.FieldDetailsFragment;
 import com.licence.serban.farmcompanion.interfaces.OnAddEmployeeListener;
+import com.licence.serban.farmcompanion.interfaces.OnAddFieldListener;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 import com.licence.serban.farmcompanion.fragments.ActivitiesFragment;
 import com.licence.serban.farmcompanion.fragments.DashboardFragment;
@@ -37,13 +49,15 @@ import com.licence.serban.farmcompanion.fragments.EquipmentFragment;
 import com.licence.serban.farmcompanion.fragments.FieldsFragment;
 import com.licence.serban.farmcompanion.fragments.InputsFragment;
 import com.licence.serban.farmcompanion.R;
-import com.licence.serban.farmcompanion.classes.User;
+import com.licence.serban.farmcompanion.classes.models.User;
 import com.licence.serban.farmcompanion.classes.Utilities;
+import com.licence.serban.farmcompanion.interfaces.OnDateSelectedListener;
 import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
-import com.licence.serban.farmcompanion.interfaces.OnEmployeeAdded;
+import com.licence.serban.farmcompanion.interfaces.OnElementAdded;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnAppTitleChange, OnDrawerMenuLock, OnAddEmployeeListener,OnEmployeeAdded {
+        implements NavigationView.OnNavigationItemSelectedListener, OnAppTitleChange, OnDrawerMenuLock,
+        OnAddEmployeeListener, OnElementAdded, OnDateSelectedListener, OnAddFieldListener {
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
@@ -83,9 +97,10 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
+
 
         navNameTextView = (TextView) header.findViewById(R.id.navNameTextView);
         navEmailTextView = (TextView) header.findViewById(R.id.navEmailTextView);
@@ -99,6 +114,7 @@ public class MainActivity extends AppCompatActivity
                 currentUser = dataSnapshot.getValue(User.class);
                 navNameTextView.setText(currentUser.getName());
                 navEmailTextView.setText(currentUser.getEmail());
+                showMenu(navigationView);
 
             }
 
@@ -107,7 +123,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
         usersDatabaseReference.child(userID).child(Utilities.Constants.DB_COMPANY).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -125,8 +140,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.content_main, new DashboardFragment()).commit();
+        requestPermissions(this);
     }
 
     @Override
@@ -184,7 +201,9 @@ public class MainActivity extends AppCompatActivity
                 fragmentTransaction.replace(R.id.content_main, new InputsFragment()).commit();
                 break;
             case R.id.nav_fields:
-                fragmentTransaction.replace(R.id.content_main, new FieldsFragment()).commit();
+                FieldsFragment fieldsFragment = new FieldsFragment();
+                fieldsFragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.content_main, fieldsFragment).commit();
                 break;
             case R.id.nav_equipment:
                 fragmentTransaction.replace(R.id.content_main, new EquipmentFragment()).commit();
@@ -202,10 +221,29 @@ public class MainActivity extends AppCompatActivity
                 companyInfoFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content_main, companyInfoFragment).commit();
                 break;
+            case R.id.nav_emp_start_activity:
+                EmployeeWorkFragment workFragment = new EmployeeWorkFragment();
+                workFragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.content_main, workFragment).commit();
+                break;
+            case R.id.nav_emp_dashboard:
+                EmployeeDashboardFragment dashboardFragment = new EmployeeDashboardFragment();
+                dashboardFragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.content_main, dashboardFragment).commit();
+                break;
         }
         return true;
     }
 
+    public void showMenu(NavigationView navView) {
+        if (currentUser.isAdmin()) {
+            navView.getMenu().setGroupVisible(R.id.nav_admin_menu, true);
+            navView.getMenu().setGroupVisible(R.id.nav_emp_menu, false);
+        } else {
+            navView.getMenu().setGroupVisible(R.id.nav_admin_menu, false);
+            navView.getMenu().setGroupVisible(R.id.nav_emp_menu, true);
+        }
+    }
 
     @Override
     public void updateTitle(String title) {
@@ -229,7 +267,7 @@ public class MainActivity extends AppCompatActivity
         Bundle bundle = new Bundle();
         bundle.putString(Utilities.Constants.USER_ID, userID);
         addEmployeeFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.content_main, addEmployeeFragment).addToBackStack(null).commit();
+        fragmentTransaction.replace(R.id.content_main, addEmployeeFragment, Utilities.Constants.EMPLOYEE_TAG).addToBackStack(null).commit();
     }
 
     @Override
@@ -238,13 +276,80 @@ public class MainActivity extends AppCompatActivity
         AddEmployeeFragment addEmployeeFragment = new AddEmployeeFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Utilities.Constants.USER_ID, userID);
-        bundle.putString(Utilities.Constants.EMPLOYEE_ID,employeeId);
+        bundle.putString(Utilities.Constants.EMPLOYEE_ID, employeeId);
         addEmployeeFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.content_main, addEmployeeFragment).addToBackStack(null).commit();
+        fragmentTransaction.replace(R.id.content_main, addEmployeeFragment, Utilities.Constants.EMPLOYEE_TAG).addToBackStack(null).commit();
     }
 
     @Override
     public void endFragment() {
         fragmentManager.popBackStackImmediate();
+    }
+
+    @Override
+    public void openDatePicker(long date) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        DateFragment dateFragment = new DateFragment();
+        if (date != -1) {
+            Bundle bundle = new Bundle();
+            bundle.putLong(Utilities.Constants.DATE_EDIT, date);
+            dateFragment.setArguments(bundle);
+        }
+        dateFragment.show(fragmentTransaction, "dialog");
+    }
+
+    @Override
+    public void onDateSelected(String date) {
+        AddEmployeeFragment currentFragment = (AddEmployeeFragment) getSupportFragmentManager().findFragmentByTag(Utilities.Constants.EMPLOYEE_TAG);
+        if (currentFragment != null) {
+            currentFragment.setDate(date);
+        }
+    }
+
+    @Override
+    public void openAddFieldUI() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        AddFieldFragment addFieldFragment = new AddFieldFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Utilities.Constants.USER_ID, userID);
+        addFieldFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.content_main, addFieldFragment).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void openFieldDetailsFragment(String fieldID) {
+        FieldDetailsFragment fieldDetailsFragment = new FieldDetailsFragment();
+        Bundle arguments = new Bundle();
+        arguments.putString(Utilities.Constants.USER_ID, userID);
+        arguments.putString(Utilities.Constants.FIELD_ID, fieldID);
+        fieldDetailsFragment.setArguments(arguments);
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_main, fieldDetailsFragment).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void openEditFieldUI(String fieldID) {
+        AddFieldFragment editFieldFragment = new AddFieldFragment();
+        Bundle arguments = new Bundle();
+        arguments.putString(Utilities.Constants.USER_ID, userID);
+        arguments.putString(Utilities.Constants.FIELD_ID, fieldID);
+        editFieldFragment.setArguments(arguments);
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_main, editFieldFragment).addToBackStack(null).commit();
+    }
+
+    public void requestPermissions(Activity activity) {
+        if (ContextCompat.checkSelfPermission(activity,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Utilities.Constants.REQUEST_FINE_LOCATION);
+
+
+        }
+
     }
 }

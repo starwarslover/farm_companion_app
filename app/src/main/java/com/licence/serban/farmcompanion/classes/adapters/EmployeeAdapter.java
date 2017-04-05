@@ -1,4 +1,4 @@
-package com.licence.serban.farmcompanion.classes;
+package com.licence.serban.farmcompanion.classes.adapters;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.licence.serban.farmcompanion.R;
+import com.licence.serban.farmcompanion.classes.models.Employee;
 
 import java.util.List;
 

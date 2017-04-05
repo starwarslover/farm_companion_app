@@ -8,4 +8,5 @@ public interface OnAddEmployeeListener {
     void openAddEmployeeUI();
 
     void openEditEmployeeUI(String employeeId);
+
 }

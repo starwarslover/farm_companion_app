@@ -1,4 +1,4 @@
-package com.licence.serban.farmcompanion.classes;
+package com.licence.serban.farmcompanion.classes.models;
 
 import java.io.Serializable;
 

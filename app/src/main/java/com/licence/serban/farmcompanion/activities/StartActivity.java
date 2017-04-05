@@ -14,6 +14,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.classes.Utilities;
 
@@ -32,31 +34,39 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         username = sharedPreferences.getString(Utilities.Constants.EMAIL, "");
         password = sharedPreferences.getString(Utilities.Constants.PASSWORD, "");
 
-        if (!username.isEmpty() && !password.isEmpty()) {
-            firebaseAuth = FirebaseAuth.getInstance();
-            firebaseAuth
-                    .signInWithEmailAndPassword(username, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            Intent i = new Intent(StartActivity.this, MainActivity.class);
-                            startActivity(i);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Intent intent = new Intent(StartActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                        }
-                    });
-
+//        if (!username.isEmpty() && !password.isEmpty()) {
+//
+////            firebaseAuth
+////                    .signInWithEmailAndPassword(username, password)
+////                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+////                        @Override
+////                        public void onComplete(@NonNull Task<AuthResult> task) {
+////                            Intent i = new Intent(StartActivity.this, MainActivity.class);
+////                            startActivity(i);
+////                        }
+////                    })
+////                    .addOnFailureListener(new OnFailureListener() {
+////                        @Override
+////                        public void onFailure(@NonNull Exception e) {
+////                            Intent intent = new Intent(StartActivity.this, LoginActivity.class);
+////                            startActivity(intent);
+////                        }
+////                    });
+//
+//        }
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
+            Intent i = new Intent(StartActivity.this, MainActivity.class);
+            startActivity(i);
         } else {
-            Toast.makeText(this, "Here", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Here", Toast.LENGTH_SHORT).show();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
