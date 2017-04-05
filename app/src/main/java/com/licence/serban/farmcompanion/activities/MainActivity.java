@@ -39,6 +39,7 @@ import com.licence.serban.farmcompanion.fragments.DateFragment;
 import com.licence.serban.farmcompanion.fragments.EmployeeDashboardFragment;
 import com.licence.serban.farmcompanion.fragments.EmployeeWorkFragment;
 import com.licence.serban.farmcompanion.fragments.FieldDetailsFragment;
+import com.licence.serban.farmcompanion.fragments.TaskTrackingFragment;
 import com.licence.serban.farmcompanion.interfaces.OnAddEmployeeListener;
 import com.licence.serban.farmcompanion.interfaces.OnAddFieldListener;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity
     private TextView navCompanyNameTextView;
     private ActionBar actionBar;
     private DrawerLayout drawer;
+    private String employerID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,6 +225,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_emp_start_activity:
                 EmployeeWorkFragment workFragment = new EmployeeWorkFragment();
+                bundle.putString(Utilities.Constants.DB_EMPLOYER_ID, employerID);
                 workFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content_main, workFragment).commit();
                 break;
@@ -230,6 +233,11 @@ public class MainActivity extends AppCompatActivity
                 EmployeeDashboardFragment dashboardFragment = new EmployeeDashboardFragment();
                 dashboardFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content_main, dashboardFragment).commit();
+                break;
+            case R.id.nav_ongoing_tasks:
+                TaskTrackingFragment taskTrackingFragment = new TaskTrackingFragment();
+                taskTrackingFragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.content_main, taskTrackingFragment).commit();
                 break;
         }
         return true;
@@ -242,6 +250,17 @@ public class MainActivity extends AppCompatActivity
         } else {
             navView.getMenu().setGroupVisible(R.id.nav_admin_menu, false);
             navView.getMenu().setGroupVisible(R.id.nav_emp_menu, true);
+            databaseReference.child(Utilities.Constants.DB_EMPLOYEES).child(userID).child(Utilities.Constants.DB_EMPLOYER_ID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    employerID = dataSnapshot.getValue(String.class);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 

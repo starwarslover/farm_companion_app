@@ -27,6 +27,10 @@
             android:id="@+id/nav_activities"
             android:icon="@drawable/ic_local_activity_black_24dp"
             android:title="@string/nav_activities" />
+        <item
+            android:id="@+id/nav_ongoing_tasks"
+            android:icon="@drawable/ic_local_activity_black_24dp"
+            android:title="@string/nav_ongoing_tasks" />
 
         <item android:title="@string/general">
             <menu>

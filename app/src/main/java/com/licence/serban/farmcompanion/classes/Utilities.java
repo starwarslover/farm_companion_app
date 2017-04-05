@@ -41,6 +41,7 @@ public final class Utilities {
         public static final java.lang.String FIELD_ID = "edit_field_id";
         public static final String DB_LIVE_TRACKING = "live_tracking";
         public static final int REQUEST_FINE_LOCATION = 55;
+        public static final String DB_EMPLOYER_ID = "employerID";
         public static String EMAIL = "email";
         public static String PASSWORD = "password";
         public static int SPLASH_TIMEOUT = 1000;

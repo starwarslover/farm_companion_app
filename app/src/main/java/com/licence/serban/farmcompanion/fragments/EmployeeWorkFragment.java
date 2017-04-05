@@ -38,6 +38,7 @@ public class EmployeeWorkFragment extends Fragment {
     private Button startBroadcastButton;
     private DatabaseReference databaseReference;
     private String userID;
+    private String employerID;
 
     public EmployeeWorkFragment() {
         // Required empty public constructor
@@ -66,6 +67,7 @@ public class EmployeeWorkFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             userID = args.getString(Utilities.Constants.USER_ID);
+            employerID = args.getString(Utilities.Constants.DB_EMPLOYER_ID);
         }
 
         startBroadcastButton = (Button) view.findViewById(R.id.startBroadCastingButton);
@@ -93,6 +95,7 @@ public class EmployeeWorkFragment extends Fragment {
                     EmployeeLocationListener locationListener = new EmployeeLocationListener(databaseReference, userID);
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 10, locationListener);
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 10, locationListener);
+                    databaseReference.child(Utilities.Constants.DB_USERS).child(employerID).child(Utilities.Constants.DB_ACTIVE_TASKS).child(userID).setValue(true);
                 }
             }
         });

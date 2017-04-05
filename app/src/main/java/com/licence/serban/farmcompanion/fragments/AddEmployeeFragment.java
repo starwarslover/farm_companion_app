@@ -302,7 +302,9 @@ public class AddEmployeeFragment extends Fragment {
                 employee.setEmployerID(userID);
                 employee.setAccountEmail(email);
                 employee.setBaseSalary(salary);
-                employee.setStartDate(employmentDate.getTime());
+                if (employmentDate != null) {
+                    employee.setStartDate(employmentDate.getTime());
+                }
                 employee.setContractNumber(contractNumber);
                 employee.setPersonalIdNumber(personalNumber);
                 employee.setIdNumber(idNumber);

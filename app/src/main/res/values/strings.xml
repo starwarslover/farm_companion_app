@@ -100,6 +100,7 @@
     <string name="gps_not_found_message">Location is not enabled. Do you want to enable it?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="nav_ongoing_tasks">Ongoing Tasks</string>
 
     <string-array name="ownership">
         <item>Own</item>
