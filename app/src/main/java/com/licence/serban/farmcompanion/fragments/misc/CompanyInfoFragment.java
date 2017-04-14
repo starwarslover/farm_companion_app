@@ -1,4 +1,4 @@
-package com.licence.serban.farmcompanion.fragments;
+package com.licence.serban.farmcompanion.fragments.misc;
 
 
 import android.content.Context;

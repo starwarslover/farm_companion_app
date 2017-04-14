@@ -1,4 +1,4 @@
-package com.licence.serban.farmcompanion.fragments;
+package com.licence.serban.farmcompanion.fragments.dashboard;
 
 
 import android.content.Context;
@@ -15,12 +15,11 @@ import com.licence.serban.farmcompanion.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EquipmentFragment extends Fragment {
-
+public class DashboardFragment extends Fragment {
 
     private OnAppTitleChange updateTitleCallback;
 
-    public EquipmentFragment() {
+    public DashboardFragment() {
         // Required empty public constructor
     }
 
@@ -40,9 +39,9 @@ public class EquipmentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        updateTitleCallback.updateTitle(getResources().getString(R.string.nav_equipment));
+        updateTitleCallback.updateTitle(getResources().getString(R.string.nav_dash));
 
-        return inflater.inflate(R.layout.fragment_equipment, container, false);
+        return inflater.inflate(R.layout.fragment_dashboard, container, false);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.licence.serban.farmcompanion.fragments;
+package com.licence.serban.farmcompanion.fragments.equipment;
 
 
 import android.content.Context;
@@ -15,15 +15,14 @@ import com.licence.serban.farmcompanion.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ActivitiesFragment extends Fragment {
+public class EquipmentFragment extends Fragment {
 
 
     private OnAppTitleChange updateTitleCallback;
 
-    public ActivitiesFragment() {
+    public EquipmentFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -34,15 +33,16 @@ public class ActivitiesFragment extends Fragment {
             throw new ClassCastException(context.toString()
                     + " must implement OnHeadlineSelectedListener");
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        updateTitleCallback.updateTitle(getResources().getString(R.string.nav_activities));
+        updateTitleCallback.updateTitle(getResources().getString(R.string.nav_equipment));
 
-        return inflater.inflate(R.layout.fragment_activities, container, false);
+        return inflater.inflate(R.layout.fragment_equipment, container, false);
     }
 
 }

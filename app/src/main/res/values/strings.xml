@@ -101,10 +101,20 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="nav_ongoing_tasks">Ongoing Tasks</string>
+    <string name="new_activity">New Activity</string>
+    <string name="filter_by_status">Filter by status:</string>
+    <string name="new_task">New Task</string>
+    <string name="create_task">Create Task</string>
 
     <string-array name="ownership">
         <item>Own</item>
         <item>Rent</item>
         <item>Cropshare</item>
+    </string-array>
+    <string-array name="activity_status">
+        <item>Not started</item>
+        <item>Ongoing</item>
+        <item>Paused</item>
+        <item>Finished</item>
     </string-array>
 </resources>

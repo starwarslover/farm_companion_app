@@ -1,4 +1,4 @@
-package com.licence.serban.farmcompanion.fragments;
+package com.licence.serban.farmcompanion.fragments.fields;
 
 
 import android.content.Context;

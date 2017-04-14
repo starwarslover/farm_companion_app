@@ -1,4 +1,4 @@
-package com.licence.serban.farmcompanion.fragments;
+package com.licence.serban.farmcompanion.fragments.misc;
 
 
 import android.content.Context;
@@ -17,7 +17,6 @@ import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.interfaces.OnDateSelectedListener;
 
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
 
 /**

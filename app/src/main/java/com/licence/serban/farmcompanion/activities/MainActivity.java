@@ -2,7 +2,6 @@ package com.licence.serban.farmcompanion.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -32,33 +31,35 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.classes.models.Company;
-import com.licence.serban.farmcompanion.fragments.AddEmployeeFragment;
-import com.licence.serban.farmcompanion.fragments.AddFieldFragment;
-import com.licence.serban.farmcompanion.fragments.CompanyInfoFragment;
-import com.licence.serban.farmcompanion.fragments.DateFragment;
-import com.licence.serban.farmcompanion.fragments.EmployeeDashboardFragment;
-import com.licence.serban.farmcompanion.fragments.EmployeeWorkFragment;
-import com.licence.serban.farmcompanion.fragments.FieldDetailsFragment;
-import com.licence.serban.farmcompanion.fragments.TaskTrackingFragment;
+import com.licence.serban.farmcompanion.fragments.activities.NewTaskFragment;
+import com.licence.serban.farmcompanion.fragments.employees.AddEmployeeFragment;
+import com.licence.serban.farmcompanion.fragments.fields.AddFieldFragment;
+import com.licence.serban.farmcompanion.fragments.misc.CompanyInfoFragment;
+import com.licence.serban.farmcompanion.fragments.misc.DateFragment;
+import com.licence.serban.farmcompanion.fragments.emp_account.EmployeeDashboardFragment;
+import com.licence.serban.farmcompanion.fragments.emp_account.EmployeeTasksFragment;
+import com.licence.serban.farmcompanion.fragments.fields.FieldDetailsFragment;
+import com.licence.serban.farmcompanion.fragments.activities.TaskTrackingFragment;
 import com.licence.serban.farmcompanion.interfaces.OnAddEmployeeListener;
 import com.licence.serban.farmcompanion.interfaces.OnAddFieldListener;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
-import com.licence.serban.farmcompanion.fragments.ActivitiesFragment;
-import com.licence.serban.farmcompanion.fragments.DashboardFragment;
-import com.licence.serban.farmcompanion.fragments.EmployeesFragment;
-import com.licence.serban.farmcompanion.fragments.EquipmentFragment;
-import com.licence.serban.farmcompanion.fragments.FieldsFragment;
-import com.licence.serban.farmcompanion.fragments.InputsFragment;
+import com.licence.serban.farmcompanion.fragments.activities.ActivitiesFragment;
+import com.licence.serban.farmcompanion.fragments.dashboard.DashboardFragment;
+import com.licence.serban.farmcompanion.fragments.employees.EmployeesFragment;
+import com.licence.serban.farmcompanion.fragments.equipment.EquipmentFragment;
+import com.licence.serban.farmcompanion.fragments.fields.FieldsFragment;
+import com.licence.serban.farmcompanion.fragments.consumables.InputsFragment;
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.classes.models.User;
 import com.licence.serban.farmcompanion.classes.Utilities;
+import com.licence.serban.farmcompanion.interfaces.OnCreateNewTaskListener;
 import com.licence.serban.farmcompanion.interfaces.OnDateSelectedListener;
 import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
 import com.licence.serban.farmcompanion.interfaces.OnElementAdded;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnAppTitleChange, OnDrawerMenuLock,
-        OnAddEmployeeListener, OnElementAdded, OnDateSelectedListener, OnAddFieldListener {
+        OnAddEmployeeListener, OnElementAdded, OnDateSelectedListener, OnAddFieldListener, OnCreateNewTaskListener {
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
@@ -216,7 +217,9 @@ public class MainActivity extends AppCompatActivity
                 fragmentTransaction.replace(R.id.content_main, employeesFragment).commit();
                 break;
             case R.id.nav_activities:
-                fragmentTransaction.replace(R.id.content_main, new ActivitiesFragment()).commit();
+                ActivitiesFragment activities = new ActivitiesFragment();
+                activities.setArguments(bundle);
+                fragmentTransaction.replace(R.id.content_main, activities).commit();
                 break;
             case R.id.nav_company_info:
                 CompanyInfoFragment companyInfoFragment = new CompanyInfoFragment();
@@ -224,7 +227,7 @@ public class MainActivity extends AppCompatActivity
                 fragmentTransaction.replace(R.id.content_main, companyInfoFragment).commit();
                 break;
             case R.id.nav_emp_start_activity:
-                EmployeeWorkFragment workFragment = new EmployeeWorkFragment();
+                EmployeeTasksFragment workFragment = new EmployeeTasksFragment();
                 bundle.putString(Utilities.Constants.DB_EMPLOYER_ID, employerID);
                 workFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content_main, workFragment).commit();
@@ -370,5 +373,16 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+    }
+
+    @Override
+    public void openNewTaskUI() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        NewTaskFragment taskFragment = new NewTaskFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Utilities.Constants.USER_ID, userID);
+        bundle.putString(Utilities.Constants.DB_EMPLOYER_ID, employerID);
+        taskFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.content_main, taskFragment).addToBackStack(null).commit();
     }
 }
