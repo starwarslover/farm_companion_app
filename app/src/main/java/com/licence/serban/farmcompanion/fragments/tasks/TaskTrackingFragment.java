@@ -1,4 +1,4 @@
-package com.licence.serban.farmcompanion.fragments.activities;
+package com.licence.serban.farmcompanion.fragments.tasks;
 
 
 import android.Manifest;

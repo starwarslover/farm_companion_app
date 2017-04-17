@@ -1,4 +1,4 @@
-package com.licence.serban.farmcompanion.fragments.activities;
+package com.licence.serban.farmcompanion.fragments.tasks;
 
 
 import android.content.Context;
@@ -15,6 +15,7 @@ import com.licence.serban.farmcompanion.classes.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.classes.models.ResourcePlaceholder;
 import com.licence.serban.farmcompanion.classes.models.Task;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
+import com.licence.serban.farmcompanion.interfaces.OnTaskCreatedListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +23,7 @@ import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 public class NewTaskFragment extends Fragment {
 
 
+    public OnTaskCreatedListener taskCreatedCallback;
     private OnAppTitleChange updateTitleCallback;
     private Button newTaskButton;
     private String empID;
@@ -40,6 +42,12 @@ public class NewTaskFragment extends Fragment {
         } catch (ClassCastException ex) {
             throw new ClassCastException(context.toString()
                     + " must implement OnHeadlineSelectedListener");
+        }
+        try {
+            taskCreatedCallback = (OnTaskCreatedListener) context;
+        } catch (ClassCastException ex) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnTaskCreatedListener");
         }
     }
 
@@ -70,7 +78,9 @@ public class NewTaskFragment extends Fragment {
                 empPlaceholder.setName("ionel");
                 task.addEmployee(empPlaceholder);
                 TasksDatabaseAdapter adapter = TasksDatabaseAdapter.getInstance(employerId);
-                adapter.insertTask(task);
+                String id = adapter.insertTask(task);
+
+                taskCreatedCallback.StartActivityTracking(id);
             }
         });
 

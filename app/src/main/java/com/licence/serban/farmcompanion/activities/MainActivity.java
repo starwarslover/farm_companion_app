@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.ViewAnimator;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,7 +33,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.classes.models.Company;
-import com.licence.serban.farmcompanion.fragments.activities.NewTaskFragment;
+import com.licence.serban.farmcompanion.fragments.tasks.NewTaskFragment;
+import com.licence.serban.farmcompanion.fragments.emp_account.EmpTaskTrackingFragment;
 import com.licence.serban.farmcompanion.fragments.employees.AddEmployeeFragment;
 import com.licence.serban.farmcompanion.fragments.fields.AddFieldFragment;
 import com.licence.serban.farmcompanion.fragments.misc.CompanyInfoFragment;
@@ -39,11 +42,11 @@ import com.licence.serban.farmcompanion.fragments.misc.DateFragment;
 import com.licence.serban.farmcompanion.fragments.emp_account.EmployeeDashboardFragment;
 import com.licence.serban.farmcompanion.fragments.emp_account.EmployeeTasksFragment;
 import com.licence.serban.farmcompanion.fragments.fields.FieldDetailsFragment;
-import com.licence.serban.farmcompanion.fragments.activities.TaskTrackingFragment;
+import com.licence.serban.farmcompanion.fragments.tasks.TaskTrackingFragment;
 import com.licence.serban.farmcompanion.interfaces.OnAddEmployeeListener;
 import com.licence.serban.farmcompanion.interfaces.OnAddFieldListener;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
-import com.licence.serban.farmcompanion.fragments.activities.ActivitiesFragment;
+import com.licence.serban.farmcompanion.fragments.tasks.TasksFragment;
 import com.licence.serban.farmcompanion.fragments.dashboard.DashboardFragment;
 import com.licence.serban.farmcompanion.fragments.employees.EmployeesFragment;
 import com.licence.serban.farmcompanion.fragments.equipment.EquipmentFragment;
@@ -56,10 +59,11 @@ import com.licence.serban.farmcompanion.interfaces.OnCreateNewTaskListener;
 import com.licence.serban.farmcompanion.interfaces.OnDateSelectedListener;
 import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
 import com.licence.serban.farmcompanion.interfaces.OnElementAdded;
+import com.licence.serban.farmcompanion.interfaces.OnTaskCreatedListener;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnAppTitleChange, OnDrawerMenuLock,
-        OnAddEmployeeListener, OnElementAdded, OnDateSelectedListener, OnAddFieldListener, OnCreateNewTaskListener {
+        OnAddEmployeeListener, OnElementAdded, OnDateSelectedListener, OnAddFieldListener, OnCreateNewTaskListener, OnTaskCreatedListener {
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
@@ -74,19 +78,19 @@ public class MainActivity extends AppCompatActivity
     private TextView navCompanyNameTextView;
     private ActionBar actionBar;
     private DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
     private String employerID;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         firebaseAuth = FirebaseAuth.getInstance();
         fragmentManager = getSupportFragmentManager();
-        actionBar = getSupportActionBar();
 
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
@@ -94,26 +98,14 @@ public class MainActivity extends AppCompatActivity
             userID = firebaseUser.getUid();
         }
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View header = navigationView.getHeaderView(0);
-
-
-        navNameTextView = (TextView) header.findViewById(R.id.navNameTextView);
-        navEmailTextView = (TextView) header.findViewById(R.id.navEmailTextView);
-        navCompanyNameTextView = (TextView) header.findViewById(R.id.navCompanyTextView);
+        setViews();
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         DatabaseReference usersDatabaseReference = databaseReference.child(Utilities.Constants.DB_USERS);
         usersDatabaseReference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                ((ViewAnimator) findViewById(R.id.viewAnimator)).setDisplayedChild(1);
                 currentUser = dataSnapshot.getValue(User.class);
                 navNameTextView.setText(currentUser.getName());
                 navEmailTextView.setText(currentUser.getEmail());
@@ -143,10 +135,37 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        setFirstStart();
 
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.content_main, new DashboardFragment()).commit();
-        requestPermissions(this);
+    }
+
+    private void setViews() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+
+
+        navNameTextView = (TextView) header.findViewById(R.id.navNameTextView);
+        navEmailTextView = (TextView) header.findViewById(R.id.navEmailTextView);
+        navCompanyNameTextView = (TextView) header.findViewById(R.id.navCompanyTextView);
+    }
+
+    private void setFirstStart() {
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_main);
+        if (currentFragment == null) {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.content_main, new DashboardFragment()).commit();
+            requestPermissions(this);
+        }
     }
 
     @Override
@@ -217,7 +236,7 @@ public class MainActivity extends AppCompatActivity
                 fragmentTransaction.replace(R.id.content_main, employeesFragment).commit();
                 break;
             case R.id.nav_activities:
-                ActivitiesFragment activities = new ActivitiesFragment();
+                TasksFragment activities = new TasksFragment();
                 activities.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content_main, activities).commit();
                 break;
@@ -383,6 +402,16 @@ public class MainActivity extends AppCompatActivity
         bundle.putString(Utilities.Constants.USER_ID, userID);
         bundle.putString(Utilities.Constants.DB_EMPLOYER_ID, employerID);
         taskFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.content_main, taskFragment).addToBackStack(null).commit();
+        fragmentTransaction.replace(R.id.content_main, taskFragment).commit();
+    }
+
+    @Override
+    public void StartActivityTracking(String taskId) {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        EmpTaskTrackingFragment trackingFragment = new EmpTaskTrackingFragment();
+        Bundle args = new Bundle();
+        args.putString(Utilities.Constants.TASK_ID_EXTRA, taskId);
+        trackingFragment.setArguments(args);
+        fragmentTransaction.replace(R.id.content_main, trackingFragment).commit();
     }
 }

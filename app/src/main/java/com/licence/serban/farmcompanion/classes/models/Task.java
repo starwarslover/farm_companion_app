@@ -3,9 +3,13 @@ package com.licence.serban.farmcompanion.classes.models;
 import com.licence.serban.farmcompanion.classes.TaskType;
 import com.licence.serban.farmcompanion.classes.WorkState;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Serban on 14.04.2017.
@@ -31,13 +35,21 @@ public class Task {
 
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public Task(ResourcePlaceholder field) {
+        this.inputs = new ArrayList<>();
+        this.employees = new ArrayList<>();
+        this.usedImplements = new ArrayList<>();
+        this.field = field;
+
     }
 
     public String getId() {
 
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public ResourcePlaceholder getField() {
@@ -52,8 +64,25 @@ public class Task {
         return startDate;
     }
 
+    public void setStartDate(String startDate) {
+        try {
+            this.startDate = new SimpleDateFormat("dd MM yyyy HH:mm:ss zz", Locale.ENGLISH).parse(startDate);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public Date getStopDate() {
+
         return stopDate;
+    }
+
+    public void setStopDate(String date) {
+        try {
+            this.stopDate = new SimpleDateFormat("dd MM yyyy HH:mm:ss zz", Locale.ENGLISH).parse(date);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public List<Date> getIntermediaries() {
@@ -109,15 +138,17 @@ public class Task {
         this.usedImplements = usedImplements;
     }
 
-    public Task(ResourcePlaceholder field) {
-        this.inputs = new ArrayList<>();
-        this.employees = new ArrayList<>();
-        this.usedImplements = new ArrayList<>();
-        this.field = field;
-
-    }
-
     public void addEmployee(ResourcePlaceholder emp) {
         this.employees.add(emp);
+    }
+
+    public void startTask(boolean canTrack) {
+        this.startDate = new Date(Calendar.getInstance().getTimeInMillis());
+        this.canTrack = canTrack;
+    }
+
+    public void stopTask() {
+        this.stopDate = Calendar.getInstance().getTime();
+        this.canTrack = false;
     }
 }

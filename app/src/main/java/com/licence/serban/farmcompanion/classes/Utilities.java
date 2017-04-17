@@ -43,9 +43,11 @@ public final class Utilities {
         public static final int REQUEST_FINE_LOCATION = 55;
         public static final String DB_EMPLOYER_ID = "employerID";
         public static final String DB_ACTIVITIES = "activities";
+        public static final java.lang.String TASK_ID_EXTRA = "task_id";
+        public static final String GPS_COORDINATES = "live_coordinates";
+        public static final String DB_ACTIVE_TASKS = "active_tasks";
         public static String EMAIL = "email";
         public static String PASSWORD = "password";
         public static int SPLASH_TIMEOUT = 1000;
-        public static final String DB_ACTIVE_TASKS = "active_tasks";
     }
 }

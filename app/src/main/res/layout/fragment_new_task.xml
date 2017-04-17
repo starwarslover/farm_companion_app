@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.licence.serban.farmcompanion.fragments.activities.NewTaskFragment">
+    tools:context="com.licence.serban.farmcompanion.fragments.tasks.NewTaskFragment">
 
     <Button
         android:id="@+id/tasksCreateTaskButton"

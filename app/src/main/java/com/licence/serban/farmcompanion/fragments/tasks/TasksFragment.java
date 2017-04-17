@@ -1,4 +1,4 @@
-package com.licence.serban.farmcompanion.fragments.activities;
+package com.licence.serban.farmcompanion.fragments.tasks;
 
 
 import android.content.Context;
@@ -7,15 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.classes.adapters.TaskAdapter;
 import com.licence.serban.farmcompanion.classes.adapters.TasksDatabaseAdapter;
@@ -29,7 +24,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ActivitiesFragment extends Fragment {
+public class TasksFragment extends Fragment {
 
     private OnAppTitleChange updateTitleCallback;
 
@@ -42,7 +37,7 @@ public class ActivitiesFragment extends Fragment {
     private String userID;
     private ListView activitiesListView;
 
-    public ActivitiesFragment() {
+    public TasksFragment() {
         // Required empty public constructor
     }
 
@@ -63,18 +58,27 @@ public class ActivitiesFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         updateTitleCallback.updateTitle(getResources().getString(R.string.nav_activities));
-        View view = inflater.inflate(R.layout.fragment_activities, container, false);
+        View view = inflater.inflate(R.layout.fragment_tasks, container, false);
 
         Bundle args = getArguments();
         if (args != null) {
             userID = args.getString(Utilities.Constants.USER_ID);
         }
 
-        TasksDatabaseAdapter adapter = TasksDatabaseAdapter.getInstance(userID);
+        final TasksDatabaseAdapter tasksDatabaseAdapter = TasksDatabaseAdapter.getInstance(userID);
         activitiesListView = (ListView) view.findViewById(R.id.activitiesListView);
         taskAdapter = new TaskAdapter(getActivity(), R.layout.task_row, new ArrayList<Task>());
         activitiesListView.setAdapter(taskAdapter);
-        adapter.setListener(taskAdapter);
+        tasksDatabaseAdapter.setListener(taskAdapter);
+
+        activitiesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Task task = taskAdapter.getItem(position);
+                tasksDatabaseAdapter.deleteTask(task.getId());
+                return true;
+            }
+        });
 
         return view;
     }

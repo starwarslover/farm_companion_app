@@ -34,6 +34,12 @@ public class TaskAdapter extends ArrayAdapter<Task> {
         this.myTasks = objects;
     }
 
+    @Nullable
+    @Override
+    public Task getItem(int position) {
+        return this.myTasks.get(position);
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -68,7 +74,7 @@ public class TaskAdapter extends ArrayAdapter<Task> {
         }
         if (taskToRemove != null) {
             myTasks.remove(taskToRemove);
-            this.notifyDataSetChanged();
+            notifyDataSetChanged();
         }
     }
 

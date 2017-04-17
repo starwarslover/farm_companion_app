@@ -9,6 +9,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.classes.models.Task;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Created by Serban on 14.04.2017.
  */
@@ -18,9 +20,8 @@ public class TasksDatabaseAdapter {
     public static final String DB_TASKS = "tasks";
 
     private static TasksDatabaseAdapter instance;
-
-    private DatabaseReference mainReference;
     private static DatabaseReference userTasksReference;
+    private DatabaseReference mainReference;
     private DatabaseReference tasksReference;
 
     private TasksDatabaseAdapter() {
@@ -45,11 +46,13 @@ public class TasksDatabaseAdapter {
         userTasksReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_USERS).child(adminID).child(DB_TASKS);
     }
 
-    public void insertTask(Task task) {
+    public String insertTask(Task task) {
         String id = tasksReference.push().getKey();
         task.setId(id);
         tasksReference.child(id).setValue(task);
         userTasksReference.child(id).setValue(true);
+
+        return id;
     }
 
     public void setListener(final TaskAdapter adapter) {
@@ -80,6 +83,7 @@ public class TasksDatabaseAdapter {
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 String id = dataSnapshot.getKey();
                 adapter.removeTask(id);
+                adapter.notifyDataSetChanged();
 
             }
 
@@ -95,5 +99,9 @@ public class TasksDatabaseAdapter {
         });
     }
 
+    public void deleteTask(String taskId) {
+        userTasksReference.child(taskId).removeValue();
+        tasksReference.child(taskId).removeValue();
+    }
 
 }
