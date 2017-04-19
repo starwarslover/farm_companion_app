@@ -35,23 +35,18 @@ import java.util.List;
  */
 public class EmployeesFragment extends Fragment {
 
+    FragmentManager fragmentManager;
     private List<Employee> employees;
     private String userID;
-
     private OnAppTitleChange updateTitleCallback;
     private OnAddEmployeeListener addEmployeeListener;
-
     private EmployeeAdapter employeeAdapter;
     private DatabaseReference databaseReference;
-    private DatabaseReference userReference;
     private DatabaseReference employeesReference;
-
     private ListView employeesListView;
     private Button addEmployeeButton;
     private Button secondAddEmployeeButton;
     private LinearLayout noEmployeeLayout;
-
-    FragmentManager fragmentManager;
 
 
     public EmployeesFragment() {
@@ -85,19 +80,60 @@ public class EmployeesFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_employees, container, false);
 
-        userID = getArguments().getString(Utilities.Constants.USER_ID);
+        Bundle args = getArguments();
+        if(args != null) {
+            userID = getArguments().getString(Utilities.Constants.USER_ID);
+        }
 
-        fragmentManager = getChildFragmentManager();
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        userReference = databaseReference.child(Utilities.Constants.DB_USERS).child(userID);
-        employeesReference = databaseReference.child(Utilities.Constants.DB_EMPLOYEES);
+        employeesReference = databaseReference.child(Utilities.Constants.DB_EMPLOYEES).child(userID);
 
+        setUpViews(view);
+
+
+        employeesReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Employee employee = dataSnapshot.getValue(Employee.class);
+                if (employee != null) {
+                    employeeAdapter.add(employee);
+                }
+                checkAdapterCount();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Employee employee = dataSnapshot.getValue(Employee.class);
+                employeeAdapter.updateEmployee(employee);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                String empId = dataSnapshot.getKey();
+                employeeAdapter.removeEmployee(empId);
+                checkAdapterCount();
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        return view;
+
+    }
+
+    private void setUpViews(View view) {
         employeesListView = (ListView) view.findViewById(R.id.employeesListView);
         addEmployeeButton = (Button) view.findViewById(R.id.employeesAddEmployeeButton);
         secondAddEmployeeButton = (Button) view.findViewById(R.id.employeesAddEmployeeSecondButton);
         noEmployeeLayout = (LinearLayout) view.findViewById(R.id.employeesNoEmployeeMessage);
-
-
         employeeAdapter = new EmployeeAdapter(getActivity(), R.layout.employee_row, employees);
         employeesListView.setAdapter(employeeAdapter);
 
@@ -125,60 +161,12 @@ public class EmployeesFragment extends Fragment {
             }
         });
 
-        userReference.child(Utilities.Constants.DB_EMPLOYEES).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                employeesReference.child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Employee employee = dataSnapshot.getValue(Employee.class);
-                        employeeAdapter.add(employee);
-                    }
+    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String empId = dataSnapshot.getKey();
-                employeeAdapter.removeEmployee(empId);
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        userReference.child(Utilities.Constants.DB_EMPLOYEES).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount() == 0) {
-                    noEmployeeLayout.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        return view;
-
+    private void checkAdapterCount() {
+        if (employeeAdapter.getCount() == 0) {
+            noEmployeeLayout.setVisibility(View.VISIBLE);
+        }
     }
 
 }

@@ -84,6 +84,15 @@ public class FieldsAdapter extends ArrayAdapter<CompanyField> {
         return row;
     }
 
+    public void updateField(CompanyField field) {
+        for (CompanyField f : myFields) {
+            if (field.getId().equals(f.getId())) {
+                f = field;
+                break;
+            }
+        }
+    }
+
     private class FieldHolder {
         TextView fieldName;
         TextView fieldCrop;

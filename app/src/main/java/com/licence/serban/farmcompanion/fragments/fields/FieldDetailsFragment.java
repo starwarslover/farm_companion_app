@@ -89,7 +89,7 @@ public class FieldDetailsFragment extends Fragment {
         }
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child(Utilities.Constants.DB_FIELDS).child(fieldID).addValueEventListener(new ValueEventListener() {
+        databaseReference.child(Utilities.Constants.DB_FIELDS).child(userID).child(fieldID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 CompanyField companyField = dataSnapshot.getValue(CompanyField.class);
@@ -120,10 +120,8 @@ public class FieldDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DatabaseReference mainReference = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference fieldReference = mainReference.child(Utilities.Constants.DB_FIELDS);
-                DatabaseReference userReference = mainReference.child(Utilities.Constants.DB_USERS).child(userID).child(Utilities.Constants.DB_FIELDS);
+                DatabaseReference fieldReference = mainReference.child(Utilities.Constants.DB_FIELDS).child(userID);
                 fieldReference.child(fieldID).removeValue();
-                userReference.child(fieldID).removeValue();
                 fieldAddedListener.endFragment();
             }
         });

@@ -77,6 +77,17 @@ public class EmployeeAdapter extends ArrayAdapter<Employee> {
         }
     }
 
+    public void updateEmployee(Employee employee) {
+        Employee tempEmp = null;
+        for (Employee emp : myEmployees) {
+            if (employee.getId().equals(emp.getId())) {
+                emp = employee;
+                break;
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     private class EmployeeHolder {
         public TextView nameTextView;
         public TextView positionTextView;

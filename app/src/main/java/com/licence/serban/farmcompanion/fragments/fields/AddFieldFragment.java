@@ -94,8 +94,7 @@ public class AddFieldFragment extends Fragment {
         }
 
         firebaseDatabase = FirebaseDatabase.getInstance().getReference();
-        userReference = firebaseDatabase.child(Utilities.Constants.DB_USERS).child(userId);
-        fieldsReference = firebaseDatabase.child(Utilities.Constants.DB_FIELDS);
+        fieldsReference = firebaseDatabase.child(Utilities.Constants.DB_FIELDS).child(userId);
 
         if (fieldID != null) {
             doEditField(view);
@@ -136,7 +135,6 @@ public class AddFieldFragment extends Fragment {
                 String id = fieldsReference.push().getKey();
                 companyField.setId(id);
                 fieldsReference.child(id).setValue(companyField);
-                userReference.child(Utilities.Constants.DB_FIELDS).child(id).setValue(true);
 
                 fieldAddedListener.endFragment();
             }

@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.licence.serban.farmcompanion.classes.models.Company;
 import com.licence.serban.farmcompanion.classes.models.CompanyField;
 import com.licence.serban.farmcompanion.classes.adapters.FieldsAdapter;
 import com.licence.serban.farmcompanion.classes.Utilities;
@@ -38,7 +39,7 @@ public class FieldsFragment extends Fragment {
     private FieldsAdapter fieldsAdapter;
     private OnAppTitleChange updateTitleCallback;
     private DatabaseReference databaseReference;
-    private DatabaseReference userReference;
+    private DatabaseReference fieldsReference;
 
     private LinearLayout noFieldLayout;
     private ListView fieldsListView;
@@ -86,31 +87,26 @@ public class FieldsFragment extends Fragment {
         }
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        userReference = databaseReference.child(Utilities.Constants.DB_USERS).child(userID);
+        fieldsReference = databaseReference.child(Utilities.Constants.DB_FIELDS).child(userID);
 
         fieldsAdapter = new FieldsAdapter(getActivity(), R.layout.field_row, new ArrayList<CompanyField>());
         fieldsListView.setAdapter(fieldsAdapter);
 
-        userReference.child(Utilities.Constants.DB_FIELDS).addChildEventListener(new ChildEventListener() {
+        fieldsReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                databaseReference.child(Utilities.Constants.DB_FIELDS).child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        CompanyField field = dataSnapshot.getValue(CompanyField.class);
-                        fieldsAdapter.add(field);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                CompanyField field = dataSnapshot.getValue(CompanyField.class);
+                if(field != null) {
+                    fieldsAdapter.add(field);
+                }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                CompanyField field = dataSnapshot.getValue(CompanyField.class);
+                if(field != null) {
+                    fieldsAdapter.updateField(field);
+                }
             }
 
             @Override
@@ -122,19 +118,6 @@ public class FieldsFragment extends Fragment {
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        userReference.child(Utilities.Constants.DB_FIELDS).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount() == 0) {
-                    messageLayout.setVisibility(View.VISIBLE);
-                }
             }
 
             @Override

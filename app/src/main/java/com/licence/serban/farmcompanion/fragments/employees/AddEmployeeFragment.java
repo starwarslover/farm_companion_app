@@ -38,16 +38,13 @@ import java.util.Date;
  */
 public class AddEmployeeFragment extends Fragment {
 
+    long dateMils = -1;
     private DatabaseReference databaseReference;
     private DatabaseReference employeesReference;
     private DatabaseReference userReference;
     private FirebaseAuth firebaseAuth;
-
     private String userID;
     private boolean editMode = false;
-    long dateMils = -1;
-
-
     private OnAppTitleChange updateTitleCallback;
     private OnDrawerMenuLock lockDrawerMenuCallback;
     private OnElementAdded employeeAddedListener;
@@ -110,8 +107,7 @@ public class AddEmployeeFragment extends Fragment {
         employeeID = getArguments().getString(Utilities.Constants.EMPLOYEE_ID);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        userReference = databaseReference.child(Utilities.Constants.DB_USERS).child(userID);
-        employeesReference = databaseReference.child(Utilities.Constants.DB_EMPLOYEES);
+        employeesReference = databaseReference.child(Utilities.Constants.DB_EMPLOYEES).child(userID);
 
         if (employeeID == null) {
             addEmployeeBehaviour();
@@ -318,7 +314,6 @@ public class AddEmployeeFragment extends Fragment {
                                 employeeUser.setId(id);
                                 employee.setId(id);
                                 employeesReference.child(id).setValue(employee);
-                                userReference.child(Utilities.Constants.DB_EMPLOYEES).child(id).setValue(true);
                                 databaseReference.child(Utilities.Constants.DB_USERS).child(id).setValue(employeeUser);
                                 Toast.makeText(AddEmployeeFragment.this.getActivity(), "Success", Toast.LENGTH_SHORT).show();
                                 employeeAddedListener.endFragment();
