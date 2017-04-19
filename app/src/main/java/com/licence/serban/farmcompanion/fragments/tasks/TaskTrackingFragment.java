@@ -17,6 +17,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.classes.Utilities;
+import com.licence.serban.farmcompanion.classes.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.classes.models.Coordinates;
 
 /**
@@ -36,7 +38,7 @@ public class TaskTrackingFragment extends Fragment {
     private GoogleMap myGoogleMap;
 
     private DatabaseReference mainReference;
-    private DatabaseReference userReference;
+    private DatabaseReference userActiveTasksReference;
     private DatabaseReference tasksReference;
     private String userID;
 
@@ -46,7 +48,7 @@ public class TaskTrackingFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_task_tracking, container, false);
@@ -63,7 +65,7 @@ public class TaskTrackingFragment extends Fragment {
 
         mainReference = FirebaseDatabase.getInstance().getReference();
         tasksReference = mainReference.child(Utilities.Constants.DB_ACTIVE_TASKS);
-        userReference = mainReference.child(Utilities.Constants.DB_USERS).child(userID);
+        userActiveTasksReference = mainReference.child(Utilities.Constants.DB_USERS).child(userID).child(Utilities.Constants.DB_ACTIVE_TASKS);
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -78,60 +80,64 @@ public class TaskTrackingFragment extends Fragment {
                 int permissionCheck = ContextCompat.checkSelfPermission(TaskTrackingFragment.this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
                 if (permissionCheck == PermissionChecker.PERMISSION_GRANTED) {
                     googleMap.setMyLocationEnabled(true);
-                    LatLng sydney = new LatLng(-34, 151);
-                    myGoogleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+//                    LatLng sydney = new LatLng(-34, 151);
+//                    myGoogleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+//
+//                    // For zooming automatically to the location of the marker
+//                    CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+//                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                    // For zooming automatically to the location of the marker
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                    userReference.child(Utilities.Constants.DB_ACTIVE_TASKS).addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            final String empId = dataSnapshot.getKey();
-                            tasksReference.child(empId).child(Utilities.Constants.DB_LIVE_TRACKING).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Coordinates coordinates = dataSnapshot.getValue(Coordinates.class);
-                                    LatLng latLng = new LatLng(coordinates.getLatitude(), coordinates.getLongitude());
-                                    myGoogleMap.addMarker(new MarkerOptions().position(latLng).title(empId));
-                                    CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(12).build();
-                                    myGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
+                    renderTasks();
                 }
             }
         });
 
         return view;
+    }
+
+    private void renderTasks() {
+        userActiveTasksReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String id = dataSnapshot.getKey();
+
+                final MarkerOptions marker = new MarkerOptions().title(id).position(new LatLng(45, 45));
+                myGoogleMap.addMarker(marker);
+                tasksReference.child(id).child(Utilities.Constants.GPS_COORDINATES).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Coordinates coordinates = dataSnapshot.getValue(Coordinates.class);
+                        if (coordinates != null) {
+                            marker.position(coordinates.toLatLng());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

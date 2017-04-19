@@ -64,7 +64,12 @@ public class TasksDatabaseAdapter {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Task task = dataSnapshot.getValue(Task.class);
-                        adapter.add(task);
+                        int pos = adapter.containsTask(task);
+                        if (pos == -1) {
+                            adapter.add(task);
+                        }else {
+                            adapter.setTask(pos, task);
+                        }
                     }
 
                     @Override

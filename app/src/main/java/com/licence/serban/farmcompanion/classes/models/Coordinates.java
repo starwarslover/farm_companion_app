@@ -2,6 +2,8 @@ package com.licence.serban.farmcompanion.classes.models;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by Serban on 06.04.2017.
  */
@@ -32,5 +34,9 @@ public class Coordinates {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public LatLng toLatLng() {
+        return new LatLng(getLatitude(), getLongitude());
     }
 }

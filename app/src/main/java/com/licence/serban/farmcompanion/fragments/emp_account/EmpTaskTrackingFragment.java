@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -44,6 +43,8 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     private LocationRequest mLocationRequest;
     private DatabaseReference currentTaskReference;
     private Button stopTaskButton;
+    private String employerID;
+    private DatabaseReference userActiveTasksReference;
 
     public EmpTaskTrackingFragment() {
         // Required empty public constructor
@@ -59,6 +60,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
         Bundle args = getArguments();
         if (args != null) {
             taskID = args.getString(Utilities.Constants.TASK_ID_EXTRA);
+            employerID = args.getString(Utilities.Constants.DB_EMPLOYER_ID);
         }
 
 
@@ -82,6 +84,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
 
         activeTasksReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_ACTIVE_TASKS);
         currentTaskReference = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(taskID);
+        userActiveTasksReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_USERS).child(employerID).child(Utilities.Constants.DB_ACTIVE_TASKS);
 
         startTask();
         setOrientation();
@@ -94,7 +97,8 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
                 .getTime()));
         currentTaskReference.child("canTrack").setValue(false);
         activeTasksReference.child(taskID).removeValue();
-
+        userActiveTasksReference.child(taskID).removeValue();
+        googleApiClient.disconnect();
     }
 
     private void setOrientation() {
@@ -105,7 +109,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
         currentTaskReference.child("startDate").setValue(new SimpleDateFormat("dd MM yyyy HH:mm:ss zz", Locale.ENGLISH).format(Calendar.getInstance()
                 .getTime()));
         currentTaskReference.child("canTrack").setValue(true);
-        googleApiClient.disconnect();
+        userActiveTasksReference.child(taskID).setValue(true);
     }
 
     @Override

@@ -411,6 +411,7 @@ public class MainActivity extends AppCompatActivity
         EmpTaskTrackingFragment trackingFragment = new EmpTaskTrackingFragment();
         Bundle args = new Bundle();
         args.putString(Utilities.Constants.TASK_ID_EXTRA, taskId);
+        args.putString(Utilities.Constants.DB_EMPLOYER_ID, employerID);
         trackingFragment.setArguments(args);
         fragmentTransaction.replace(R.id.content_main, trackingFragment).commit();
     }
