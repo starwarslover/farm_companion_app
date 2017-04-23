@@ -2,6 +2,7 @@ package com.licence.serban.farmcompanion.fragments.emp_account;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -22,8 +24,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.classes.Utilities;
+import com.licence.serban.farmcompanion.classes.WorkState;
 import com.licence.serban.farmcompanion.classes.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.classes.models.Coordinates;
+import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
+import com.licence.serban.farmcompanion.interfaces.OnElementAdded;
+import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -44,7 +50,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     private DatabaseReference currentTaskReference;
     private Button stopTaskButton;
     private String employerID;
-    private DatabaseReference userActiveTasksReference;
+    private OnFragmentStart startFragment;
 
     public EmpTaskTrackingFragment() {
         // Required empty public constructor
@@ -69,6 +75,13 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
             @Override
             public void onClick(View v) {
                 stopBroadcasting();
+//                EmployeeTasksFragment employeeTasksFragment = new EmployeeTasksFragment();
+//                Bundle args = new Bundle();
+//                args.putString(Utilities.Constants.DB_EMPLOYER_ID, employerID);
+//                employeeTasksFragment.setArguments(args);
+//                startFragment.startFragment(employeeTasksFragment, false);
+                startFragment.popBackStack();
+                startFragment.popBackStack();
             }
         });
 
@@ -82,9 +95,8 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
         mLocationRequest.setSmallestDisplacement(10);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        activeTasksReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_ACTIVE_TASKS);
-        currentTaskReference = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(taskID);
-        userActiveTasksReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_USERS).child(employerID).child(Utilities.Constants.DB_ACTIVE_TASKS);
+        activeTasksReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_ACTIVE_TASKS).child(employerID);
+        currentTaskReference = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(employerID).child(taskID);
 
         startTask();
         setOrientation();
@@ -97,7 +109,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
                 .getTime()));
         currentTaskReference.child("canTrack").setValue(false);
         activeTasksReference.child(taskID).removeValue();
-        userActiveTasksReference.child(taskID).removeValue();
+        currentTaskReference.child("currentState").setValue(WorkState.PAUSED);
         googleApiClient.disconnect();
     }
 
@@ -109,7 +121,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
         currentTaskReference.child("startDate").setValue(new SimpleDateFormat("dd MM yyyy HH:mm:ss zz", Locale.ENGLISH).format(Calendar.getInstance()
                 .getTime()));
         currentTaskReference.child("canTrack").setValue(true);
-        userActiveTasksReference.child(taskID).setValue(true);
+        currentTaskReference.child("currentState").setValue(WorkState.STARTED);
     }
 
     @Override
@@ -121,8 +133,20 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     @Override
     public void onStart() {
         super.onStart();
+
         if (lastLocation == null) {
             googleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            startFragment = (OnFragmentStart) context;
+        } catch (ClassCastException ex) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnFragmentStart");
         }
     }
 
@@ -130,6 +154,12 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     public void onStop() {
         super.onStop();
         googleApiClient.disconnect();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopBroadcasting();
     }
 
     @Override

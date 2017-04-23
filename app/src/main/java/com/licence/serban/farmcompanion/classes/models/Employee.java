@@ -8,7 +8,6 @@ import java.util.Date;
 
 public class Employee {
     private String id;
-    private String employerID;
     private String name;
     private String personalIdNumber;
     private String idNumber;
@@ -17,6 +16,9 @@ public class Employee {
     private double baseSalary;
     private String contractNumber;
     private String accountEmail;
+
+    public Employee() {
+    }
 
     public String getAccountEmail() {
         return accountEmail;
@@ -90,9 +92,6 @@ public class Employee {
         this.contractNumber = contractNumber;
     }
 
-    public Employee() {
-    }
-
     @Override
     public String toString() {
         return "Employee{" +
@@ -105,13 +104,5 @@ public class Employee {
                 ", baseSalary=" + baseSalary +
                 ", contractNumber='" + contractNumber + '\'' +
                 '}';
-    }
-
-    public String getEmployerID() {
-        return employerID;
-    }
-
-    public void setEmployerID(String employerID) {
-        this.employerID = employerID;
     }
 }

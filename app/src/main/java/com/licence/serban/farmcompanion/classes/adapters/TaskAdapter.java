@@ -1,6 +1,7 @@
 package com.licence.serban.farmcompanion.classes.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -13,8 +14,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.licence.serban.farmcompanion.R;
+import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.classes.models.Task;
+import com.licence.serban.farmcompanion.fragments.tasks.TaskTrackingFragment;
+import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 
 import org.w3c.dom.Text;
 
@@ -28,12 +33,14 @@ public class TaskAdapter extends ArrayAdapter<Task> {
     private Context myContext;
     private int myResId;
     private List<Task> myTasks;
+    private OnFragmentStart fragmentStartCallback;
     View.OnClickListener myListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Integer position = (Integer) v.getTag();
             Task t = myTasks.get(position);
-            Toast.makeText(myContext, t.getId(), Toast.LENGTH_SHORT).show();
+            startTrackingFragment(t);
+
         }
     };
 
@@ -42,6 +49,11 @@ public class TaskAdapter extends ArrayAdapter<Task> {
         this.myContext = context;
         this.myResId = resource;
         this.myTasks = objects;
+        try {
+            fragmentStartCallback = (OnFragmentStart) context;
+        } catch (Exception ex) {
+
+        }
     }
 
     @Nullable
@@ -69,6 +81,7 @@ public class TaskAdapter extends ArrayAdapter<Task> {
         }
 
         Task currentTask = myTasks.get(position);
+
         if (currentTask.isCanTrack()) {
             holder.showOnMapButton.setVisibility(View.VISIBLE);
             holder.showOnMapButton.setTag(position);
@@ -78,8 +91,9 @@ public class TaskAdapter extends ArrayAdapter<Task> {
         }
 
         holder.nameTextView.setText("Task " + position);
-
-
+        if (currentTask.getCurrentState() != null) {
+            holder.statusTextView.setText(currentTask.getCurrentState().toString());
+        }
         return row;
     }
 
@@ -112,6 +126,29 @@ public class TaskAdapter extends ArrayAdapter<Task> {
         myTasks.set(pos, task);
         this.notifyDataSetChanged();
     }
+
+    public void updateTask(Task task) {
+        int index = 0;
+        for (Task t : myTasks) {
+            index++;
+            if (t.getId().equals(task.getId())) {
+                break;
+            }
+        }
+        myTasks.set(index - 1, task);
+        this.notifyDataSetChanged();
+    }
+
+    private void startTrackingFragment(Task t) {
+        TaskTrackingFragment fragment = new TaskTrackingFragment();
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Bundle args = new Bundle();
+        args.putString(Utilities.Constants.TASK_ID_EXTRA, t.getId());
+        args.putString(Utilities.Constants.USER_ID, userID);
+        fragment.setArguments(args);
+        fragmentStartCallback.startFragment(fragment, true);
+    }
+
 
     private class TaskHolder {
         private TextView nameTextView;

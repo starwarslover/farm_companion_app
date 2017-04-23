@@ -2,6 +2,7 @@ package com.licence.serban.farmcompanion.fragments.tasks;
 
 
 import android.Manifest;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -16,6 +17,8 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -30,6 +33,8 @@ import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.classes.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.classes.models.Coordinates;
 
+import java.util.HashMap;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -42,6 +47,11 @@ public class TaskTrackingFragment extends Fragment {
     private DatabaseReference tasksReference;
     private String userID;
 
+    private HashMap<String, Circle> empsCircles;
+    private String taskID;
+
+    private HashMap<String, Marker> mapMarkers;
+
     public TaskTrackingFragment() {
         // Required empty public constructor
     }
@@ -53,6 +63,9 @@ public class TaskTrackingFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_task_tracking, container, false);
 
+        mapMarkers = new HashMap<>();
+        empsCircles = new HashMap<>();
+
         mapView = (MapView) view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
 
@@ -61,12 +74,11 @@ public class TaskTrackingFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             userID = args.getString(Utilities.Constants.USER_ID);
+            taskID = args.getString(Utilities.Constants.TASK_ID_EXTRA);
         }
 
         mainReference = FirebaseDatabase.getInstance().getReference();
-        tasksReference = mainReference.child(Utilities.Constants.DB_ACTIVE_TASKS);
-        userActiveTasksReference = mainReference.child(Utilities.Constants.DB_USERS).child(userID).child(Utilities.Constants.DB_ACTIVE_TASKS);
-
+        tasksReference = mainReference.child(Utilities.Constants.DB_ACTIVE_TASKS).child(userID);
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
@@ -96,36 +108,42 @@ public class TaskTrackingFragment extends Fragment {
     }
 
     private void renderTasks() {
-        userActiveTasksReference.addChildEventListener(new ChildEventListener() {
+
+        tasksReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String id = dataSnapshot.getKey();
+                Coordinates coordinates = dataSnapshot.child(Utilities.Constants.GPS_COORDINATES).getValue(Coordinates.class);
+                LatLng latLng = coordinates.toLatLng();
+                Marker marker = myGoogleMap.addMarker(new MarkerOptions().position(latLng));
+                mapMarkers.put(dataSnapshot.getKey(), marker);
 
-                final MarkerOptions marker = new MarkerOptions().title(id).position(new LatLng(45, 45));
-                myGoogleMap.addMarker(marker);
-                tasksReference.child(id).child(Utilities.Constants.GPS_COORDINATES).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Coordinates coordinates = dataSnapshot.getValue(Coordinates.class);
-                        if (coordinates != null) {
-                            marker.position(coordinates.toLatLng());
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                Circle circle = myGoogleMap.addCircle(new CircleOptions().center(latLng).radius(100));
+                empsCircles.put(dataSnapshot.getKey(), circle);
+                if (taskID != null && taskID.equals(dataSnapshot.getKey())) {
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(12).build();
+                    myGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
+//                myGoogleMap.addMarker(new MarkerOptions().position(latLng).title(dataSnapshot.getKey()));
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                Coordinates coordinates = dataSnapshot.child(Utilities.Constants.GPS_COORDINATES).getValue(Coordinates.class);
+                LatLng latLng = coordinates.toLatLng();
+                Marker marker = mapMarkers.get(dataSnapshot.getKey());
+                marker.setPosition(latLng);
+                Circle circle = empsCircles.get(dataSnapshot.getKey());
+                circle.setCenter(latLng);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Marker marker = mapMarkers.get(dataSnapshot.getKey());
+                marker.remove();
+                mapMarkers.remove(dataSnapshot.getKey());
+                Circle circle = empsCircles.get(dataSnapshot.getKey());
+                circle.remove();
+                mapMarkers.remove(dataSnapshot.getKey());
             }
 
             @Override

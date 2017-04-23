@@ -59,11 +59,12 @@ import com.licence.serban.farmcompanion.interfaces.OnCreateNewTaskListener;
 import com.licence.serban.farmcompanion.interfaces.OnDateSelectedListener;
 import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
 import com.licence.serban.farmcompanion.interfaces.OnElementAdded;
+import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 import com.licence.serban.farmcompanion.interfaces.OnTaskCreatedListener;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnAppTitleChange, OnDrawerMenuLock,
-        OnAddEmployeeListener, OnElementAdded, OnDateSelectedListener, OnAddFieldListener, OnCreateNewTaskListener, OnTaskCreatedListener {
+        OnAddEmployeeListener, OnElementAdded, OnDateSelectedListener, OnAddFieldListener, OnCreateNewTaskListener, OnFragmentStart, OnTaskCreatedListener {
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
@@ -107,9 +108,14 @@ public class MainActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ((ViewAnimator) findViewById(R.id.viewAnimator)).setDisplayedChild(1);
                 currentUser = dataSnapshot.getValue(User.class);
-                navNameTextView.setText(currentUser.getName());
-                navEmailTextView.setText(currentUser.getEmail());
-                showMenu(navigationView);
+                if (currentUser != null) {
+                    navNameTextView.setText(currentUser.getName());
+                    navEmailTextView.setText(currentUser.getEmail());
+                    showMenu(navigationView);
+                    setFirstStart();
+                } else {
+                    logout();
+                }
 
             }
 
@@ -135,8 +141,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        setFirstStart();
 
+    }
+
+    private void loadDashboard() {
     }
 
     private void setViews() {
@@ -163,7 +171,11 @@ public class MainActivity extends AppCompatActivity
         Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_main);
         if (currentFragment == null) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.content_main, new DashboardFragment()).commit();
+            if (currentUser.isAdmin()) {
+                fragmentTransaction.add(R.id.content_main, new DashboardFragment()).commit();
+            } else {
+                fragmentTransaction.add(R.id.content_main, new EmployeeDashboardFragment()).commit();
+            }
             requestPermissions(this);
         }
     }
@@ -189,21 +201,25 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_logout) {
-            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-            firebaseAuth.signOut();
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(Utilities.Constants.EMAIL, "");
-            editor.putString(Utilities.Constants.PASSWORD, "");
-            editor.apply();
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            MainActivity.this.finish();
+            logout();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void logout() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.signOut();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Utilities.Constants.EMAIL, "");
+        editor.putString(Utilities.Constants.PASSWORD, "");
+        editor.apply();
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        MainActivity.this.finish();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -272,17 +288,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             navView.getMenu().setGroupVisible(R.id.nav_admin_menu, false);
             navView.getMenu().setGroupVisible(R.id.nav_emp_menu, true);
-            databaseReference.child(Utilities.Constants.DB_EMPLOYEES).child(userID).child(Utilities.Constants.DB_EMPLOYER_ID).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    employerID = dataSnapshot.getValue(String.class);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+            employerID = currentUser.getEmployerID();
         }
     }
 
@@ -402,7 +408,7 @@ public class MainActivity extends AppCompatActivity
         bundle.putString(Utilities.Constants.USER_ID, userID);
         bundle.putString(Utilities.Constants.DB_EMPLOYER_ID, employerID);
         taskFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.content_main, taskFragment).commit();
+        fragmentTransaction.replace(R.id.content_main, taskFragment).addToBackStack(null).commit();
     }
 
     @Override
@@ -413,6 +419,21 @@ public class MainActivity extends AppCompatActivity
         args.putString(Utilities.Constants.TASK_ID_EXTRA, taskId);
         args.putString(Utilities.Constants.DB_EMPLOYER_ID, employerID);
         trackingFragment.setArguments(args);
-        fragmentTransaction.replace(R.id.content_main, trackingFragment).commit();
+        fragmentTransaction.replace(R.id.content_main, trackingFragment).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void startFragment(Fragment fragmentToStart, boolean addToBackStack) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.content_main, fragmentToStart);
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
+        transaction.commit();
+    }
+
+    @Override
+    public void popBackStack() {
+        fragmentManager.popBackStack();
     }
 }

@@ -60,6 +60,10 @@ public class Task {
         return currentState;
     }
 
+    public void setCurrentState(String currentState) {
+        this.currentState = WorkState.valueOf(currentState);
+    }
+
     public Date getStartDate() {
         return startDate;
     }

@@ -11,6 +11,10 @@ public class User implements Serializable {
     private String name;
     private String email;
     private boolean isAdmin;
+    private String employerID;
+
+    public User() {
+    }
 
     public boolean isAdmin() {
         return isAdmin;
@@ -28,7 +32,6 @@ public class User implements Serializable {
         this.id = id;
     }
 
-
     public String getName() {
         return name;
     }
@@ -45,7 +48,12 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public User() {
+    public String getEmployerID() {
+        return employerID;
+    }
+
+    public void setEmployerID(String employerID) {
+        this.employerID = employerID;
     }
 
     @Override
@@ -58,3 +66,4 @@ public class User implements Serializable {
                 '}';
     }
 }
+

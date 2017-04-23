@@ -108,6 +108,7 @@
     <string name="fetching_user_data">Fetching user data...</string>
     <string name="pause_task">Stop Task</string>
     <string name="show_on_map">Show On Map</string>
+    <string name="start_task">Start Task</string>
 
     <string-array name="ownership">
         <item>Own</item>
