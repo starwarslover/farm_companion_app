@@ -109,6 +109,20 @@
     <string name="pause_task">Stop Task</string>
     <string name="show_on_map">Show On Map</string>
     <string name="start_task">Start Task</string>
+    <string name="total_elapsed_time">Total elapsed time</string>
+    <string name="started_at">Started at</string>
+    <string name="speed">Speed</string>
+    <string name="add_equipment">Add Equipment</string>
+    <string name="type">Type</string>
+    <string name="manufacturer">Manufacturer</string>
+    <string name="model">Model</string>
+    <string name="serial_number">Serial Number</string>
+    <string name="model_required">Model*</string>
+    <string name="manufacturer_required">Manufacturer*</string>
+    <string name="type_required">Type*</string>
+    <string name="required_field">This field is required!</string>
+    <string name="field_required">Field*</string>
+    <string name="equipment">Equipment</string>
 
     <string-array name="ownership">
         <item>Own</item>
@@ -120,5 +134,20 @@
         <item>Ongoing</item>
         <item>Paused</item>
         <item>Finished</item>
+    </string-array>
+    <string-array name="equipment_types">
+        <item>Combine</item>
+        <item>Cultivator</item>
+        <item>Disk</item>
+        <item>Plough</item>
+        <item>Seeder</item>
+        <item>Tractor</item>
+    </string-array>
+    <string-array name="task_types">
+        <item>Fertilising</item>
+        <item>Harvesting</item>
+        <item>Plowing</item>
+        <item>Sowing</item>
+        <item>Spraying</item>
     </string-array>
 </resources>

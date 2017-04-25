@@ -2,14 +2,20 @@ package com.licence.serban.farmcompanion.fragments.tasks;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.licence.serban.farmcompanion.R;
+import com.licence.serban.farmcompanion.activities.MainActivity;
 import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.classes.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.classes.models.ResourcePlaceholder;
@@ -80,12 +86,39 @@ public class NewTaskFragment extends Fragment {
                 TasksDatabaseAdapter adapter = TasksDatabaseAdapter.getInstance(employerId);
                 String id = adapter.insertTask(task);
 
-                taskCreatedCallback.StartActivityTracking(id);
+                if (((MainActivity) getActivity()).isUserAdmin()) {
+
+                } else {
+                    if (isGpsProviderEnabled()) {
+                        taskCreatedCallback.StartActivityTracking(id);
+                    } else {
+                        requestGpsEnable();
+                    }
+                }
             }
         });
 
         return view;
     }
+
+    private void requestGpsEnable() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+        builder.setTitle(R.string.gps_not_found_title);  // GPS not found
+        builder.setMessage(R.string.gps_not_found_message); // Want to enable?
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        });
+        builder.setNegativeButton(R.string.no, null);
+        builder.create().show();
+    }
+
+    private boolean isGpsProviderEnabled() {
+        LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
 
     private void setUpViews(View view) {
         newTaskButton = (Button) view.findViewById(R.id.tasksCreateTaskButton);

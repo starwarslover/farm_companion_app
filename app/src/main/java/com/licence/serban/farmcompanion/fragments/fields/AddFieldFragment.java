@@ -24,6 +24,7 @@ import com.licence.serban.farmcompanion.classes.models.CompanyField;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
 import com.licence.serban.farmcompanion.interfaces.OnElementAdded;
+import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,6 +50,7 @@ public class AddFieldFragment extends Fragment {
     private DatabaseReference firebaseDatabase;
     private DatabaseReference userReference;
     private DatabaseReference fieldsReference;
+    private OnFragmentStart startFragmentCallback;
 
     public AddFieldFragment() {
         // Required empty public constructor
@@ -74,6 +76,12 @@ public class AddFieldFragment extends Fragment {
         } catch (ClassCastException ex) {
             throw new ClassCastException(context.toString()
                     + " must implement OnElementAdded");
+        }
+        try {
+            startFragmentCallback = (OnFragmentStart) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() +
+                    " must implement OnFragmentStart");
         }
     }
 
@@ -136,9 +144,21 @@ public class AddFieldFragment extends Fragment {
                 companyField.setId(id);
                 fieldsReference.child(id).setValue(companyField);
 
-                fieldAddedListener.endFragment();
+
+                goToDetails(id);
+
             }
         });
+    }
+
+    private void goToDetails(String id) {
+        FieldDetailsFragment fragment = new FieldDetailsFragment();
+        Bundle args = new Bundle();
+        args.putString(Utilities.Constants.USER_ID, userId);
+        args.putString(Utilities.Constants.FIELD_ID, id);
+        fragment.setArguments(args);
+        startFragmentCallback.popBackStack();
+        startFragmentCallback.startFragment(fragment,true);
     }
 
 

@@ -25,6 +25,7 @@ import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.interfaces.OnAddFieldListener;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 import com.licence.serban.farmcompanion.R;
+import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 
 import java.util.ArrayList;
 
@@ -48,6 +49,7 @@ public class FieldsFragment extends Fragment {
     private Button addFieldSecondButton;
 
     private OnAddFieldListener fieldListener;
+    private OnFragmentStart startFragmentCallback;
 
     public FieldsFragment() {
         // Required empty public constructor
@@ -68,6 +70,7 @@ public class FieldsFragment extends Fragment {
             throw new ClassCastException(context.toString() +
                     " must implement OnAddFieldListener");
         }
+
     }
 
 
@@ -96,7 +99,7 @@ public class FieldsFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 CompanyField field = dataSnapshot.getValue(CompanyField.class);
-                if(field != null) {
+                if (field != null) {
                     fieldsAdapter.add(field);
                 }
             }
@@ -104,7 +107,7 @@ public class FieldsFragment extends Fragment {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 CompanyField field = dataSnapshot.getValue(CompanyField.class);
-                if(field != null) {
+                if (field != null) {
                     fieldsAdapter.updateField(field);
                 }
             }

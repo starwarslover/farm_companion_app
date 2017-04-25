@@ -46,6 +46,11 @@ public final class Utilities {
         public static final java.lang.String TASK_ID_EXTRA = "task_id";
         public static final String GPS_COORDINATES = "live_coordinates";
         public static final String DB_ACTIVE_TASKS = "active_tasks";
+        public static final String DB_SPEED = "speed";
+        public static final String DB_ELAPSED_TIME = "elapsed_time";
+        public static final String DB_START_DATE = "startDate";
+        public static final String DB_CAN_TRACK = "canTrack";
+        public static final String DB_STATE = "currentState";
         public static String EMAIL = "email";
         public static String PASSWORD = "password";
         public static int SPLASH_TIMEOUT = 1000;

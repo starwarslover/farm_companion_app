@@ -2,7 +2,9 @@ package com.licence.serban.farmcompanion.fragments.employees;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
@@ -16,6 +18,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +32,7 @@ import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
 import com.licence.serban.farmcompanion.interfaces.OnElementAdded;
+import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -63,6 +67,7 @@ public class AddEmployeeFragment extends Fragment {
     private Button addEmployeeButton;
     private String employeeID;
     private Button datePickerButton;
+    private OnFragmentStart startFragmentCallback;
 
 
     public AddEmployeeFragment() {
@@ -86,6 +91,12 @@ public class AddEmployeeFragment extends Fragment {
         }
         try {
             employeeAddedListener = (OnElementAdded) context;
+        } catch (ClassCastException ex) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnElementAdded");
+        }
+        try {
+            startFragmentCallback = (OnFragmentStart) context;
         } catch (ClassCastException ex) {
             throw new ClassCastException(context.toString()
                     + " must implement OnElementAdded");
@@ -306,6 +317,8 @@ public class AddEmployeeFragment extends Fragment {
                 employee.setIdNumber(idNumber);
                 employee.setPosition(position);
 
+                final FirebaseUser user = firebaseAuth.getCurrentUser();
+
                 firebaseAuth.createUserWithEmailAndPassword(email, password)
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
@@ -316,8 +329,8 @@ public class AddEmployeeFragment extends Fragment {
                                 employeesReference.child(id).setValue(employee);
                                 databaseReference.child(Utilities.Constants.DB_USERS).child(id).setValue(employeeUser);
                                 Toast.makeText(AddEmployeeFragment.this.getActivity(), "Success", Toast.LENGTH_SHORT).show();
-                                employeeAddedListener.endFragment();
-
+                                firebaseAuth.signOut();
+                                signInCurrentUser(id);
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -328,6 +341,30 @@ public class AddEmployeeFragment extends Fragment {
                         });
             }
         });
+    }
+
+    private void signInCurrentUser(final String id) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        String email = sharedPreferences.getString(Utilities.Constants.EMAIL, "");
+        String pass = sharedPreferences.getString(Utilities.Constants.PASSWORD, "");
+        if (!email.isEmpty() && !pass.isEmpty()) {
+            firebaseAuth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                @Override
+                public void onSuccess(AuthResult authResult) {
+                    goToDetails(id);
+                }
+            });
+        }
+    }
+
+    private void goToDetails(String id) {
+        Fragment fragment = new AddEmployeeFragment();
+        Bundle args = new Bundle();
+        args.putString(Utilities.Constants.USER_ID, userID);
+        args.putString(Utilities.Constants.EMPLOYEE_ID, id);
+        fragment.setArguments(args);
+        startFragmentCallback.popBackStack();
+        startFragmentCallback.startFragment(fragment, true);
     }
 
     @Override

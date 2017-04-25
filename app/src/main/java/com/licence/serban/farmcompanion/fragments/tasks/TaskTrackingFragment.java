@@ -7,9 +7,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,19 +25,23 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
+import com.licence.serban.farmcompanion.classes.StringDateFormatter;
 import com.licence.serban.farmcompanion.classes.Utilities;
-import com.licence.serban.farmcompanion.classes.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.classes.models.Coordinates;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,11 +54,15 @@ public class TaskTrackingFragment extends Fragment {
     private DatabaseReference userActiveTasksReference;
     private DatabaseReference tasksReference;
     private String userID;
+    private Circle selectedCircle;
 
     private HashMap<String, Circle> empsCircles;
     private String taskID;
 
     private HashMap<String, Marker> mapMarkers;
+    private String selectedEmployee;
+
+    private TaskDetailsLayoutHolder holder;
 
     public TaskTrackingFragment() {
         // Required empty public constructor
@@ -61,13 +73,14 @@ public class TaskTrackingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_task_tracking, container, false);
+        final View view = inflater.inflate(R.layout.fragment_task_tracking, container, false);
 
         mapMarkers = new HashMap<>();
         empsCircles = new HashMap<>();
 
         mapView = (MapView) view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
+        holder = new TaskDetailsLayoutHolder(view);
 
         mapView.onResume();
 
@@ -99,6 +112,24 @@ public class TaskTrackingFragment extends Fragment {
 //                    CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
 //                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+                    myGoogleMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
+                        @Override
+                        public void onCircleClick(Circle circle) {
+                            selectedCircle = circle;
+                            selectedEmployee = getHashKeyValue(circle);
+                            holder.showDetails();
+                        }
+                    });
+
+                    myGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                        @Override
+                        public void onMapClick(LatLng latLng) {
+                            selectedCircle = null;
+                            selectedEmployee = null;
+                            holder.hideDetails();
+                        }
+                    });
+
                     renderTasks();
                 }
             }
@@ -107,43 +138,88 @@ public class TaskTrackingFragment extends Fragment {
         return view;
     }
 
+    private String getHashKeyValue(Circle circle) {
+        for (String key : empsCircles.keySet()) {
+            if (empsCircles.get(key).equals(circle)) {
+                return key;
+            }
+        }
+        return null;
+    }
+
     private void renderTasks() {
 
         tasksReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Coordinates coordinates = dataSnapshot.child(Utilities.Constants.GPS_COORDINATES).getValue(Coordinates.class);
-                LatLng latLng = coordinates.toLatLng();
-                Marker marker = myGoogleMap.addMarker(new MarkerOptions().position(latLng));
-                mapMarkers.put(dataSnapshot.getKey(), marker);
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Coordinates coordinates = snapshot.child(Utilities.Constants.GPS_COORDINATES).getValue(Coordinates.class);
+                    if (coordinates != null && coordinates.toLatLng() != null) {
+                        LatLng latLng = coordinates.toLatLng();
+//                Marker marker = myGoogleMap.addMarker(new MarkerOptions().position(latLng));
+//                mapMarkers.put(dataSnapshot.getKey(), marker);
 
-                Circle circle = myGoogleMap.addCircle(new CircleOptions().center(latLng).radius(100));
-                empsCircles.put(dataSnapshot.getKey(), circle);
-                if (taskID != null && taskID.equals(dataSnapshot.getKey())) {
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(12).build();
-                    myGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
+                        Circle circle = myGoogleMap.addCircle(new CircleOptions().center(latLng).radius(100).fillColor(Color.BLACK));
+                        circle.setClickable(true);
+                        empsCircles.put(dataSnapshot.getKey(), circle);
+                        if (taskID != null && taskID.equals(dataSnapshot.getKey())) {
+                            CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(12).build();
+                            myGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                            selectedCircle = circle;
+                            selectedEmployee = getHashKeyValue(circle);
+                            holder.showDetails();
+                        }
 //                myGoogleMap.addMarker(new MarkerOptions().position(latLng).title(dataSnapshot.getKey()));
+
+                    }
+
+                }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Coordinates coordinates = dataSnapshot.child(Utilities.Constants.GPS_COORDINATES).getValue(Coordinates.class);
-                LatLng latLng = coordinates.toLatLng();
-                Marker marker = mapMarkers.get(dataSnapshot.getKey());
-                marker.setPosition(latLng);
-                Circle circle = empsCircles.get(dataSnapshot.getKey());
-                circle.setCenter(latLng);
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Coordinates coordinates = snapshot.child(Utilities.Constants.GPS_COORDINATES).getValue(Coordinates.class);
+                    if (coordinates != null && coordinates.toLatLng() != null) {
+                        LatLng latLng = coordinates.toLatLng();
+//                Marker marker = mapMarkers.get(dataSnapshot.getKey());
+//                marker.setPosition(latLng);
+                        Circle circle = empsCircles.get(dataSnapshot.getKey());
+                        if (circle != null) {
+                            circle.setCenter(latLng);
+                        }
+                        if (selectedEmployee != null && selectedEmployee.equals(dataSnapshot.getKey())) {
+                            holder.setSpeed(dataSnapshot.child(Utilities.Constants.DB_SPEED).getValue(String.class));
+                            try {
+                                String date = snapshot.child(Utilities.Constants.DB_START_DATE).getValue(String.class);
+                                holder.setStartedAt(date);
+                            } catch (Exception ex) {
+
+                            }
+                            long time = snapshot.child(Utilities.Constants.DB_ELAPSED_TIME).getValue(Long.class);
+                            holder.setTotalWorkTime(time);
+                            CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(12).build();
+                            myGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        }
+
+                    }
+
+                }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Marker marker = mapMarkers.get(dataSnapshot.getKey());
-                marker.remove();
-                mapMarkers.remove(dataSnapshot.getKey());
+//                Marker marker = mapMarkers.get(dataSnapshot.getKey());
+//                marker.remove();
+//                mapMarkers.remove(dataSnapshot.getKey());
                 Circle circle = empsCircles.get(dataSnapshot.getKey());
-                circle.remove();
-                mapMarkers.remove(dataSnapshot.getKey());
+                if (circle != null) {
+                    circle.remove();
+                }
+                selectedCircle = null;
+                selectedEmployee = null;
+                holder.hideDetails();
+                empsCircles.remove(dataSnapshot.getKey());
             }
 
             @Override
@@ -180,5 +256,57 @@ public class TaskTrackingFragment extends Fragment {
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
+    }
+
+    private class TaskDetailsLayoutHolder {
+        private TextView speedTextView;
+        private LinearLayout parentLayout;
+        private TextView startedAtTextView;
+        private TextView totalWorkTimeTextView;
+
+        public TaskDetailsLayoutHolder(View view) {
+            this.speedTextView = (TextView) view.findViewById(R.id.taskTrackingInfoSpeedTextView);
+            this.parentLayout = (LinearLayout) view.findViewById(R.id.taskTrackingInfoLayout);
+            this.startedAtTextView = (TextView) view.findViewById(R.id.taskTrackingEmpStartedAtTextView);
+            this.totalWorkTimeTextView = (TextView) view.findViewById(R.id.taskTrackingElapsedTimeTextView);
+        }
+
+        public void setSpeed(String speed) {
+            this.speedTextView.setText(speed);
+        }
+
+        public void showDetails() {
+            this.parentLayout.setVisibility(View.VISIBLE);
+        }
+
+        public void hideDetails() {
+            this.parentLayout.setVisibility(View.GONE);
+        }
+
+        public void setTotalWorkTime(long mills) {
+            try {
+                String time = String.format("%02d:%02d:%02d",
+                        TimeUnit.MILLISECONDS.toHours(mills),
+                        TimeUnit.MILLISECONDS.toMinutes(mills) -
+                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(mills)),
+                        TimeUnit.MILLISECONDS.toSeconds(mills) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(mills)));
+                this.totalWorkTimeTextView.setText(time);
+
+            } catch (Exception e) {
+
+            }
+        }
+
+
+        public void setStartedAt(String date) {
+            try {
+                Date dateToFormat = new SimpleDateFormat("dd MM yyyy HH:mm:ss zz", Locale.ENGLISH).parse(date);
+                String formatedDate = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).format(dateToFormat);
+                startedAtTextView.setText(formatedDate);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

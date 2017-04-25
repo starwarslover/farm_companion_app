@@ -244,7 +244,9 @@ public class MainActivity extends AppCompatActivity
                 fragmentTransaction.replace(R.id.content_main, fieldsFragment).commit();
                 break;
             case R.id.nav_equipment:
-                fragmentTransaction.replace(R.id.content_main, new EquipmentFragment()).commit();
+                Fragment fragment = new EquipmentFragment();
+                fragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.content_main, fragment).commit();
                 break;
             case R.id.nav_employees:
                 EmployeesFragment employeesFragment = new EmployeesFragment();
@@ -435,5 +437,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void popBackStack() {
         fragmentManager.popBackStack();
+    }
+
+    public boolean isUserAdmin() {
+        return currentUser.isAdmin();
     }
 }
