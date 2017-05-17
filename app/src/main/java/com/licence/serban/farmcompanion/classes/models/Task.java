@@ -17,7 +17,7 @@ import java.util.Locale;
 
 public class Task {
     private String id;
-    private TaskType type;
+    private String type;
     private List<ResourcePlaceholder> inputs;
     private List<ResourcePlaceholder> employees;
     private List<ResourcePlaceholder> usedImplements;
@@ -54,6 +54,10 @@ public class Task {
 
     public ResourcePlaceholder getField() {
         return field;
+    }
+
+    public void setField(ResourcePlaceholder field) {
+        this.field = field;
     }
 
     public WorkState getCurrentState() {
@@ -109,12 +113,12 @@ public class Task {
         return canTrack;
     }
 
-    public TaskType getType() {
+    public String getType() {
         return type;
 
     }
 
-    public void setType(TaskType type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -144,6 +148,10 @@ public class Task {
 
     public void addEmployee(ResourcePlaceholder emp) {
         this.employees.add(emp);
+    }
+
+    public void addEquipment(ResourcePlaceholder equip) {
+        this.usedImplements.add(equip);
     }
 
     public void startTask(boolean canTrack) {

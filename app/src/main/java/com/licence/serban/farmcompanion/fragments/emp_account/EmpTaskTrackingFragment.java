@@ -21,13 +21,18 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.classes.WorkState;
 import com.licence.serban.farmcompanion.classes.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.classes.models.Coordinates;
+import com.licence.serban.farmcompanion.classes.models.Employee;
+import com.licence.serban.farmcompanion.classes.models.Task;
 import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 
 import java.text.SimpleDateFormat;
@@ -52,6 +57,8 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     private OnFragmentStart startFragment;
     private String employeeID;
     private long startTime;
+    private Task currentTask;
+    private Employee employee;
 
     public EmpTaskTrackingFragment() {
         // Required empty public constructor
@@ -72,6 +79,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
 
         employeeID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+
         stopTaskButton = (Button) view.findViewById(R.id.empTrackStopBroadcastButton);
         stopTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,13 +91,13 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
 //                employeeTasksFragment.setArguments(args);
 //                startFragment.startFragment(employeeTasksFragment, false);
                 startFragment.popBackStack();
-                startFragment.popBackStack();
             }
         });
 
 
         activeTasksReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_ACTIVE_TASKS).child(employerID).child(taskID);
         currentTaskReference = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(employerID).child(taskID);
+        getInformation();
 
         setUpLocationApi();
         startTask();
@@ -97,6 +105,34 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
         return view;
 
     }
+
+    private void getInformation() {
+        currentTaskReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                currentTask = dataSnapshot.getValue(Task.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_EMPLOYEES).child(employerID).child(employeeID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                employee = dataSnapshot.getValue(Employee.class);
+                activeTasksReference.child(employeeID).child("emp_name").setValue(employee.getName());
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     private void setUpLocationApi() {
         googleApiClient = new GoogleApiClient.Builder(this.getActivity())
@@ -120,7 +156,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     }
 
     private void setOrientation() {
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     private void startTask() {
@@ -137,6 +173,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     public void onDestroyView() {
         super.onDestroyView();
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        stopBroadcasting();
     }
 
     @Override
@@ -168,7 +205,6 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopBroadcasting();
     }
 
     @Override

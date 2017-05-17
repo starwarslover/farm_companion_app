@@ -17,6 +17,7 @@ import com.licence.serban.farmcompanion.classes.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.classes.models.Task;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 import com.licence.serban.farmcompanion.R;
+import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 
 import java.util.ArrayList;
 
@@ -36,6 +37,7 @@ public class TasksFragment extends Fragment {
 
     private String userID;
     private ListView activitiesListView;
+    private OnFragmentStart startFragmentCallback;
 
     public TasksFragment() {
         // Required empty public constructor
@@ -50,6 +52,12 @@ public class TasksFragment extends Fragment {
         } catch (ClassCastException ex) {
             throw new ClassCastException(context.toString()
                     + " must implement OnHeadlineSelectedListener");
+        }
+        try {
+            startFragmentCallback = (OnFragmentStart) context;
+        } catch (ClassCastException ex) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnFragmentStart");
         }
     }
 
@@ -71,6 +79,16 @@ public class TasksFragment extends Fragment {
         activitiesListView.setAdapter(taskAdapter);
         tasksDatabaseAdapter.setListener(taskAdapter);
 
+        activitiesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Task task = taskAdapter.getItem(position);
+                if (task != null) {
+                    startTaskDetails(task, position);
+                }
+            }
+        });
+
         activitiesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -81,6 +99,16 @@ public class TasksFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void startTaskDetails(Task task, int position) {
+        Fragment fragment = new TaskDetailsFragment();
+        Bundle args = new Bundle();
+        args.putString(Utilities.Constants.USER_ID, userID);
+        args.putString(Utilities.Constants.TASK_ID_EXTRA, task.getId());
+        args.putInt("position",position);
+        fragment.setArguments(args);
+        startFragmentCallback.startFragment(fragment, true);
     }
 
 }

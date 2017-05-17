@@ -123,6 +123,9 @@
     <string name="required_field">This field is required!</string>
     <string name="field_required">Field*</string>
     <string name="equipment">Equipment</string>
+    <string name="no_field_selected">You cannot start a task without a field selected.</string>
+    <string name="no_equip_selected">You must select at least one equipment in order to start this task.</string>
+    <string name="task_type">Task Type</string>
 
     <string-array name="ownership">
         <item>Own</item>

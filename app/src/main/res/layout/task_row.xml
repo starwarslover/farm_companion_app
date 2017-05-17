@@ -24,8 +24,7 @@
         <TextView
             android:id="@+id/taskRowSomethingTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="somethingElse" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

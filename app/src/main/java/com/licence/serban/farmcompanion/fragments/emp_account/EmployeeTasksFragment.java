@@ -27,6 +27,7 @@ import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.classes.adapters.EmpTasksAdapter;
 import com.licence.serban.farmcompanion.classes.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.classes.models.Task;
+import com.licence.serban.farmcompanion.fragments.tasks.TaskDetailsFragment;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 import com.licence.serban.farmcompanion.interfaces.OnCreateNewTaskListener;
 import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
@@ -112,7 +113,7 @@ public class EmployeeTasksFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Task task = tasksAdapter.getItem(position);
-                startFragment(task);
+                startFragment(task, position);
             }
         });
 
@@ -123,11 +124,12 @@ public class EmployeeTasksFragment extends Fragment {
         return view;
     }
 
-    private void startFragment(Task task) {
-        EmpTaskDetailsFragment detailsFragment = new EmpTaskDetailsFragment();
+    private void startFragment(Task task, int position) {
+        TaskDetailsFragment detailsFragment = new TaskDetailsFragment();
         Bundle args = new Bundle();
         args.putString(Utilities.Constants.TASK_ID_EXTRA, task.getId());
         args.putString(Utilities.Constants.DB_EMPLOYER_ID, employerID);
+        args.putInt("position", position);
         detailsFragment.setArguments(args);
         startFragmentCallBack.startFragment(detailsFragment, true);
     }

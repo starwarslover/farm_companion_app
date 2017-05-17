@@ -90,7 +90,7 @@ public class TaskAdapter extends ArrayAdapter<Task> {
             holder.showOnMapButton.setVisibility(View.GONE);
         }
 
-        holder.nameTextView.setText("Task " + position);
+        holder.nameTextView.setText("Task " + (position + 1));
         if (currentTask.getCurrentState() != null) {
             holder.statusTextView.setText(currentTask.getCurrentState().toString());
         }

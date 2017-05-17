@@ -56,6 +56,8 @@ public class TaskTrackingFragment extends Fragment {
     private String userID;
     private Circle selectedCircle;
 
+    private boolean cameraPositioned = false;
+
     private HashMap<String, Circle> empsCircles;
     private String taskID;
 
@@ -104,7 +106,6 @@ public class TaskTrackingFragment extends Fragment {
                 myGoogleMap = googleMap;
                 int permissionCheck = ContextCompat.checkSelfPermission(TaskTrackingFragment.this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
                 if (permissionCheck == PermissionChecker.PERMISSION_GRANTED) {
-                    googleMap.setMyLocationEnabled(true);
 //                    LatLng sydney = new LatLng(-34, 151);
 //                    myGoogleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
 //
@@ -159,7 +160,7 @@ public class TaskTrackingFragment extends Fragment {
 //                Marker marker = myGoogleMap.addMarker(new MarkerOptions().position(latLng));
 //                mapMarkers.put(dataSnapshot.getKey(), marker);
 
-                        Circle circle = myGoogleMap.addCircle(new CircleOptions().center(latLng).radius(100).fillColor(Color.BLACK));
+                        Circle circle = myGoogleMap.addCircle(new CircleOptions().center(latLng).radius(150).fillColor(Color.BLACK));
                         circle.setClickable(true);
                         empsCircles.put(dataSnapshot.getKey(), circle);
                         if (taskID != null && taskID.equals(dataSnapshot.getKey())) {
@@ -168,6 +169,12 @@ public class TaskTrackingFragment extends Fragment {
                             selectedCircle = circle;
                             selectedEmployee = getHashKeyValue(circle);
                             holder.showDetails();
+                        }
+
+                        if (taskID == null && !cameraPositioned) {
+                            cameraPositioned = true;
+                            CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(9).build();
+                            myGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         }
 //                myGoogleMap.addMarker(new MarkerOptions().position(latLng).title(dataSnapshot.getKey()));
 
@@ -198,6 +205,7 @@ public class TaskTrackingFragment extends Fragment {
                             }
                             long time = snapshot.child(Utilities.Constants.DB_ELAPSED_TIME).getValue(Long.class);
                             holder.setTotalWorkTime(time);
+                            holder.setEmpName(snapshot.child("emp_name").getValue(String.class));
                             CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(12).build();
                             myGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         }
@@ -263,12 +271,14 @@ public class TaskTrackingFragment extends Fragment {
         private LinearLayout parentLayout;
         private TextView startedAtTextView;
         private TextView totalWorkTimeTextView;
+        private TextView empNameTextView;
 
         public TaskDetailsLayoutHolder(View view) {
             this.speedTextView = (TextView) view.findViewById(R.id.taskTrackingInfoSpeedTextView);
             this.parentLayout = (LinearLayout) view.findViewById(R.id.taskTrackingInfoLayout);
             this.startedAtTextView = (TextView) view.findViewById(R.id.taskTrackingEmpStartedAtTextView);
             this.totalWorkTimeTextView = (TextView) view.findViewById(R.id.taskTrackingElapsedTimeTextView);
+            this.empNameTextView = (TextView) view.findViewById(R.id.taskTrackingEmpNameTextView);
         }
 
         public void setSpeed(String speed) {
@@ -303,10 +313,16 @@ public class TaskTrackingFragment extends Fragment {
             try {
                 Date dateToFormat = new SimpleDateFormat("dd MM yyyy HH:mm:ss zz", Locale.ENGLISH).parse(date);
                 String formatedDate = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).format(dateToFormat);
-                startedAtTextView.setText(formatedDate);
+                String formatedHour = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH).format(dateToFormat);
+                String formatedText = formatedDate + "\n" + formatedHour;
+                startedAtTextView.setText(formatedText);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        public void setEmpName(String name) {
+            this.empNameTextView.setText(name);
         }
     }
 }
