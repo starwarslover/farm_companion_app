@@ -126,6 +126,13 @@
     <string name="no_field_selected">You cannot start a task without a field selected.</string>
     <string name="no_equip_selected">You must select at least one equipment in order to start this task.</string>
     <string name="task_type">Task Type</string>
+    <string name="purchase_date">Purchase Date</string>
+    <string name="manufacturing_year">Manufacturing Year</string>
+    <string name="purchase_price">Purchase Price</string>
+    <string name="plate_number">Plate Number</string>
+    <string name="engine_type">Engine Type</string>
+    <string name="transmission_type">Transmission Type</string>
+    <string name="engine_capacity">Engine Capacity</string>
 
     <string-array name="ownership">
         <item>Own</item>

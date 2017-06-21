@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.licence.serban.farmcompanion.classes.Equipment;
+import com.licence.serban.farmcompanion.classes.models.Equipment;
 import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.classes.adapters.EquipmentDatabaseAdapter;
 import com.licence.serban.farmcompanion.classes.adapters.EquipmentListAdapter;

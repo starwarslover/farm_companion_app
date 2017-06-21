@@ -11,8 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.licence.serban.farmcompanion.R;
-import com.licence.serban.farmcompanion.classes.Equipment;
-import com.licence.serban.farmcompanion.classes.models.Employee;
+import com.licence.serban.farmcompanion.classes.models.Equipment;
 
 import java.util.List;
 

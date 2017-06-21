@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.licence.serban.farmcompanion.R;
-import com.licence.serban.farmcompanion.classes.Equipment;
+import com.licence.serban.farmcompanion.classes.models.Equipment;
 import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.classes.adapters.EquipmentDatabaseAdapter;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
@@ -33,6 +33,7 @@ public class AddEquipmentFragment extends Fragment {
     private Button addEquipmentButton;
     private String userID;
     private EquipmentDatabaseAdapter databaseAdapter;
+    private TextInputEditText plateNumberEditText;
 
     public AddEquipmentFragment() {
         // Required empty public constructor
@@ -80,6 +81,8 @@ public class AddEquipmentFragment extends Fragment {
         modelInputText = (TextInputEditText) view.findViewById(R.id.addEquipModelEditText);
         serialNrInputText = (TextInputEditText) view.findViewById(R.id.addEquipSerialNrEditText);
         addEquipmentButton = (Button) view.findViewById(R.id.addEquipmentAddButton);
+        plateNumberEditText = (TextInputEditText) view.findViewById(R.id.addEquipPlateNrEditText);
+
 
         addEquipmentButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,4 +1,4 @@
-package com.licence.serban.farmcompanion.classes;
+package com.licence.serban.farmcompanion.classes.models;
 
 import java.util.Date;
 
@@ -17,6 +17,8 @@ public class Equipment {
     private String plateNumber;
     private double purchasePrice;
     private String ownership;
+    private EquipmentEngine engine;
+    private String transmissionType;
 
     public Equipment() {
     }
@@ -27,6 +29,22 @@ public class Equipment {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public EquipmentEngine getEngine() {
+        return engine;
+    }
+
+    public void setEngine(EquipmentEngine engine) {
+        this.engine = engine;
+    }
+
+    public String getTransmissionType() {
+        return transmissionType;
+    }
+
+    public void setTransmissionType(String transmissionType) {
+        this.transmissionType = transmissionType;
     }
 
     public String getType() {

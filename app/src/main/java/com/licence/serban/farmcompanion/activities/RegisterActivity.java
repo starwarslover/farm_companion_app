@@ -165,7 +165,7 @@ public class RegisterActivity extends AppCompatActivity {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 e.printStackTrace();
-                                Toast.makeText(RegisterActivity.this, getResources().getString(R.string.register_error), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
 

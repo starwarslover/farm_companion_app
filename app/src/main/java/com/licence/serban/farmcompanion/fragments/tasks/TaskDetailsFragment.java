@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.TypedValue;
@@ -24,16 +23,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
-import com.licence.serban.farmcompanion.classes.Equipment;
 import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.classes.adapters.TasksDatabaseAdapter;
-import com.licence.serban.farmcompanion.classes.models.CompanyField;
 import com.licence.serban.farmcompanion.classes.models.ResourcePlaceholder;
 import com.licence.serban.farmcompanion.classes.models.Task;
 import com.licence.serban.farmcompanion.fragments.emp_account.EmpTaskTrackingFragment;
 import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 

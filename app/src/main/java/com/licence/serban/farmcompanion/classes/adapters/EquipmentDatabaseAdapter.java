@@ -5,7 +5,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.licence.serban.farmcompanion.classes.Equipment;
+import com.licence.serban.farmcompanion.classes.models.Equipment;
 
 /**
  * Created by Serban on 25.04.2017.
