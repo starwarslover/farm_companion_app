@@ -7,6 +7,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.classes.Utilities;
+import com.licence.serban.farmcompanion.classes.models.ResourcePlaceholder;
 import com.licence.serban.farmcompanion.classes.models.Task;
 
 import java.text.SimpleDateFormat;
@@ -18,16 +19,21 @@ import java.text.SimpleDateFormat;
 public class TasksDatabaseAdapter {
 
     public static final String DB_TASKS = "tasks";
+    public static final String DB_INPUTS = "inputs";
 
+    private static String userID;
     private static TasksDatabaseAdapter instance;
     private static DatabaseReference tasksReference;
+    private static DatabaseReference mainReference;
 
     private TasksDatabaseAdapter() {
 
     }
 
     private TasksDatabaseAdapter(String adminID) {
-        tasksReference = FirebaseDatabase.getInstance().getReference().child(DB_TASKS).child(adminID);
+        userID = adminID;
+        mainReference = FirebaseDatabase.getInstance().getReference();
+        tasksReference = mainReference.child(DB_TASKS).child(adminID);
     }
 
     public static synchronized TasksDatabaseAdapter getInstance(String adminID) {
@@ -40,6 +46,7 @@ public class TasksDatabaseAdapter {
     }
 
     private static void setTasksReference(String adminID) {
+        userID = adminID;
         tasksReference = FirebaseDatabase.getInstance().getReference().child(DB_TASKS).child(adminID);
     }
 
@@ -47,6 +54,24 @@ public class TasksDatabaseAdapter {
         String id = tasksReference.push().getKey();
         task.setId(id);
         tasksReference.child(id).setValue(task);
+
+        DatabaseReference inputsReference = mainReference.child(DB_INPUTS).child(userID);
+        for (ResourcePlaceholder ph : task.getInputs())
+            inputsReference.child(ph.getId()).child(DB_TASKS).child(id).setValue(true);
+
+        DatabaseReference employeesReference = mainReference.child(Utilities.Constants.DB_EMPLOYEES).child(userID);
+        for (ResourcePlaceholder ph : task.getEmployees())
+            employeesReference.child(ph.getId()).child(DB_TASKS).child(id).setValue(true);
+
+        DatabaseReference fieldsReference = mainReference.child(Utilities.Constants.DB_FIELDS).child(userID);
+        if (task.getField() != null) {
+            fieldsReference.child(task.getField().getId()).child(DB_TASKS).child(id).setValue(true);
+        }
+
+        DatabaseReference equipmentReference = mainReference.child(EquipmentDatabaseAdapter.DB_EQUIPMENTS).child(userID);
+        for (ResourcePlaceholder ph : task.getUsedImplements())
+            equipmentReference.child(ph.getId()).child(DB_TASKS).child(id).setValue(true);
+
         return id;
     }
 

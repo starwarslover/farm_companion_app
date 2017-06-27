@@ -14,9 +14,9 @@
 
     <ImageView
         android:id="@+id/navHeaderImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/sym_def_app_icon" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:srcCompat="@drawable/farmer" />
 
     <TextView
         android:id="@+id/navNameTextView"

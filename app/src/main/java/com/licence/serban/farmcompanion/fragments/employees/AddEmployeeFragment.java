@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -68,6 +70,8 @@ public class AddEmployeeFragment extends Fragment {
     private String employeeID;
     private Button datePickerButton;
     private OnFragmentStart startFragmentCallback;
+    private CheckBox employeeAccountCheckBox;
+    private LinearLayout employeeAccountLayout;
 
 
     public AddEmployeeFragment() {
@@ -140,6 +144,17 @@ public class AddEmployeeFragment extends Fragment {
                     }
                 }
                 employeeAddedListener.openDatePicker(time);
+            }
+        });
+
+        employeeAccountCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (employeeAccountCheckBox.isChecked()) {
+                    employeeAccountLayout.setVisibility(View.VISIBLE);
+                } else {
+                    employeeAccountLayout.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -391,6 +406,8 @@ public class AddEmployeeFragment extends Fragment {
         confirmPasswordEditText = (TextInputEditText) view.findViewById(R.id.addEmployeeConfirmPassEditText);
         datePickerButton = (Button) view.findViewById(R.id.addEmployeeDatePickButton);
         addEmployeeButton = (Button) view.findViewById(R.id.addEmployeeAddButton);
+        employeeAccountCheckBox = (CheckBox) view.findViewById(R.id.addEmployeeEmployeeAccountCheckbox);
+        employeeAccountLayout = (LinearLayout) view.findViewById(R.id.addEmployeeEmployeeAccountLayout);
     }
 }
 

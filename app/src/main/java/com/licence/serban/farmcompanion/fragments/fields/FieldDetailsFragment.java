@@ -8,19 +8,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.classes.Utilities;
+import com.licence.serban.farmcompanion.classes.adapters.TaskAdapter;
 import com.licence.serban.farmcompanion.classes.models.CompanyField;
+import com.licence.serban.farmcompanion.classes.models.Task;
 import com.licence.serban.farmcompanion.interfaces.OnAddFieldListener;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 import com.licence.serban.farmcompanion.interfaces.OnElementAdded;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,6 +51,7 @@ public class FieldDetailsFragment extends Fragment {
     private Button deleteFieldButton;
 
     private OnElementAdded fieldAddedListener;
+    private ListView fieldActivitiesListView;
 
 
     public FieldDetailsFragment() {
@@ -88,6 +96,9 @@ public class FieldDetailsFragment extends Fragment {
             fieldID = arguments.getString(Utilities.Constants.FIELD_ID);
         }
 
+        final TaskAdapter adapter = new TaskAdapter(this.getActivity(), R.layout.task_row, new ArrayList<Task>());
+        fieldActivitiesListView.setAdapter(adapter);
+
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.child(Utilities.Constants.DB_FIELDS).child(userID).child(fieldID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -130,14 +141,19 @@ public class FieldDetailsFragment extends Fragment {
     }
 
     private void findViewsById(View view) {
-        fieldNameTextView = (TextView) view.findViewById(R.id.fieldDetailsNameTextView);
-        fieldAreaTextView = (TextView) view.findViewById(R.id.fieldDetailsAreaTextView);
-        fieldLocationTextView = (TextView) view.findViewById(R.id.fieldDetailsLocationTextView);
-        fieldCropTextView = (TextView) view.findViewById(R.id.fieldDetailsCropTextView);
-        fieldOwnershipTextView = (TextView) view.findViewById(R.id.fieldDetailsOwnershipTextView);
-        fieldNotesTextView = (TextView) view.findViewById(R.id.fieldDetailsNotesTextView);
-        editFieldButton = (Button) view.findViewById(R.id.fieldDetailsEditButton);
-        deleteFieldButton = (Button) view.findViewById(R.id.fieldDetailsDeleteButton);
+        fieldActivitiesListView = (ListView) view.findViewById(R.id.fieldDetailsActivitiesListView);
+
+        View detailsView = LayoutInflater.from(FieldDetailsFragment.this.getActivity()).inflate(R.layout.field_list_header, fieldActivitiesListView, false);
+        fieldActivitiesListView.addHeaderView(detailsView);
+
+        fieldNameTextView = (TextView) detailsView.findViewById(R.id.fieldDetailsNameTextView);
+        fieldAreaTextView = (TextView) detailsView.findViewById(R.id.fieldDetailsAreaTextView);
+        fieldLocationTextView = (TextView) detailsView.findViewById(R.id.fieldDetailsLocationTextView);
+        fieldCropTextView = (TextView) detailsView.findViewById(R.id.fieldDetailsCropTextView);
+        fieldOwnershipTextView = (TextView) detailsView.findViewById(R.id.fieldDetailsOwnershipTextView);
+        fieldNotesTextView = (TextView) detailsView.findViewById(R.id.fieldDetailsNotesTextView);
+        editFieldButton = (Button) detailsView.findViewById(R.id.fieldDetailsEditButton);
+        deleteFieldButton = (Button) detailsView.findViewById(R.id.fieldDetailsDeleteButton);
     }
 
 }

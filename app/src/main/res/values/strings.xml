@@ -133,6 +133,8 @@
     <string name="engine_type">Engine Type</string>
     <string name="transmission_type">Transmission Type</string>
     <string name="engine_capacity">Engine Capacity</string>
+    <string name="create_employee_account">Create employee account?</string>
+    <string name="field">Camp</string>
 
     <string-array name="ownership">
         <item>Own</item>
