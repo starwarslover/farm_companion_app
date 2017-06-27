@@ -42,6 +42,7 @@ public class EquipmentDatabaseAdapter {
     public String insertEquipment(Equipment equipment) {
         String id = equipmentReference.push().getKey();
         equipment.setId(id);
+        equipment.setCreatedAt(System.currentTimeMillis());
         equipmentReference.child(id).setValue(equipment);
         return id;
     }

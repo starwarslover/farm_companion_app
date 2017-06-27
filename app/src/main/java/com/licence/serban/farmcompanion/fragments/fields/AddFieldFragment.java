@@ -138,6 +138,7 @@ public class AddFieldFragment extends Fragment {
                 companyField.setOwnership(fieldOwnership);
                 companyField.setCropStatus(getResources().getString(R.string.unseeded_string));
                 companyField.setNotes(fieldNotes);
+                companyField.setCreatedAt(System.currentTimeMillis());
 
 
                 String id = fieldsReference.push().getKey();

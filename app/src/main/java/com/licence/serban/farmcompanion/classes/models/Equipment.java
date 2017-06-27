@@ -19,8 +19,17 @@ public class Equipment {
     private String ownership;
     private EquipmentEngine engine;
     private String transmissionType;
+    private long createdAt;
 
     public Equipment() {
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getId() {

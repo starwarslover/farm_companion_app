@@ -30,6 +30,7 @@ public class Task {
     private long timeStopped;
     private double area;
     private boolean canTrack;
+    private long createdAt;
 
     private Task() {
 
@@ -41,6 +42,14 @@ public class Task {
         this.usedImplements = new ArrayList<>();
         this.field = field;
 
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getId() {

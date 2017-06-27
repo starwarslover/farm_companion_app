@@ -9,6 +9,15 @@ public class Company {
     private String city;
     private String country;
     private String zipCode;
+    private long createdAt;
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public String getCity() {
         return city;

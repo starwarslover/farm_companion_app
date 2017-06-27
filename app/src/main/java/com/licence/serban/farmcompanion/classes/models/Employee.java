@@ -16,8 +16,17 @@ public class Employee {
     private double baseSalary;
     private String contractNumber;
     private String accountEmail;
+    private long createdAt;
 
     public Employee() {
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getAccountEmail() {

@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.classes.Utilities;
 import com.licence.serban.farmcompanion.classes.adapters.TaskAdapter;
+import com.licence.serban.farmcompanion.classes.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.classes.models.CompanyField;
 import com.licence.serban.farmcompanion.classes.models.Task;
 import com.licence.serban.farmcompanion.interfaces.OnAddFieldListener;
@@ -112,6 +113,47 @@ public class FieldDetailsFragment extends Fragment {
                     fieldLocationTextView.setText(companyField.getLocation());
                     fieldNotesTextView.setText(companyField.getNotes());
                 }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        databaseReference.child(Utilities.Constants.DB_FIELDS).child(userID).child(fieldID).child(TasksDatabaseAdapter.DB_TASKS).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String key = dataSnapshot.getKey();
+                databaseReference.child(TasksDatabaseAdapter.DB_TASKS).child(userID).child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Task task = dataSnapshot.getValue(Task.class);
+                        if (task != null) {
+                            adapter.add(task);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override

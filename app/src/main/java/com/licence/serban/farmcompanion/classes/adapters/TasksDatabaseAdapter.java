@@ -53,6 +53,7 @@ public class TasksDatabaseAdapter {
     public String insertTask(Task task) {
         String id = tasksReference.push().getKey();
         task.setId(id);
+        task.setCreatedAt(System.currentTimeMillis());
         tasksReference.child(id).setValue(task);
 
         DatabaseReference inputsReference = mainReference.child(DB_INPUTS).child(userID);

@@ -10,6 +10,15 @@ public class CompanyField {
     private String location;
     private String cropStatus;
     private String notes;
+    private long createdAt;
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public String getNotes() {
         return notes;

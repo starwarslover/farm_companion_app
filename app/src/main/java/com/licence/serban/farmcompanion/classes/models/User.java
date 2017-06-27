@@ -12,8 +12,17 @@ public class User implements Serializable {
     private String email;
     private boolean isAdmin;
     private String employerID;
+    private long createdAt;
 
     public User() {
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 
     public boolean isAdmin() {

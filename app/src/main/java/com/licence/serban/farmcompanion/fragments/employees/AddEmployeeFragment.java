@@ -319,6 +319,7 @@ public class AddEmployeeFragment extends Fragment {
                 employeeUser.setEmail(email);
                 employeeUser.setName(name);
                 employeeUser.setEmployerID(userID);
+                employeeUser.setCreatedAt(System.currentTimeMillis());
 
                 final Employee employee = new Employee();
                 employee.setName(name);
@@ -331,6 +332,7 @@ public class AddEmployeeFragment extends Fragment {
                 employee.setPersonalIdNumber(personalNumber);
                 employee.setIdNumber(idNumber);
                 employee.setPosition(position);
+                employee.setCreatedAt(System.currentTimeMillis());
 
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
 
