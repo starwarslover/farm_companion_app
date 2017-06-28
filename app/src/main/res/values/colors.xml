@@ -6,5 +6,6 @@
     <color name="colorError">#cc0000</color>
     <color name="lightGrey">#c1c1c1</color>
     <color name="white">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
 
 </resources>

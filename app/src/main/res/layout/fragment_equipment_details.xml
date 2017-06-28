@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.licence.serban.farmcompanion.fragments.equipment.EquipmentDetailsFragment">
+
+    <LinearLayout
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/equipDetailsEditButton"
+            android:layout_width="@dimen/detail_button_size"
+            android:layout_height="@dimen/detail_button_size"
+            android:src="@drawable/ic_edit_black_24dp" />
+
+        <TextView
+            android:id="@+id/equipDetailsNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Dummy text"
+            android:textSize="25sp" />
+
+        <ImageButton
+            android:id="@+id/equipDetailsDeleteButton"
+            android:layout_width="@dimen/detail_button_size"
+            android:layout_height="@dimen/detail_button_size"
+            android:src="@drawable/ic_delete_forever_black_24dp" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/equipmentDetailsListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
+
+</LinearLayout>
