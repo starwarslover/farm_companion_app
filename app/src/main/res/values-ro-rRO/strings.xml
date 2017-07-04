@@ -1,165 +1,166 @@
 <resources>
-    <string name="app_name">FarmCompanion</string>
-    <string name="welcome_message">Bun venit!</string>
-    <string name="title_activity_main">FarmCompanion</string>
+  <string name="app_name">FarmCompanion</string>
+  <string name="welcome_message">Bun venit!</string>
+  <string name="title_activity_main">FarmCompanion</string>
 
-    <string name="navigation_drawer_open">Deschide meniul de navigatie</string>
-    <string name="navigation_drawer_close">Inchide meniul de navigatie</string>
+  <string name="navigation_drawer_open">Deschide meniul de navigatie</string>
+  <string name="navigation_drawer_close">Inchide meniul de navigatie</string>
 
-    <string name="action_settings">Setar</string>
-    <string name="username">Nume utilizator</string>
-    <string name="password">Parola*</string>
-    <string name="log_in">Autentificare</string>
-    <string name="login">Autentificare</string>
-    <string name="no_account_label">Nu ai un cont? Click aici!</string>
-    <string name="forgot_password">Ai uitat parola?</string>
-    <string name="email_error">Introduceti adresa de email!</string>
-    <string name="email">Email*</string>
-    <string name="login_password">Parola</string>
-    <string name="login_email">Email</string>
-    <string name="pass_error">Introduceti parola!</string>
-    <string name="login_failed">A aparut o eroare la autentificare…</string>
-    <string name="sign_up">Inregistrare</string>
-    <string name="name">Nume*</string>
-    <string name="company_name">Denumire companie</string>
-    <string name="confirm_email">Confirmare email*</string>
-    <string name="existing_account">Ai un cont existent?</string>
-    <string name="confirm_pass">Confirmare parola*</string>
-    <string name="unmatching_email">Adresele de email nu corespund!</string>
-    <string name="unmatching_passwords">Parolele nu corespund!</string>
-    <string name="email_sample">email@domain.com*</string>
-    <string name="invalid_email">Adresa de email introdusa este invalida!</string>
-    <string name="no_name_error">Trebuie sa introuci numele!</string>
-    <string name="no_email_error">Trebuie sa introduci adresa de email!</string>
-    <string name="no_pass_error">Trebuie sa introduci parola!</string>
-    <string name="register_error">A aparut o eroare la inregistrare…</string>
-    <string name="register_success">Inregistrare cu succes…</string>
-    <string name="reset_pass">Resetare parola</string>
-    <string name="send_email">Trimite email</string>
-    <string name="reset_pass_message">Introdu adresa de email pentru a primi instructiuni de resetare a parolei.</string>
-    <string name="reset_back">Inapoi la autentificare</string>
-    <string name="reset_send_success">Email trimis cu succes!</string>
-    <string name="reset_send_failure">A aparut o eroare la trimiterea emailului de resetare a parolei…</string>
-    <string name="nav_fields">Campuri</string>
-    <string name="nav_equipment">Echipamente</string>
-    <string name="nav_inputs">Consumabile</string>
-    <string name="nav_employees">Angajati</string>
-    <string name="nav_dash">Dashboard</string>
-    <string name="action_logout">Deconectare</string>
+  <string name="action_settings">Setar</string>
+  <string name="username">Nume utilizator</string>
+  <string name="password">Parola*</string>
+  <string name="log_in">Autentificare</string>
+  <string name="login">Autentificare</string>
+  <string name="no_account_label">Nu ai un cont? Click aici!</string>
+  <string name="forgot_password">Ai uitat parola?</string>
+  <string name="email_error">Introduceti adresa de email!</string>
+  <string name="email">Email*</string>
+  <string name="login_password">Parola</string>
+  <string name="login_email">Email</string>
+  <string name="pass_error">Introduceti parola!</string>
+  <string name="login_failed">A aparut o eroare la autentificare…</string>
+  <string name="sign_up">Inregistrare</string>
+  <string name="name">Nume*</string>
+  <string name="company_name">Denumire companie</string>
+  <string name="confirm_email">Confirmare email*</string>
+  <string name="existing_account">Ai un cont existent?</string>
+  <string name="confirm_pass">Confirmare parola*</string>
+  <string name="unmatching_email">Adresele de email nu corespund!</string>
+  <string name="unmatching_passwords">Parolele nu corespund!</string>
+  <string name="email_sample">email@domain.com*</string>
+  <string name="invalid_email">Adresa de email introdusa este invalida!</string>
+  <string name="no_name_error">Trebuie sa introuci numele!</string>
+  <string name="no_email_error">Trebuie sa introduci adresa de email!</string>
+  <string name="no_pass_error">Trebuie sa introduci parola!</string>
+  <string name="register_error">A aparut o eroare la inregistrare…</string>
+  <string name="register_success">Inregistrare cu succes…</string>
+  <string name="reset_pass">Resetare parola</string>
+  <string name="send_email">Trimite email</string>
+  <string name="reset_pass_message">Introdu adresa de email pentru a primi instructiuni de resetare a parolei.</string>
+  <string name="reset_back">Inapoi la autentificare</string>
+  <string name="reset_send_success">Email trimis cu succes!</string>
+  <string name="reset_send_failure">A aparut o eroare la trimiterea emailului de resetare a parolei…</string>
+  <string name="nav_fields">Campuri</string>
+  <string name="nav_equipment">Echipamente</string>
+  <string name="nav_inputs">Consumabile</string>
+  <string name="nav_employees">Angajati</string>
+  <string name="nav_dash">Dashboard</string>
+  <string name="action_logout">Deconectare</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="seeds_title">Seminte</string>
-    <string name="chem_title">Chimicale</string>
-    <string name="fertiliser_title">Fertilizatori</string>
-    <string name="fuel_title">Combustibil</string>
-    <string name="nav_activities">Activitati</string>
-    <string name="city">Oras</string>
-    <string name="zip_code">Cod postal</string>
-    <string name="country">Tara</string>
-    <string name="required_hint">*obligatoriu</string>
-    <string name="no_country_error">Trebuie sa introduci tara!</string>
-    <string name="no_city_error">Trebuie sa introduci orasul!</string>
-    <string name="add_employee">Adaugare angajat</string>
-    <string name="you_have_no_employees_added_to_your_company_yet">no_employee_message</string>
-    <string name="no_employee_message">Momentan nu ai adaugat niciun angajat.</string>
-    <string name="nav_company_info">Companie</string>
-    <string name="nav_user_info">Utilizator</string>
-    <string name="general">General</string>
-    <string name="save_changes">Salvare modificari</string>
-    <string name="save_success">Date salvate cu succes!</string>
-    <string name="edit_button">Editare</string>
-    <string name="personal_identification_number">Cod numeric pesonal</string>
-    <string name="id_number">Serie de buletin</string>
-    <string name="employment_date">Data angajarii</string>
-    <string name="position">Post</string>
-    <string name="base_salary">Salariu de baza</string>
-    <string name="contract_number">Numar de contract</string>
-    <string name="employee_account_email">Email cont angajat*</string>
-    <string name="employee_account_password">Parola cont angajat*</string>
-    <string name="confirm">Confirma</string>
-    <string name="add_field">Adaugare camp</string>
-    <string name="no_field_message">Momentan nu sunt campuri adaugate.</string>
-    <string name="field_name">Nume camp*</string>
-    <string name="field_location">Locatie</string>
-    <string name="field_area">Suprafata*</string>
-    <string name="ownership">Proprietar</string>
-    <string name="field_notes">Note</string>
-    <string name="no_field_name">Numele campului este obligatoriu!</string>
-    <string name="no_field_area_error">Suprafata campului este obligatorie!</string>
-    <string name="invalid_area_error">Suprafata trebuie sa fie un numar strict pozitiv!</string>
-    <string name="unseeded_string">Nesemanat</string>
-    <string name="field_name_label">Denumire camp</string>
-    <string name="area">Suprafata</string>
-    <string name="crop_status">Status recolta</string>
-    <string name="activity_history">Istoric activitati</string>
-    <string name="delete">Stergere</string>
-    <string name="my_activities">Activitatile mele</string>
-    <string name="my_tasks">Sarcinile mele</string>
-    <string name="gps_not_found_title">Locatie dezactivata</string>
-    <string name="gps_not_found_message">Serviciul de localizare este dezactivat. Doresti sa il activezi?</string>
-    <string name="yes">Da</string>
-    <string name="no">Nu</string>
-    <string name="nav_ongoing_tasks">Activitati in desfasurare</string>
-    <string name="new_activity">Activitate noua</string>
-    <string name="filter_by_status">Filtreaza dupa status:</string>
-    <string name="new_task">Sarcina noua</string>
-    <string name="create_task">Creaza sarcina</string>
-    <string name="fetching_user_data">Obtinerea datelor utilizator...</string>
-    <string name="pause_task">Opreste activitatea</string>
-    <string name="show_on_map">Arata pe harta</string>
-    <string name="start_task">Incepere activitatea</string>
-    <string name="total_elapsed_time">Timp total</string>
-    <string name="started_at">Inceput la</string>
-    <string name="speed">Viteza</string>
-    <string name="add_equipment">Adauga echipament</string>
-    <string name="type">Tip</string>
-    <string name="manufacturer">Producator</string>
-    <string name="model">Model</string>
-    <string name="serial_number">Numar de serie</string>
-    <string name="model_required">Model*</string>
-    <string name="manufacturer_required">Producator*</string>
-    <string name="type_required">Tip*</string>
-    <string name="required_field">Acest camp este obligatoriu!</string>
-    <string name="field_required">Camp*</string>
-    <string name="equipment">Echipament</string>
-    <string name="no_field_selected">Nu poti incepe o activitate fara a alege un camp.</string>
-    <string name="no_equip_selected">Este nevoie de cel putin un echipament pentru a incepe o activitate.</string>
-    <string name="task_type">Tipul activitatii</string>
-    <string name="purchase_date">Data achizitionarii</string>
-    <string name="manufacturing_year">Anu fabricatie</string>
-    <string name="purchase_price">Pret achizitie</string>
-    <string name="plate_number">Serie sasiu</string>
-    <string name="engine_type">Tip motor</string>
-    <string name="transmission_type">Tip transmisie</string>
-    <string name="engine_capacity">Capacitate motor</string>
-    <string name="create_employee_account">Creare cont angajat?</string>
-    <string name="field">Camp</string>
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="seeds_title">Seminte</string>
+  <string name="chem_title">Chimicale</string>
+  <string name="fertiliser_title">Fertilizatori</string>
+  <string name="fuel_title">Combustibil</string>
+  <string name="nav_activities">Activitati</string>
+  <string name="city">Oras</string>
+  <string name="zip_code">Cod postal</string>
+  <string name="country">Tara</string>
+  <string name="required_hint">*obligatoriu</string>
+  <string name="no_country_error">Trebuie sa introduci tara!</string>
+  <string name="no_city_error">Trebuie sa introduci orasul!</string>
+  <string name="add_employee">Adaugare angajat</string>
+  <string name="you_have_no_employees_added_to_your_company_yet">no_employee_message</string>
+  <string name="no_employee_message">Momentan nu ai adaugat niciun angajat.</string>
+  <string name="nav_company_info">Companie</string>
+  <string name="nav_user_info">Utilizator</string>
+  <string name="general">General</string>
+  <string name="save_changes">Salvare modificari</string>
+  <string name="save_success">Date salvate cu succes!</string>
+  <string name="edit_button">Editare</string>
+  <string name="personal_identification_number">Cod numeric pesonal</string>
+  <string name="id_number">Serie de buletin</string>
+  <string name="employment_date">Data angajarii</string>
+  <string name="position">Post</string>
+  <string name="base_salary">Salariu de baza</string>
+  <string name="contract_number">Numar de contract</string>
+  <string name="employee_account_email">Email cont angajat*</string>
+  <string name="employee_account_password">Parola cont angajat*</string>
+  <string name="confirm">Confirma</string>
+  <string name="add_field">Adaugare camp</string>
+  <string name="no_field_message">Momentan nu sunt campuri adaugate.</string>
+  <string name="field_name">Nume camp*</string>
+  <string name="field_location">Locatie</string>
+  <string name="field_area">Suprafata*</string>
+  <string name="ownership">Proprietar</string>
+  <string name="field_notes">Note</string>
+  <string name="no_field_name">Numele campului este obligatoriu!</string>
+  <string name="no_field_area_error">Suprafata campului este obligatorie!</string>
+  <string name="invalid_area_error">Suprafata trebuie sa fie un numar strict pozitiv!</string>
+  <string name="unseeded_string">Nesemanat</string>
+  <string name="field_name_label">Denumire camp</string>
+  <string name="area">Suprafata</string>
+  <string name="crop_status">Status recolta</string>
+  <string name="activity_history">Istoric activitati</string>
+  <string name="delete">Stergere</string>
+  <string name="my_activities">Activitatile mele</string>
+  <string name="my_tasks">Sarcinile mele</string>
+  <string name="gps_not_found_title">Locatie dezactivata</string>
+  <string name="gps_not_found_message">Serviciul de localizare este dezactivat. Doresti sa il activezi?</string>
+  <string name="yes">Da</string>
+  <string name="no">Nu</string>
+  <string name="nav_ongoing_tasks">Activitati in desfasurare</string>
+  <string name="new_activity">Activitate noua</string>
+  <string name="filter_by_status">Filtreaza dupa status:</string>
+  <string name="new_task">Sarcina noua</string>
+  <string name="create_task">Creaza sarcina</string>
+  <string name="fetching_user_data">Obtinerea datelor utilizator...</string>
+  <string name="pause_task">Opreste activitatea</string>
+  <string name="show_on_map">Arata pe harta</string>
+  <string name="start_task">Incepere activitatea</string>
+  <string name="total_elapsed_time">Timp total</string>
+  <string name="started_at">Inceput la</string>
+  <string name="speed">Viteza</string>
+  <string name="add_equipment">Adauga echipament</string>
+  <string name="type">Tip</string>
+  <string name="manufacturer">Producator</string>
+  <string name="model">Model</string>
+  <string name="serial_number">Numar de serie</string>
+  <string name="model_required">Model*</string>
+  <string name="manufacturer_required">Producator*</string>
+  <string name="type_required">Tip*</string>
+  <string name="required_field">Acest camp este obligatoriu!</string>
+  <string name="field_required">Camp*</string>
+  <string name="equipment">Echipament</string>
+  <string name="no_field_selected">Nu poti incepe o activitate fara a alege un camp.</string>
+  <string name="no_equip_selected">Este nevoie de cel putin un echipament pentru a incepe o activitate.</string>
+  <string name="task_type">Tipul activitatii</string>
+  <string name="purchase_date">Data achizitionarii</string>
+  <string name="manufacturing_year">Anu fabricatie</string>
+  <string name="purchase_price">Pret achizitie</string>
+  <string name="plate_number">Serie sasiu</string>
+  <string name="engine_type">Tip motor</string>
+  <string name="transmission_type">Tip transmisie</string>
+  <string name="engine_capacity">Capacitate motor</string>
+  <string name="create_employee_account">Creare cont angajat?</string>
+  <string name="field">Camp</string>
+  <string name="available">Disponibil</string>
 
-    <string-array name="ownership">
-        <item>Propriu</item>
-        <item>Chirie</item>
-        <item>Arenda</item>
-    </string-array>
-    <string-array name="activity_status">
-        <item>Neinceputa</item>
-        <item>In desfasurare</item>
-        <item>Intrerupta</item>
-        <item>Incheiata</item>
-    </string-array>
-    <string-array name="equipment_types">
-        <item>Combina</item>
-        <item>Cultivator</item>
-        <item>Disc</item>
-        <item>Plug</item>
-        <item>Semanatoare</item>
-        <item>Tractor</item>
-    </string-array>
-    <string-array name="task_types">
-        <item>Fertilizare</item>
-        <item>Recoltare</item>
-        <item>Arat</item>
-        <item>Semanat</item>
-        <item>Ierbicidare</item>
-    </string-array>
+  <string-array name="ownership">
+    <item>Propriu</item>
+    <item>Chirie</item>
+    <item>Arenda</item>
+  </string-array>
+  <string-array name="activity_status">
+    <item>Neinceputa</item>
+    <item>In desfasurare</item>
+    <item>Intrerupta</item>
+    <item>Incheiata</item>
+  </string-array>
+  <string-array name="equipment_types">
+    <item>Combina</item>
+    <item>Cultivator</item>
+    <item>Disc</item>
+    <item>Plug</item>
+    <item>Semanatoare</item>
+    <item>Tractor</item>
+  </string-array>
+  <string-array name="task_types">
+    <item>Fertilizare</item>
+    <item>Recoltare</item>
+    <item>Arat</item>
+    <item>Semanat</item>
+    <item>Ierbicidare</item>
+  </string-array>
 </resources>

@@ -1,203 +1,203 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.licence.serban.farmcompanion.fragments.employees.AddEmployeeFragment">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".employees.fragments.AddEmployeeFragment">
 
-    <ScrollView
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
 
-        <LinearLayout
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/addEmployeeNameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:hint="@string/name"/>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+      </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/addEmployeeNameEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/name" />
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-            </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/addEmployeePersonalIdEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/personal_identification_number"/>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+      </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/addEmployeePersonalIdEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/personal_identification_number" />
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-            </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/addEmployeeIdEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/id_number"/>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+      </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/addEmployeeIdEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/id_number" />
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:weightSum="25">
 
-            </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="21">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="25">
+          <android.support.design.widget.TextInputEditText
+              android:id="@+id/addEmployeeEmploymentDateEditText"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:enabled="false"
+              android:hint="@string/employment_date"
+              android:inputType="date"/>
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="21">
+        </android.support.design.widget.TextInputLayout>
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/addEmployeeEmploymentDateEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:hint="@string/employment_date"
-                        android:inputType="date" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <Button
-                    android:id="@+id/addEmployeeDatePickButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:background="@drawable/ic_date_range_black_24dp" />
-            </LinearLayout>
+        <Button
+            android:id="@+id/addEmployeeDatePickButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:background="@drawable/ic_date_range_black_24dp"/>
+      </LinearLayout>
 
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/addEmployeePositionEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/position" />
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/addEmployeePositionEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/position"/>
 
-            </android.support.design.widget.TextInputLayout>
+      </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/addEmployeeSalaryEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/base_salary"
-                    android:inputType="numberDecimal" />
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/addEmployeeSalaryEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/base_salary"
+            android:inputType="numberDecimal"/>
 
-            </android.support.design.widget.TextInputLayout>
+      </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/addEmployeeContractEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/contract_number" />
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/addEmployeeContractEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/contract_number"/>
 
-            </android.support.design.widget.TextInputLayout>
+      </android.support.design.widget.TextInputLayout>
 
-            <CheckBox
-                android:id="@+id/addEmployeeEmployeeAccountCheckbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/create_employee_account"/>
+      <CheckBox
+          android:id="@+id/addEmployeeEmployeeAccountCheckbox"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/create_employee_account"/>
 
-            <LinearLayout
-                android:id="@+id/addEmployeeEmployeeAccountLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
+      <LinearLayout
+          android:id="@+id/addEmployeeEmployeeAccountLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:visibility="gone">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/addEmployeeEmailEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/employee_account_email"
-                        android:inputType="textEmailAddress" />
+          <android.support.design.widget.TextInputEditText
+              android:id="@+id/addEmployeeEmailEditText"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="@string/employee_account_email"
+              android:inputType="textEmailAddress"/>
 
-                </android.support.design.widget.TextInputLayout>
+        </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/addEmployeeConfirmEmailEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/confirm_email"
-                        android:inputType="textEmailAddress" />
+          <android.support.design.widget.TextInputEditText
+              android:id="@+id/addEmployeeConfirmEmailEditText"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="@string/confirm_email"
+              android:inputType="textEmailAddress"/>
 
-                </android.support.design.widget.TextInputLayout>
+        </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/addEmployeePasswordEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/employee_account_password" />
+          <android.support.design.widget.TextInputEditText
+              android:id="@+id/addEmployeePasswordEditText"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="@string/employee_account_password"/>
 
-                </android.support.design.widget.TextInputLayout>
+        </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/addEmployeeConfirmPassEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/confirm_pass" />
+          <android.support.design.widget.TextInputEditText
+              android:id="@+id/addEmployeeConfirmPassEditText"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="@string/confirm_pass"/>
 
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
+        </android.support.design.widget.TextInputLayout>
+      </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="@string/required_hint"
-                android:textColor="@color/colorError"
-                android:textSize="12sp" />
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="end"
+          android:text="@string/required_hint"
+          android:textColor="@color/colorError"
+          android:textSize="12sp"/>
 
-            <Button
-                android:id="@+id/addEmployeeAddButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/add_employee" />
-        </LinearLayout>
-    </ScrollView>
+      <Button
+          android:id="@+id/addEmployeeAddButton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="5dp"
+          android:text="@string/add_employee"/>
+    </LinearLayout>
+  </ScrollView>
 
 
 </FrameLayout>

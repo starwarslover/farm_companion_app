@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.licence.serban.farmcompanion.fragments.emp_account.EmpTaskDetailsFragment">
+    tools:context=".emp_account.fragments.EmpTaskDetailsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

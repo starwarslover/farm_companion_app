@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    tools:context="com.licence.serban.farmcompanion.fragments.tasks.TaskTrackingFragment">
+    tools:context=".tasks.fragments.TaskTrackingFragment">
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"

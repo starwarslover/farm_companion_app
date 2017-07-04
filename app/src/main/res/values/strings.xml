@@ -1,165 +1,178 @@
 <resources>
-    <string name="app_name">FarmCompanion</string>
-    <string name="welcome_message">Welcome!</string>
-    <string name="title_activity_main">MainActivity</string>
+  <string name="app_name">FarmCompanion</string>
+  <string name="welcome_message">Welcome!</string>
+  <string name="title_activity_main">MainActivity</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+  <string name="navigation_drawer_open">Open navigation drawer</string>
+  <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
-    <string name="username">UserName</string>
-    <string name="password">Password*</string>
-    <string name="log_in">Log In</string>
-    <string name="login">Login</string>
-    <string name="no_account_label">Don\'t have an account? Click here!</string>
-    <string name="forgot_password">Forgot password?</string>
-    <string name="email_error">Insert email please!</string>
-    <string name="email">Email*</string>
-    <string name="login_password">Password</string>
-    <string name="login_email">Email</string>
-    <string name="pass_error">Insert password please!</string>
-    <string name="login_failed">An error occurred while logging in…</string>
-    <string name="sign_up">Sign Up</string>
-    <string name="name">Name*</string>
-    <string name="company_name">Company Name</string>
-    <string name="confirm_email">Confirm Email*</string>
-    <string name="existing_account">Already have an account?</string>
-    <string name="confirm_pass">Confirm Password*</string>
-    <string name="unmatching_email">Your emails don\'t match!</string>
-    <string name="unmatching_passwords">Passwords don\'t match!</string>
-    <string name="email_sample">email@domain.com*</string>
-    <string name="invalid_email">The email you entered is invalid!</string>
-    <string name="no_name_error">You must insert your name!</string>
-    <string name="no_email_error">You must insert your email!</string>
-    <string name="no_pass_error">Password required!</string>
-    <string name="register_error">A error occurred while registering…</string>
-    <string name="register_success">Register successful! Logging in…</string>
-    <string name="reset_pass">Reset Password</string>
-    <string name="send_email">Send email</string>
-    <string name="reset_pass_message">Please insert your registered email adders in order to send you password reset instructions.</string>
-    <string name="reset_back">Back to login</string>
-    <string name="reset_send_success">Email successfully sent!</string>
-    <string name="reset_send_failure">A error occurred while sending password reset instructions…</string>
-    <string name="nav_fields">Fields</string>
-    <string name="nav_equipment">Equipment</string>
-    <string name="nav_inputs">Inputs</string>
-    <string name="nav_employees">Employees</string>
-    <string name="nav_dash">Dashboard</string>
-    <string name="action_logout">LogOut</string>
+  <string name="action_settings">Settings</string>
+  <string name="username">UserName</string>
+  <string name="password">Password*</string>
+  <string name="log_in">Log In</string>
+  <string name="login">Login</string>
+  <string name="no_account_label">Don\'t have an account? Click here!</string>
+  <string name="forgot_password">Forgot password?</string>
+  <string name="email_error">Insert email please!</string>
+  <string name="email">Email*</string>
+  <string name="login_password">Password</string>
+  <string name="login_email">Email</string>
+  <string name="pass_error">Insert password please!</string>
+  <string name="login_failed">An error occurred while logging in…</string>
+  <string name="sign_up">Sign Up</string>
+  <string name="name">Name*</string>
+  <string name="company_name">Company Name</string>
+  <string name="confirm_email">Confirm Email*</string>
+  <string name="existing_account">Already have an account?</string>
+  <string name="confirm_pass">Confirm Password*</string>
+  <string name="unmatching_email">Your emails don\'t match!</string>
+  <string name="unmatching_passwords">Passwords don\'t match!</string>
+  <string name="email_sample">email@domain.com*</string>
+  <string name="invalid_email">The email you entered is invalid!</string>
+  <string name="no_name_error">You must insert your name!</string>
+  <string name="no_email_error">You must insert your email!</string>
+  <string name="no_pass_error">Password required!</string>
+  <string name="register_error">A error occurred while registering…</string>
+  <string name="register_success">Register successful! Logging in…</string>
+  <string name="reset_pass">Reset Password</string>
+  <string name="send_email">Send email</string>
+  <string name="reset_pass_message">Please insert your registered email adders in order to send you password reset instructions.</string>
+  <string name="reset_back">Back to login</string>
+  <string name="reset_send_success">Email successfully sent!</string>
+  <string name="reset_send_failure">A error occurred while sending password reset instructions…</string>
+  <string name="nav_fields">Fields</string>
+  <string name="nav_equipment">Equipment</string>
+  <string name="nav_inputs">Inputs</string>
+  <string name="nav_employees">Employees</string>
+  <string name="nav_dash">Dashboard</string>
+  <string name="action_logout">LogOut</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="seeds_title">Seeds</string>
-    <string name="chem_title">Chemicals</string>
-    <string name="fertiliser_title">Fertiliser</string>
-    <string name="fuel_title">Fuel</string>
-    <string name="nav_activities">Activities</string>
-    <string name="city">City</string>
-    <string name="zip_code">ZIP Code</string>
-    <string name="country">Country</string>
-    <string name="required_hint">*required</string>
-    <string name="no_country_error">You must insert the country!</string>
-    <string name="no_city_error">You must insert your farm\'s city!</string>
-    <string name="add_employee">Add Employee</string>
-    <string name="you_have_no_employees_added_to_your_company_yet">no_employee_message</string>
-    <string name="no_employee_message">You have no employees added yet.</string>
-    <string name="nav_company_info">Company</string>
-    <string name="nav_user_info">User</string>
-    <string name="general">General</string>
-    <string name="save_changes">Save Changes</string>
-    <string name="save_success">Data successfully saved!</string>
-    <string name="edit_button">Edit</string>
-    <string name="personal_identification_number">Personal Identification Number</string>
-    <string name="id_number">ID Number</string>
-    <string name="employment_date">Employment Date</string>
-    <string name="position">Position</string>
-    <string name="base_salary">Base Salary</string>
-    <string name="contract_number">Contract number</string>
-    <string name="employee_account_email">Employee Account Email*</string>
-    <string name="employee_account_password">Employee Account Password*</string>
-    <string name="confirm">Confirm</string>
-    <string name="add_field">Add Field</string>
-    <string name="no_field_message">There are no fields yet.</string>
-    <string name="field_name">Field Name*</string>
-    <string name="field_location">Location</string>
-    <string name="field_area">Area*</string>
-    <string name="ownership">Ownership</string>
-    <string name="field_notes">Notes</string>
-    <string name="no_field_name">Field name required!</string>
-    <string name="no_field_area_error">Field area required!</string>
-    <string name="invalid_area_error">Area must be a stricly positive number!</string>
-    <string name="unseeded_string">Unseeded</string>
-    <string name="field_name_label">Field Name</string>
-    <string name="area">Area</string>
-    <string name="crop_status">Crop status</string>
-    <string name="activity_history">Activity history</string>
-    <string name="delete">Del</string>
-    <string name="my_activities">My Activities</string>
-    <string name="my_tasks">My Tasks</string>
-    <string name="gps_not_found_title">Location disabled</string>
-    <string name="gps_not_found_message">Location is not enabled. Do you want to enable it?</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="nav_ongoing_tasks">Ongoing Tasks</string>
-    <string name="new_activity">New Activity</string>
-    <string name="filter_by_status">Filter by status:</string>
-    <string name="new_task">New Task</string>
-    <string name="create_task">Create Task</string>
-    <string name="fetching_user_data">Fetching user data...</string>
-    <string name="pause_task">Stop Task</string>
-    <string name="show_on_map">Show On Map</string>
-    <string name="start_task">Start Task</string>
-    <string name="total_elapsed_time">Total elapsed time</string>
-    <string name="started_at">Started at</string>
-    <string name="speed">Speed</string>
-    <string name="add_equipment">Add Equipment</string>
-    <string name="type">Type</string>
-    <string name="manufacturer">Manufacturer</string>
-    <string name="model">Model</string>
-    <string name="serial_number">Serial Number</string>
-    <string name="model_required">Model*</string>
-    <string name="manufacturer_required">Manufacturer*</string>
-    <string name="type_required">Type*</string>
-    <string name="required_field">This field is required!</string>
-    <string name="field_required">Field*</string>
-    <string name="equipment">Equipment</string>
-    <string name="no_field_selected">You cannot start a task without a field selected.</string>
-    <string name="no_equip_selected">You must select at least one equipment in order to start this task.</string>
-    <string name="task_type">Task Type</string>
-    <string name="purchase_date">Purchase Date</string>
-    <string name="manufacturing_year">Manufacturing Year</string>
-    <string name="purchase_price">Purchase Price</string>
-    <string name="plate_number">Plate Number</string>
-    <string name="engine_type">Engine Type</string>
-    <string name="transmission_type">Transmission Type</string>
-    <string name="engine_capacity">Engine Capacity</string>
-    <string name="create_employee_account">Create employee account?</string>
-    <string name="field">Camp</string>
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="seeds_title">Seeds</string>
+  <string name="chem_title">Chemicals</string>
+  <string name="fertiliser_title">Fertiliser</string>
+  <string name="fuel_title">Fuel</string>
+  <string name="nav_activities">Activities</string>
+  <string name="city">City</string>
+  <string name="zip_code">ZIP Code</string>
+  <string name="country">Country</string>
+  <string name="required_hint">*required</string>
+  <string name="no_country_error">You must insert the country!</string>
+  <string name="no_city_error">You must insert your farm\'s city!</string>
+  <string name="add_employee">Add Employee</string>
+  <string name="you_have_no_employees_added_to_your_company_yet">no_employee_message</string>
+  <string name="no_employee_message">You have no employees added yet.</string>
+  <string name="nav_company_info">Company</string>
+  <string name="nav_user_info">User</string>
+  <string name="general">General</string>
+  <string name="save_changes">Save Changes</string>
+  <string name="save_success">Data successfully saved!</string>
+  <string name="edit_button">Edit</string>
+  <string name="personal_identification_number">Personal Identification Number</string>
+  <string name="id_number">ID Number</string>
+  <string name="employment_date">Employment Date</string>
+  <string name="position">Position</string>
+  <string name="base_salary">Base Salary</string>
+  <string name="contract_number">Contract number</string>
+  <string name="employee_account_email">Employee Account Email*</string>
+  <string name="employee_account_password">Employee Account Password*</string>
+  <string name="confirm">Confirm</string>
+  <string name="add_field">Add Field</string>
+  <string name="no_field_message">There are no fields yet.</string>
+  <string name="field_name">Field Name*</string>
+  <string name="field_location">Location</string>
+  <string name="field_area">Area*</string>
+  <string name="ownership">Ownership</string>
+  <string name="field_notes">Notes</string>
+  <string name="no_field_name">Field name required!</string>
+  <string name="no_field_area_error">Field area required!</string>
+  <string name="invalid_area_error">Area must be a stricly positive number!</string>
+  <string name="unseeded_string">Unseeded</string>
+  <string name="field_name_label">Field Name</string>
+  <string name="area">Area</string>
+  <string name="crop_status">Crop status</string>
+  <string name="activity_history">Activity history</string>
+  <string name="delete">Del</string>
+  <string name="my_activities">My Activities</string>
+  <string name="my_tasks">My Tasks</string>
+  <string name="gps_not_found_title">Location disabled</string>
+  <string name="gps_not_found_message">Location is not enabled. Do you want to enable it?</string>
+  <string name="yes">Yes</string>
+  <string name="no">No</string>
+  <string name="nav_ongoing_tasks">Ongoing Tasks</string>
+  <string name="new_activity">New Activity</string>
+  <string name="filter_by_status">Filter by status:</string>
+  <string name="new_task">New Task</string>
+  <string name="create_task">Create Task</string>
+  <string name="fetching_user_data">Fetching user data...</string>
+  <string name="pause_task">Stop Task</string>
+  <string name="show_on_map">Show On Map</string>
+  <string name="start_task">Start Task</string>
+  <string name="total_elapsed_time">Total elapsed time</string>
+  <string name="started_at">Started at</string>
+  <string name="speed">Speed</string>
+  <string name="add_equipment">Add Equipment</string>
+  <string name="type">Type</string>
+  <string name="manufacturer">Manufacturer</string>
+  <string name="model">Model</string>
+  <string name="serial_number">Serial Number</string>
+  <string name="model_required">Model*</string>
+  <string name="manufacturer_required">Manufacturer*</string>
+  <string name="type_required">Type*</string>
+  <string name="required_field">This field is required!</string>
+  <string name="field_required">Field*</string>
+  <string name="equipment">Equipment</string>
+  <string name="no_field_selected">You cannot start a task without a field selected.</string>
+  <string name="no_equip_selected">You must select at least one equipment in order to start this task.</string>
+  <string name="task_type">Task Type</string>
+  <string name="purchase_date">Purchase Date</string>
+  <string name="manufacturing_year">Manufacturing Year</string>
+  <string name="purchase_price">Purchase Price</string>
+  <string name="plate_number">Plate Number</string>
+  <string name="engine_type">Engine Type</string>
+  <string name="transmission_type">Transmission Type</string>
+  <string name="engine_capacity">Engine Capacity</string>
+  <string name="create_employee_account">Create employee account?</string>
+  <string name="field">Camp</string>
+  <string name="available">Disponibil</string>
+  <string name="cons_name">Name</string>
+  <string name="amount">Amount</string>
+  <string name="purchased_from">Purchased from</string>
+  <string name="add_cons">Add Consumable</string>
+  <string name="cons_name_req">Name*</string>
+  <string name="invalid_numeric_val_err">Invalid numeric value</string>
 
-    <string-array name="ownership">
-        <item>Own</item>
-        <item>Rent</item>
-        <item>Cropshare</item>
-    </string-array>
-    <string-array name="activity_status">
-        <item>Not started</item>
-        <item>Ongoing</item>
-        <item>Paused</item>
-        <item>Finished</item>
-    </string-array>
-    <string-array name="equipment_types">
-        <item>Combine</item>
-        <item>Cultivator</item>
-        <item>Disk</item>
-        <item>Plough</item>
-        <item>Seeder</item>
-        <item>Tractor</item>
-    </string-array>
-    <string-array name="task_types">
-        <item>Fertilising</item>
-        <item>Harvesting</item>
-        <item>Plowing</item>
-        <item>Sowing</item>
-        <item>Spraying</item>
-    </string-array>
+  <string-array name="ownership">
+    <item>Own</item>
+    <item>Rent</item>
+    <item>Cropshare</item>
+  </string-array>
+  <string-array name="activity_status">
+    <item>Not started</item>
+    <item>Ongoing</item>
+    <item>Paused</item>
+    <item>Finished</item>
+  </string-array>
+  <string-array name="equipment_types">
+    <item>Combine</item>
+    <item>Cultivator</item>
+    <item>Disk</item>
+    <item>Plough</item>
+    <item>Seeder</item>
+    <item>Tractor</item>
+  </string-array>
+  <string-array name="task_types">
+    <item>Fertilising</item>
+    <item>Harvesting</item>
+    <item>Plowing</item>
+    <item>Sowing</item>
+    <item>Spraying</item>
+  </string-array>
+  <string-array name="cons_type">
+    <item>Seeds</item>
+    <item>Chemicals</item>
+    <item>Fertiliser</item>
+    <item>Fuel</item>
+  </string-array>
 </resources>

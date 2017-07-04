@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:orientation="vertical"
-    tools:context="com.licence.serban.farmcompanion.fragments.emp_account.EmpTaskTrackingFragment">
+    tools:context=".emp_account.fragments.EmpTaskTrackingFragment">
 
     <Button
         android:id="@+id/empTrackStopBroadcastButton"

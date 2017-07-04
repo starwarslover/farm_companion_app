@@ -5,7 +5,7 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context="com.licence.serban.farmcompanion.fragments.tasks.TaskDetailsFragment">
+    tools:context=".tasks.fragments.TaskDetailsFragment">
 
     <TextView
         android:id="@+id/taskDetailsTaskNameTextView"

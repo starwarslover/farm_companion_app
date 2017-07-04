@@ -12,7 +12,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.licence.serban.farmcompanion.R;
-import com.licence.serban.farmcompanion.classes.Utilities;
+import com.licence.serban.farmcompanion.misc.Utilities;
 
 public class ResetPasswordActivity extends AppCompatActivity {
 

@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.licence.serban.farmcompanion.R;
-import com.licence.serban.farmcompanion.classes.Utilities;
+import com.licence.serban.farmcompanion.misc.Utilities;
 
 public class LoginActivity extends AppCompatActivity {
 

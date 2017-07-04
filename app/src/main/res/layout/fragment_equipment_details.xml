@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.licence.serban.farmcompanion.fragments.equipment.EquipmentDetailsFragment">
+    tools:context=".equipment.fragments.EquipmentDetailsFragment">
 
     <LinearLayout
         android:paddingEnd="@dimen/activity_horizontal_margin"
