@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.classes.InputTypeEnum;
 import com.licence.serban.farmcompanion.classes.Utilities;
+import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 
 
 /**
@@ -21,19 +22,18 @@ import com.licence.serban.farmcompanion.classes.Utilities;
 public class InputListFragment extends Fragment {
     private InputTypeEnum inputType;
     private TextView titleTextView;
+    private OnAppTitleChange updateTitleCallback;
 
 
     public InputListFragment() {
         // Required empty public constructor
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_input_list, container, false);
-        titleTextView = (TextView) view.findViewById(R.id.inputListTitle);
+//        titleTextView = (TextView) view.findViewById(R.id.inputListTitle);
 
         inputType = (InputTypeEnum) getArguments().getSerializable(Utilities.Constants.BUNDLE_INPUT_TYPE);
         if (inputType != null) {
@@ -60,20 +60,21 @@ public class InputListFragment extends Fragment {
     }
 
     private void fertiliserBehaviour() {
-        titleTextView.setText("Fertiliser");
+
     }
 
     private void fuelBehaviour() {
-        titleTextView.setText("Fuel");
+
     }
 
     private void chemicalBehaviour() {
-        titleTextView.setText("Chemicals");
+
     }
 
     private void seedBehaviour() {
-        titleTextView.setText("Seeds");
+
     }
+
 
 
 }
