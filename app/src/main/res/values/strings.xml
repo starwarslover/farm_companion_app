@@ -142,6 +142,7 @@
   <string name="add_cons">Add Consumable</string>
   <string name="cons_name_req">Name*</string>
   <string name="invalid_numeric_val_err">Invalid numeric value</string>
+  <string name="employees">Employees</string>
 
   <string-array name="ownership">
     <item>Own</item>

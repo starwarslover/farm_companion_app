@@ -75,7 +75,6 @@
           android:layout_marginLeft="10dp"
           android:background="@android:color/transparent"
           android:text="Extinde"
-          android:visibility="invisible"
           android:textColor="@color/colorPrimary"
           android:textAllCaps="false"/>
     </LinearLayout>
@@ -86,6 +85,63 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/nav_employees"/>
+
+      <Button
+          android:id="@+id/tasksEmployeesExpandButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="10dp"
+          android:background="@android:color/transparent"
+          android:text="Extinde"
+          android:textColor="@color/colorPrimary"
+          android:textAllCaps="false"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tasksEmployeesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/nav_inputs"/>
+
+      <Button
+          android:id="@+id/tasksConsumablesExpandButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="10dp"
+          android:background="@android:color/transparent"
+          android:text="Extinde"
+          android:textColor="@color/colorPrimary"
+          android:textAllCaps="false"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tasksConsumablesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     </LinearLayout>
 
