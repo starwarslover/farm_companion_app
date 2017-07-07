@@ -48,6 +48,7 @@ import com.licence.serban.farmcompanion.interfaces.OnAddEmployeeListener;
 import com.licence.serban.farmcompanion.interfaces.OnAddFieldListener;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 import com.licence.serban.farmcompanion.interfaces.OnCreateNewTaskListener;
+import com.licence.serban.farmcompanion.interfaces.OnDatePickerSelectedListener;
 import com.licence.serban.farmcompanion.interfaces.OnDateSelectedListener;
 import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
 import com.licence.serban.farmcompanion.interfaces.OnElementAdded;
@@ -318,7 +319,7 @@ public class MainActivity extends AppCompatActivity
     Bundle bundle = new Bundle();
     bundle.putString(Utilities.Constants.USER_ID, userID);
     addEmployeeFragment.setArguments(bundle);
-    fragmentTransaction.replace(R.id.content_main, addEmployeeFragment, Utilities.Constants.EMPLOYEE_TAG).addToBackStack(null).commit();
+    fragmentTransaction.replace(R.id.content_main, addEmployeeFragment, Utilities.Constants.DATE_FRAGMENT).addToBackStack(null).commit();
   }
 
   @Override
@@ -329,7 +330,7 @@ public class MainActivity extends AppCompatActivity
     bundle.putString(Utilities.Constants.USER_ID, userID);
     bundle.putString(Utilities.Constants.EMPLOYEE_ID, employeeId);
     addEmployeeFragment.setArguments(bundle);
-    fragmentTransaction.replace(R.id.content_main, addEmployeeFragment, Utilities.Constants.EMPLOYEE_TAG).addToBackStack(null).commit();
+    fragmentTransaction.replace(R.id.content_main, addEmployeeFragment, Utilities.Constants.DATE_FRAGMENT).addToBackStack(null).commit();
   }
 
   @Override
@@ -352,7 +353,7 @@ public class MainActivity extends AppCompatActivity
 
   @Override
   public void onDateSelected(String date) {
-    AddEmployeeFragment currentFragment = (AddEmployeeFragment) getSupportFragmentManager().findFragmentByTag(Utilities.Constants.EMPLOYEE_TAG);
+    OnDatePickerSelectedListener currentFragment = (OnDatePickerSelectedListener) getSupportFragmentManager().findFragmentByTag(Utilities.Constants.DATE_FRAGMENT);
     if (currentFragment != null) {
       currentFragment.setDate(date);
     }
@@ -430,6 +431,16 @@ public class MainActivity extends AppCompatActivity
   public void startFragment(Fragment fragmentToStart, boolean addToBackStack) {
     FragmentTransaction transaction = fragmentManager.beginTransaction();
     transaction.replace(R.id.content_main, fragmentToStart);
+    if (addToBackStack) {
+      transaction.addToBackStack(null);
+    }
+    transaction.commit();
+  }
+
+  @Override
+  public void startFragment(Fragment fragmentToStart, boolean addToBackStack, String tag) {
+    FragmentTransaction transaction = fragmentManager.beginTransaction();
+    transaction.replace(R.id.content_main, fragmentToStart, tag);
     if (addToBackStack) {
       transaction.addToBackStack(null);
     }

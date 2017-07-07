@@ -7,7 +7,9 @@ import android.support.v4.app.Fragment;
  */
 
 public interface OnFragmentStart {
-    void startFragment(Fragment fragmentToStart, boolean addToBackStack);
+  void startFragment(Fragment fragmentToStart, boolean addToBackStack);
 
-    void popBackStack();
+  void startFragment(Fragment fragmentToStart, boolean addToBackStack, String tag);
+
+  void popBackStack();
 }

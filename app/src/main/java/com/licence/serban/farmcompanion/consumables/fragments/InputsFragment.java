@@ -78,7 +78,7 @@ public class InputsFragment extends Fragment {
         Bundle args = new Bundle();
         args.putString(Utilities.Constants.USER_ID, userID);
         consAddFragment.setArguments(args);
-        fragmentStart.startFragment(consAddFragment, true);
+        fragmentStart.startFragment(consAddFragment, true, Utilities.Constants.DATE_FRAGMENT);
       }
     });
 
