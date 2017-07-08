@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity
   private DatabaseReference databaseReference;
   private FirebaseAuth firebaseAuth;
   private FragmentManager fragmentManager;
+  public static String adminID;
 
 
   private String userID;
@@ -110,6 +111,11 @@ public class MainActivity extends AppCompatActivity
         ((ViewAnimator) findViewById(R.id.viewAnimator)).setDisplayedChild(1);
         currentUser = dataSnapshot.getValue(User.class);
         if (currentUser != null) {
+          if (currentUser.isAdmin()) {
+            adminID = currentUser.getId();
+          } else {
+            adminID = currentUser.getEmployerID();
+          }
           navNameTextView.setText(currentUser.getName());
           navEmailTextView.setText(currentUser.getEmail());
           showMenu(navigationView);

@@ -26,17 +26,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
-import com.licence.serban.farmcompanion.misc.Utilities;
-import com.licence.serban.farmcompanion.misc.WorkState;
-import com.licence.serban.farmcompanion.tasks.adapters.TasksDatabaseAdapter;
-import com.licence.serban.farmcompanion.misc.models.Coordinates;
 import com.licence.serban.farmcompanion.employees.models.Employee;
-import com.licence.serban.farmcompanion.tasks.models.Task;
 import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
+import com.licence.serban.farmcompanion.misc.Utilities;
+import com.licence.serban.farmcompanion.misc.models.Coordinates;
+import com.licence.serban.farmcompanion.tasks.adapters.TasksDatabaseAdapter;
+import com.licence.serban.farmcompanion.tasks.models.Task;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,200 +39,184 @@ import java.util.Locale;
 public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, LocationListener {
 
 
-    private static final int REQ_PERMISSION_LOCATION = 25;
-    private String taskID;
-    private DatabaseReference activeTasksReference;
-    private GoogleApiClient googleApiClient;
-    private Location lastLocation;
-    private LocationRequest mLocationRequest;
-    private DatabaseReference currentTaskReference;
-    private Button stopTaskButton;
-    private String employerID;
-    private OnFragmentStart startFragment;
-    private String employeeID;
-    private long startTime;
-    private Task currentTask;
-    private Employee employee;
+  private static final int REQ_PERMISSION_LOCATION = 25;
+  private String taskID;
+  private DatabaseReference activeTasksReference;
+  private GoogleApiClient googleApiClient;
+  private Location lastLocation;
+  private LocationRequest mLocationRequest;
+  private DatabaseReference currentTaskReference;
+  private Button stopTaskButton;
+  private String employerID;
+  private OnFragmentStart startFragment;
+  private String employeeID;
+  private long startTime;
+  private Task currentTask;
+  private Employee employee;
 
-    public EmpTaskTrackingFragment() {
-        // Required empty public constructor
+  public EmpTaskTrackingFragment() {
+    // Required empty public constructor
+  }
+
+
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
+
+    View view = inflater.inflate(R.layout.fragment_emp_task_tracking, container, false);
+
+    Bundle args = getArguments();
+    if (args != null) {
+      taskID = args.getString(Utilities.Constants.TASK_ID_EXTRA);
+      employerID = args.getString(Utilities.Constants.DB_EMPLOYER_ID);
     }
 
+    employeeID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    stopTaskButton = (Button) view.findViewById(R.id.empTrackStopBroadcastButton);
+    stopTaskButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        startFragment.popBackStack();
+      }
+    });
 
-        View view = inflater.inflate(R.layout.fragment_emp_task_tracking, container, false);
+    activeTasksReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_ACTIVE_TASKS).child(employerID).child(taskID);
+    currentTaskReference = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(employerID).child(taskID);
+    getInformation();
 
-        Bundle args = getArguments();
-        if (args != null) {
-            taskID = args.getString(Utilities.Constants.TASK_ID_EXTRA);
-            employerID = args.getString(Utilities.Constants.DB_EMPLOYER_ID);
-        }
+    setUpLocationApi();
+    setOrientation();
+    return view;
+  }
 
-        employeeID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-
-        stopTaskButton = (Button) view.findViewById(R.id.empTrackStopBroadcastButton);
-        stopTaskButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopBroadcasting();
-//                EmployeeTasksFragment employeeTasksFragment = new EmployeeTasksFragment();
-//                Bundle args = new Bundle();
-//                args.putString(Utilities.Constants.DB_EMPLOYER_ID, employerID);
-//                employeeTasksFragment.setArguments(args);
-//                startFragment.startFragment(employeeTasksFragment, false);
-                startFragment.popBackStack();
-            }
-        });
-
-
-        activeTasksReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_ACTIVE_TASKS).child(employerID).child(taskID);
-        currentTaskReference = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(employerID).child(taskID);
-        getInformation();
-
-        setUpLocationApi();
+  private void getInformation() {
+    currentTaskReference.addListenerForSingleValueEvent(new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
+        currentTask = dataSnapshot.getValue(Task.class);
         startTask();
-        setOrientation();
-        return view;
+      }
 
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+
+      }
+    });
+    FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_EMPLOYEES).child(employerID).child(employeeID).addListenerForSingleValueEvent(new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
+        employee = dataSnapshot.getValue(Employee.class);
+        activeTasksReference.child(employeeID).child("emp_name").setValue(employee.getName());
+
+      }
+
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+
+      }
+    });
+  }
+
+
+  private void setUpLocationApi() {
+    googleApiClient = new GoogleApiClient.Builder(this.getActivity())
+            .addApi(LocationServices.API)
+            .addConnectionCallbacks(this)
+            .build();
+
+    mLocationRequest = new LocationRequest();
+    mLocationRequest.setInterval(5000);
+    mLocationRequest.setSmallestDisplacement(10);
+    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+  }
+
+  private void stopBroadcasting() {
+    activeTasksReference.child(employeeID).removeValue();
+    currentTask.stopTask();
+    googleApiClient.disconnect();
+  }
+
+  private void setOrientation() {
+    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+  }
+
+  private void startTask() {
+    startTime = System.currentTimeMillis();
+    activeTasksReference.child(employeeID).child(Utilities.Constants.DB_START_DATE).setValue(startTime);
+    currentTask.startTask(true);
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    stopBroadcasting();
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
+
+    if (lastLocation == null) {
+      googleApiClient.connect();
     }
+  }
 
-    private void getInformation() {
-        currentTaskReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                currentTask = dataSnapshot.getValue(Task.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_EMPLOYEES).child(employerID).child(employeeID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                employee = dataSnapshot.getValue(Employee.class);
-                activeTasksReference.child(employeeID).child("emp_name").setValue(employee.getName());
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    try {
+      startFragment = (OnFragmentStart) context;
+    } catch (ClassCastException ex) {
+      throw new ClassCastException(context.toString()
+              + " must implement OnFragmentStart");
     }
+  }
 
+  @Override
+  public void onStop() {
+    super.onStop();
+    googleApiClient.disconnect();
+  }
 
-    private void setUpLocationApi() {
-        googleApiClient = new GoogleApiClient.Builder(this.getActivity())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .build();
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+  }
 
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(5000);
-        mLocationRequest.setSmallestDisplacement(10);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+  @Override
+  public void onConnected(@Nullable Bundle bundle) {
+    if (ActivityCompat.checkSelfPermission(this.getActivity(),
+            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+      ActivityCompat.requestPermissions(this.getActivity(),
+              new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+              REQ_PERMISSION_LOCATION);
+
+    } else {
+      //noinspection MissingPermission
+      LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, mLocationRequest, EmpTaskTrackingFragment.this);
     }
+  }
 
-    private void stopBroadcasting() {
-        currentTaskReference.child("stopDate").setValue(new SimpleDateFormat("dd MM yyyy HH:mm:ss zz", Locale.ENGLISH).format(Calendar.getInstance()
-                .getTime()));
-        currentTaskReference.child("canTrack").setValue(false);
-        activeTasksReference.child(employeeID).removeValue();
-        currentTaskReference.child("currentState").setValue(WorkState.PAUSED);
-        googleApiClient.disconnect();
-    }
+  @Override
+  public void onConnectionSuspended(int i) {
 
-    private void setOrientation() {
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }
+  }
 
-    private void startTask() {
-        String dateFormat = new SimpleDateFormat("dd MM yyyy HH:mm:ss zz", Locale.ENGLISH).format(Calendar.getInstance()
-                .getTime());
-        activeTasksReference.child(employeeID).child(Utilities.Constants.DB_START_DATE).setValue(dateFormat);
-        currentTaskReference.child(Utilities.Constants.DB_START_DATE).setValue(dateFormat);
-        currentTaskReference.child(Utilities.Constants.DB_CAN_TRACK).setValue(true);
-        currentTaskReference.child(Utilities.Constants.DB_STATE).setValue(WorkState.STARTED);
-        startTime = System.currentTimeMillis();
-    }
+  @Override
+  public void onLocationChanged(Location location) {
+    broadcastTaskDetails(location);
+  }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-        stopBroadcasting();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if (lastLocation == null) {
-            googleApiClient.connect();
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            startFragment = (OnFragmentStart) context;
-        } catch (ClassCastException ex) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnFragmentStart");
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        googleApiClient.disconnect();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this.getActivity(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this.getActivity(),
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQ_PERMISSION_LOCATION);
-
-        } else {
-            //noinspection MissingPermission
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, mLocationRequest, EmpTaskTrackingFragment.this);
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        broadcastTaskDetails(location);
-    }
-
-    private void broadcastTaskDetails(Location location) {
-        Coordinates coords = new Coordinates(location);
-        activeTasksReference.child(employeeID).child(Utilities.Constants.GPS_COORDINATES).setValue(coords);
-        activeTasksReference.child(employeeID).child(Utilities.Constants.DB_SPEED).setValue(location.getSpeed());
-        long elapsedTime = System.currentTimeMillis() - startTime;
-        activeTasksReference.child(employeeID).child(Utilities.Constants.DB_ELAPSED_TIME).setValue(elapsedTime);
-    }
+  private void broadcastTaskDetails(Location location) {
+    Coordinates coords = new Coordinates(location);
+    activeTasksReference.child(employeeID).child(Utilities.Constants.GPS_COORDINATES).setValue(coords);
+    activeTasksReference.child(employeeID).child(Utilities.Constants.DB_SPEED).setValue(location.getSpeed());
+    long elapsedTime = System.currentTimeMillis() - startTime;
+    activeTasksReference.child(employeeID).child(Utilities.Constants.DB_ELAPSED_TIME).setValue(elapsedTime);
+  }
 
 }
 

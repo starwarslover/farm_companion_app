@@ -143,6 +143,10 @@
   <string name="cons_name_req">Name*</string>
   <string name="invalid_numeric_val_err">Invalid numeric value</string>
   <string name="employees">Employees</string>
+  <string name="purchase_price_ron">Pret achizitie (RON)</string>
+  <string name="amount_kg">Cantitate (Kg)</string>
+  <string name="amount_liters">Cantitate (Litri)</string>
+  <string name="task_history">Task history</string>
 
   <string-array name="ownership">
     <item>Own</item>

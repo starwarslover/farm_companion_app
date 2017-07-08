@@ -17,20 +17,22 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
-import com.licence.serban.farmcompanion.activities.MainActivity;
 import com.licence.serban.farmcompanion.consumables.adapters.ConsumableDatabaseAdapter;
 import com.licence.serban.farmcompanion.consumables.models.Consumable;
+import com.licence.serban.farmcompanion.employees.models.EEmployeeState;
 import com.licence.serban.farmcompanion.employees.models.Employee;
 import com.licence.serban.farmcompanion.equipment.adapters.EquipmentDatabaseAdapter;
 import com.licence.serban.farmcompanion.equipment.models.Equipment;
 import com.licence.serban.farmcompanion.fields.models.CompanyField;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
+import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 import com.licence.serban.farmcompanion.interfaces.OnTaskCreatedListener;
 import com.licence.serban.farmcompanion.misc.Utilities;
 import com.licence.serban.farmcompanion.tasks.adapters.TasksDatabaseAdapter;
@@ -39,6 +41,8 @@ import com.licence.serban.farmcompanion.tasks.models.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.licence.serban.farmcompanion.misc.Utilities.Constants.TASK_ID_EXTRA;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,6 +75,8 @@ public class NewTaskFragment extends Fragment {
   private DatabaseReference employeesReference;
   boolean isAdmin;
   private ArrayList<CheckBox> consumableCheckBoxes;
+  private ArrayList<CheckBox> employeeCheckBoxes;
+  private OnFragmentStart onFragmentStartCallback;
 
   public NewTaskFragment() {
     // Required empty public constructor
@@ -92,6 +98,12 @@ public class NewTaskFragment extends Fragment {
       throw new ClassCastException(context.toString()
               + " must implement OnTaskCreatedListener");
     }
+    try {
+      onFragmentStartCallback = (OnFragmentStart) context;
+    } catch (ClassCastException ex) {
+      throw new ClassCastException(context.toString()
+              + " must implement OnFragmentStart");
+    }
   }
 
   @Override
@@ -104,11 +116,11 @@ public class NewTaskFragment extends Fragment {
 
     equipmentCheckBoxes = new ArrayList<>();
     consumableCheckBoxes = new ArrayList<>();
+    employeeCheckBoxes = new ArrayList<>();
     equipments = new ArrayList<>();
     fields = new ArrayList<>();
 
-    isAdmin = ((MainActivity) getActivity()).isUserAdmin();
-
+    isAdmin = FirebaseAuth.getInstance().getCurrentUser() != null;
     Bundle args = getArguments();
     if (args != null) {
       empID = args.getString(Utilities.Constants.USER_ID);
@@ -127,6 +139,7 @@ public class NewTaskFragment extends Fragment {
     fieldsReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_FIELDS).child(employerId);
     employeesReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_EMPLOYEES);
     employeeReference = !isAdmin ? employeesReference.child(empID) : null;
+    employeesReference = employeesReference.child(employerId);
     consumablesReference = FirebaseDatabase.getInstance().getReference().child(ConsumableDatabaseAdapter.DB_CONSUMABLES).child(employerId);
   }
 
@@ -195,7 +208,6 @@ public class NewTaskFragment extends Fragment {
     return checkBox;
   }
 
-
   private void fillEmployees() {
     if (!isAdmin) {
       employeeReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -212,8 +224,32 @@ public class NewTaskFragment extends Fragment {
 
         }
       });
+    } else {
+      employeesReference.orderByChild("state").equalTo(EEmployeeState.AVAILABLE.toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+          for (DataSnapshot child : dataSnapshot.getChildren()) {
+            Employee employee = child.getValue(Employee.class);
+            employeeCheckBoxes.add(getEmployeeCheckBox(employee));
+          }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+      });
     }
-    
+
+  }
+
+  private CheckBox getEmployeeCheckBox(Employee employee) {
+    CheckBox empCheckBox = createEmptyCheckBox();
+    String name = employee.getName();
+    empCheckBox.setText(name);
+    empCheckBox.setTag(employee);
+    empsLayout.addView(empCheckBox);
+    return empCheckBox;
   }
 
   private void fillEquipments() {
@@ -260,7 +296,6 @@ public class NewTaskFragment extends Fragment {
     LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
     return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
   }
-
 
   private void setUpViews(View view) {
     typeSpinner = (Spinner) view.findViewById(R.id.tasksTypeSpinner);
@@ -329,20 +364,30 @@ public class NewTaskFragment extends Fragment {
         }
         String type = typeSpinner.getSelectedItem().toString();
 
-        ResourcePlaceholder empPh = new ResourcePlaceholder();
-        empPh.setName(currentEmployee.getName());
-        empPh.setId(currentEmployee.getId());
-
         Task task = new Task(fieldPh);
-        task.addEmployee(empPh);
+        if (!isAdmin) {
+          ResourcePlaceholder empPh = null;
+          empPh = new ResourcePlaceholder();
+          empPh.setName(currentEmployee.getName());
+          empPh.setId(currentEmployee.getId());
+          task.addEmployee(empPh);
+        } else {
+          task.setEmployees(getEmployeesList());
+        }
+
         task.setUsedImplements(usedEquipments);
         task.setType(type);
-
+        task.setInputs(getConsumablesList());
         TasksDatabaseAdapter adapter = TasksDatabaseAdapter.getInstance(employerId);
         String id = adapter.insertTask(task);
 
-        if (((MainActivity) getActivity()).isUserAdmin()) {
-
+        if (isAdmin) {
+          Fragment fragmentDetails = new TaskDetailsFragment();
+          Bundle args = new Bundle();
+          args.putString(Utilities.Constants.USER_ID, employerId);
+          args.putString(TASK_ID_EXTRA, id);
+          fragmentDetails.setArguments(args);
+          onFragmentStartCallback.startFragment(fragmentDetails, false);
         } else {
           if (isGpsProviderEnabled()) {
             taskCreatedCallback.StartActivityTracking(id);
@@ -368,6 +413,38 @@ public class NewTaskFragment extends Fragment {
       }
     }
     return equips;
+  }
+
+  private List<ResourcePlaceholder> getConsumablesList() {
+    List<ResourcePlaceholder> cons = new ArrayList<>();
+    for (CheckBox cb : consumableCheckBoxes) {
+      if (cb.isChecked()) {
+        Consumable consumable = (Consumable) cb.getTag();
+        if (consumable != null) {
+          ResourcePlaceholder consPh = new ResourcePlaceholder();
+          consPh.setId(consumable.getId());
+          consPh.setName(consumable.getName());
+          cons.add(consPh);
+        }
+      }
+    }
+    return cons;
+  }
+
+  private List<ResourcePlaceholder> getEmployeesList() {
+    List<ResourcePlaceholder> emps = new ArrayList<>();
+    for (CheckBox cb : employeeCheckBoxes) {
+      if (cb.isChecked()) {
+        Employee employee = (Employee) cb.getTag();
+        if (employee != null) {
+          ResourcePlaceholder empPh = new ResourcePlaceholder();
+          empPh.setId(employee.getId());
+          empPh.setName(employee.getName());
+          emps.add(empPh);
+        }
+      }
+    }
+    return emps;
   }
 
   private CompanyField getSpinnerField() {

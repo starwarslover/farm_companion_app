@@ -111,12 +111,12 @@ public class TasksDatabaseAdapter {
     });
   }
 
-  public void setListener(final EmpTasksAdapter adapter) {
+  public void setListener(final EmpTasksAdapter adapter, final String empID) {
     tasksReference.addChildEventListener(new ChildEventListener() {
       @Override
       public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Task task = dataSnapshot.getValue(Task.class);
-        if (task != null) {
+        if (task != null && task.hasEmployee(empID)) {
           adapter.add(task);
         }
       }
@@ -124,7 +124,7 @@ public class TasksDatabaseAdapter {
       @Override
       public void onChildChanged(DataSnapshot dataSnapshot, String s) {
         Task task = dataSnapshot.getValue(Task.class);
-        if (task != null) {
+        if (task != null && task.hasEmployee(empID)) {
           adapter.updateTask(task);
         }
       }

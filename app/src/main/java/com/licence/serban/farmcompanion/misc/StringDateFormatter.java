@@ -1,6 +1,5 @@
 package com.licence.serban.farmcompanion.misc;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,13 +9,18 @@ import java.util.Date;
  */
 
 public class StringDateFormatter {
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+  private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
-    public static Date stringToDate(String date) throws ParseException {
-        return dateFormat.parse(date);
-    }
+  public static Date stringToDate(String date) throws ParseException {
+    return dateFormat.parse(date);
+  }
 
-    public static String dateToString(Date date) {
-        return dateFormat.format(date);
-    }
+  public static String dateToString(Date date) {
+    return dateFormat.format(date);
+  }
+
+  public static String milisToString(Long milis, String dateFormat) {
+    SimpleDateFormat format = new SimpleDateFormat(dateFormat);
+    return format.format(new Date(milis));
+  }
 }

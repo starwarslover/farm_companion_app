@@ -85,11 +85,11 @@ public class TasksFragment extends Fragment {
     newTaskButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Fragment newTashFragment = new NewTaskFragment();
+        Fragment newTaskFragment = new NewTaskFragment();
         Bundle args = new Bundle();
         args.putString(Utilities.Constants.DB_EMPLOYER_ID, userID);
-        newTashFragment.setArguments(args);
-        startFragmentCallback.startFragment(newTashFragment, true);
+        newTaskFragment.setArguments(args);
+        startFragmentCallback.startFragment(newTaskFragment, true);
       }
     });
 

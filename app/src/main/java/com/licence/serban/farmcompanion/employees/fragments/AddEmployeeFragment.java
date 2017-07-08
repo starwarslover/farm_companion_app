@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
+import com.licence.serban.farmcompanion.employees.models.EEmployeeState;
 import com.licence.serban.farmcompanion.employees.models.Employee;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 import com.licence.serban.farmcompanion.interfaces.OnDatePickerSelectedListener;
@@ -178,15 +180,17 @@ public class AddEmployeeFragment extends Fragment implements OnDatePickerSelecte
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
         Employee currentEmployee = dataSnapshot.getValue(Employee.class);
-        nameEditText.setText(currentEmployee.getName());
-        persNumberEditText.setText(currentEmployee.getPersonalIdNumber());
-        idNumberEditText.setText(currentEmployee.getIdNumber());
-        dateEditText.setText(StringDateFormatter.dateToString(new Date(currentEmployee.getStartDate())));
-        dateMils = currentEmployee.getStartDate();
-        positionEditText.setText(currentEmployee.getPosition());
-        salaryEditText.setText(String.valueOf(currentEmployee.getBaseSalary()));
-        contractEditText.setText(currentEmployee.getContractNumber());
-        emailEditText.setText(currentEmployee.getAccountEmail());
+        if (currentEmployee != null) {
+          nameEditText.setText(currentEmployee.getName());
+          persNumberEditText.setText(currentEmployee.getPersonalIdNumber());
+          idNumberEditText.setText(currentEmployee.getIdNumber());
+          dateEditText.setText(StringDateFormatter.dateToString(new Date(currentEmployee.getStartDate())));
+          dateMils = currentEmployee.getStartDate();
+          positionEditText.setText(currentEmployee.getPosition());
+          salaryEditText.setText(String.valueOf(currentEmployee.getBaseSalary()));
+          contractEditText.setText(currentEmployee.getContractNumber());
+          emailEditText.setText(currentEmployee.getAccountEmail());
+        }
       }
 
       @Override
@@ -286,25 +290,31 @@ public class AddEmployeeFragment extends Fragment implements OnDatePickerSelecte
           nameEditText.setError(getResources().getString(R.string.no_name_error));
           return;
         }
-        if (email.isEmpty()) {
-          emailEditText.setError(getResources().getString(R.string.no_email_error));
-          return;
-        }
-        if (confirmEmail.isEmpty()) {
-          emailEditText.setError(getResources().getString(R.string.no_email_error));
-          return;
-        }
-        if (password.isEmpty()) {
-          passwordEditText.setError(getResources().getString(R.string.no_pass_error));
-          return;
-        }
-        if (confirmPassword.isEmpty()) {
-          confirmPasswordEditText.setError(getResources().getString(R.string.no_pass_error));
-          return;
+        if (employeeAccountCheckBox.isChecked()) {
+          if (email.isEmpty()) {
+            emailEditText.setError(getResources().getString(R.string.no_email_error));
+            return;
+          }
+          if (confirmEmail.isEmpty()) {
+            emailEditText.setError(getResources().getString(R.string.no_email_error));
+            return;
+          }
+          if (password.isEmpty()) {
+            passwordEditText.setError(getResources().getString(R.string.no_pass_error));
+            return;
+          }
+          if (confirmPassword.isEmpty()) {
+            confirmPasswordEditText.setError(getResources().getString(R.string.no_pass_error));
+            return;
+          }
         }
         double salary = 0;
         if (!salaryString.isEmpty()) {
-          salary = Double.parseDouble(salaryString);
+          try {
+            salary = Double.parseDouble(salaryString);
+          } catch (Exception ex) {
+            ex.printStackTrace();
+          }
         }
         Date employmentDate = null;
         if (!employmentDateString.isEmpty()) {
@@ -314,13 +324,6 @@ public class AddEmployeeFragment extends Fragment implements OnDatePickerSelecte
             e.printStackTrace();
           }
         }
-
-        final User employeeUser = new User();
-        employeeUser.setAdmin(false);
-        employeeUser.setEmail(email);
-        employeeUser.setName(name);
-        employeeUser.setEmployerID(userID);
-        employeeUser.setCreatedAt(System.currentTimeMillis());
 
         final Employee employee = new Employee();
         employee.setName(name);
@@ -334,29 +337,52 @@ public class AddEmployeeFragment extends Fragment implements OnDatePickerSelecte
         employee.setIdNumber(idNumber);
         employee.setPosition(position);
         employee.setCreatedAt(System.currentTimeMillis());
+        employee.setState(EEmployeeState.AVAILABLE);
 
         final FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                  @Override
-                  public void onSuccess(AuthResult authResult) {
-                    String id = authResult.getUser().getUid();
-                    employeeUser.setId(id);
-                    employee.setId(id);
-                    employeesReference.child(id).setValue(employee);
-                    databaseReference.child(Utilities.Constants.DB_USERS).child(id).setValue(employeeUser);
-                    Toast.makeText(AddEmployeeFragment.this.getActivity(), "Success", Toast.LENGTH_SHORT).show();
-                    firebaseAuth.signOut();
-                    signInCurrentUser(id);
-                  }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                  @Override
-                  public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(AddEmployeeFragment.this.getActivity(), "Failure", Toast.LENGTH_SHORT).show();
-                  }
-                });
+
+        if (employeeAccountCheckBox.isChecked()) {
+          final User employeeUser = new User();
+          employeeUser.setAdmin(false);
+          employeeUser.setEmail(email);
+          employeeUser.setName(name);
+          employeeUser.setEmployerID(userID);
+          employeeUser.setCreatedAt(System.currentTimeMillis());
+
+          firebaseAuth.createUserWithEmailAndPassword(email, password)
+                  .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                      String id = authResult.getUser().getUid();
+                      employeeUser.setId(id);
+                      employee.setId(id);
+                      employeesReference.child(id).setValue(employee);
+                      databaseReference.child(Utilities.Constants.DB_USERS).child(id).setValue(employeeUser);
+                      Toast.makeText(AddEmployeeFragment.this.getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                      firebaseAuth.signOut();
+                      signInCurrentUser(id);
+                    }
+                  })
+                  .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                      Log.e("Error", e.getMessage());
+                      Toast.makeText(AddEmployeeFragment.this.getActivity(), "Failure", Toast.LENGTH_SHORT).show();
+                    }
+                  });
+        } else {
+          final String id = employeesReference.push().getKey();
+          employee.setId(id);
+          employeesReference.child(id).setValue(employee).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+              goToDetails(id);
+            }
+          });
+        }
+
+
       }
     });
   }

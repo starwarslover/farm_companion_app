@@ -46,6 +46,7 @@
 
     </android.support.design.widget.TextInputLayout>
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -61,10 +62,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
-            android:hint="@string/purchase_price"
-            android:inputType="numberDecimal"
-
-            />
+            android:hint="@string/purchase_price_ron"
+            android:inputType="numberDecimal"/>
 
       </android.support.design.widget.TextInputLayout>
 
@@ -78,10 +77,11 @@
             android:id="@+id/consAddAmountEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/amount"
+            android:hint="@string/amount_liters"
             android:inputType="numberDecimal"/>
 
       </android.support.design.widget.TextInputLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -135,8 +135,8 @@
           android:id="@+id/consAddNotesEditText"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:lines="5"
-          android:hint="@string/purchased_from"/>
+          android:hint="@string/purchased_from"
+          android:lines="5"/>
 
     </android.support.design.widget.TextInputLayout>
 

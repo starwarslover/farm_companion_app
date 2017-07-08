@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:paddingStart="10dp"
     android:paddingEnd="10dp"
     android:paddingTop="15dp"
-    app:paddingEnd="15dp"
+    android:paddingBottom="15dp"
     android:background="#dddddd"
     android:layout_margin="10dp">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/taskRowNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:text="NamePlaceholder"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/taskRowSomethingTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/taskRowShowButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:text="@string/show_on_map"
-        android:visibility="gone" />
+  <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="2"
+      android:orientation="vertical">
 
     <TextView
-        android:id="@+id/taskRowStatusTextView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="StatusHere" />
+        android:id="@+id/taskRowNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:text="NamePlaceholder"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/taskRowTypeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+  </LinearLayout>
+
+  <Button
+      android:id="@+id/taskRowShowButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:layout_weight="1"
+      android:text="@string/show_on_map"
+      android:visibility="gone"/>
+
+  <TextView
+      android:id="@+id/taskRowStatusTextView"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center"
+      android:text="StatusHere"/>
 
 </LinearLayout>

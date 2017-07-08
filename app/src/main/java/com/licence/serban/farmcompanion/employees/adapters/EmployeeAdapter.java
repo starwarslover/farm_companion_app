@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.licence.serban.farmcompanion.R;
+import com.licence.serban.farmcompanion.employees.models.EEmployeeState;
 import com.licence.serban.farmcompanion.employees.models.Employee;
 
 import java.util.List;
@@ -20,76 +21,89 @@ import java.util.List;
  */
 
 public class EmployeeAdapter extends ArrayAdapter<Employee> {
-    private Context myContext;
-    private int myResourceId;
-    private List<Employee> myEmployees;
+  private Context myContext;
+  private int myResourceId;
+  private List<Employee> myEmployees;
 
-    public EmployeeAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Employee> objects) {
-        super(context, resource, objects);
-        this.myContext = context;
-        this.myResourceId = resource;
-        this.myEmployees = objects;
+  public EmployeeAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Employee> objects) {
+    super(context, resource, objects);
+    this.myContext = context;
+    this.myResourceId = resource;
+    this.myEmployees = objects;
+  }
+
+  @Nullable
+  @Override
+  public Employee getItem(int position) {
+    return myEmployees.get(position);
+  }
+
+  @NonNull
+  @Override
+  public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    View row = convertView;
+    EmployeeHolder holder = null;
+
+    if (row == null) {
+      LayoutInflater layoutInflater = LayoutInflater.from(myContext);
+      row = layoutInflater.inflate(myResourceId, parent, false);
+      holder = new EmployeeHolder();
+      holder.nameTextView = (TextView) row.findViewById(R.id.employeeRowNameTextView);
+      holder.positionTextView = (TextView) row.findViewById(R.id.employeeRowPositionTextView);
+      holder.statusTextView = (TextView) row.findViewById(R.id.empRowStateTextView);
+
+      row.setTag(holder);
+    } else {
+      holder = (EmployeeHolder) row.getTag();
     }
 
-    @Nullable
-    @Override
-    public Employee getItem(int position) {
-        return myEmployees.get(position);
+    Employee currentEmployee = myEmployees.get(position);
+    holder.nameTextView.setText(currentEmployee.getName());
+    String empPos = currentEmployee.getPosition();
+    if (empPos.isEmpty()) {
+      empPos = " N/A";
     }
-
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View row = convertView;
-        EmployeeHolder holder = null;
-
-        if (row == null) {
-            LayoutInflater layoutInflater = LayoutInflater.from(myContext);
-            row = layoutInflater.inflate(myResourceId, parent, false);
-            holder = new EmployeeHolder();
-            holder.nameTextView = (TextView) row.findViewById(R.id.employeeRowNameTextView);
-            holder.positionTextView = (TextView) row.findViewById(R.id.employeeRowPositionTextView);
-
-            row.setTag(holder);
-        } else {
-            holder = (EmployeeHolder) row.getTag();
-        }
-
-
-        Employee currentEmployee = myEmployees.get(position);
-        holder.nameTextView.setText(currentEmployee.getName());
-        holder.positionTextView.setText(currentEmployee.getPosition());
-
-        return row;
+    holder.positionTextView.setText(empPos);
+    EEmployeeState state = currentEmployee.getState();
+    String stateString;
+    if (state != null) {
+      stateString = state.toString();
+    } else {
+      stateString = "N/A";
     }
+    holder.statusTextView.setText(stateString);
 
-    public void removeEmployee(String empId) {
-        Employee tempEmp = null;
-        for (Employee emp : myEmployees) {
-            if (empId.equals(emp.getId())) {
-                tempEmp = emp;
-                break;
-            }
-        }
-        if (tempEmp != null) {
-            myEmployees.remove(tempEmp);
-            this.notifyDataSetChanged();
-        }
-    }
+    return row;
+  }
 
-    public void updateEmployee(Employee employee) {
-        Employee tempEmp = null;
-        for (Employee emp : myEmployees) {
-            if (employee.getId().equals(emp.getId())) {
-                emp = employee;
-                break;
-            }
-        }
-        notifyDataSetChanged();
+  public void removeEmployee(String empId) {
+    Employee tempEmp = null;
+    for (Employee emp : myEmployees) {
+      if (empId.equals(emp.getId())) {
+        tempEmp = emp;
+        break;
+      }
     }
+    if (tempEmp != null) {
+      myEmployees.remove(tempEmp);
+      this.notifyDataSetChanged();
+    }
+  }
 
-    private class EmployeeHolder {
-        public TextView nameTextView;
-        public TextView positionTextView;
+  public void updateEmployee(Employee employee) {
+    Employee tempEmp = null;
+    for (Employee emp : myEmployees) {
+      if (employee.getId().equals(emp.getId())) {
+        emp = employee;
+        break;
+      }
     }
+    notifyDataSetChanged();
+  }
+
+  private class EmployeeHolder {
+    public TextView nameTextView;
+    public TextView positionTextView;
+    public TextView statusTextView;
+  }
 }
