@@ -40,6 +40,7 @@ public class TasksFragment extends Fragment {
   private ListView activitiesListView;
   private OnFragmentStart startFragmentCallback;
   private Button newTaskButton;
+  private TasksDatabaseAdapter tasksDatabaseAdapter;
 
   public TasksFragment() {
     // Required empty public constructor
@@ -64,6 +65,12 @@ public class TasksFragment extends Fragment {
   }
 
   @Override
+  public void onDetach() {
+    super.onDetach();
+    tasksDatabaseAdapter.removeListeners();
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
 
@@ -75,7 +82,7 @@ public class TasksFragment extends Fragment {
       userID = args.getString(Utilities.Constants.USER_ID);
     }
 
-    final TasksDatabaseAdapter tasksDatabaseAdapter = TasksDatabaseAdapter.getInstance(userID);
+    tasksDatabaseAdapter = TasksDatabaseAdapter.getInstance(userID);
     activitiesListView = (ListView) view.findViewById(R.id.activitiesListView);
     taskAdapter = new TaskAdapter(getActivity(), R.layout.task_row, new ArrayList<Task>());
     newTaskButton = (Button) view.findViewById(R.id.activitiesNewActivityButton);

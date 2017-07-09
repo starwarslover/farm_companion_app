@@ -125,4 +125,9 @@ public class EmployeeTasksFragment extends Fragment {
     startFragmentCallBack.startFragment(detailsFragment, true);
   }
 
+  @Override
+  public void onDetach() {
+    super.onDetach();
+    databaseAdapter.removeListeners();
+  }
 }

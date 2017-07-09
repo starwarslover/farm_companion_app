@@ -75,6 +75,7 @@ public class AddEmployeeFragment extends Fragment implements OnDatePickerSelecte
   private OnFragmentStart startFragmentCallback;
   private CheckBox employeeAccountCheckBox;
   private LinearLayout employeeAccountLayout;
+  private ValueEventListener empListener;
 
 
   public AddEmployeeFragment() {
@@ -108,6 +109,14 @@ public class AddEmployeeFragment extends Fragment implements OnDatePickerSelecte
       throw new ClassCastException(context.toString()
               + " must implement OnElementAdded");
     }
+  }
+
+  @Override
+  public void onDetach() {
+    super.onDetach();
+    lockDrawerMenuCallback.unlockDrawerMenu();
+    if (employeeID != null)
+      employeesReference.child(employeeID).removeEventListener(empListener);
   }
 
   @Override
@@ -176,7 +185,7 @@ public class AddEmployeeFragment extends Fragment implements OnDatePickerSelecte
 
   private void editEmployeeBehaviour(final String employeeID) {
 
-    employeesReference.child(employeeID).addValueEventListener(new ValueEventListener() {
+    empListener = new ValueEventListener() {
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
         Employee currentEmployee = dataSnapshot.getValue(Employee.class);
@@ -197,7 +206,8 @@ public class AddEmployeeFragment extends Fragment implements OnDatePickerSelecte
       public void onCancelled(DatabaseError databaseError) {
 
       }
-    });
+    };
+    employeesReference.child(employeeID).addValueEventListener(empListener);
 
 
     emailEditText.setEnabled(false);

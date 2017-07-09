@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.emp_account.fragments.EmpTaskTrackingFragment;
+import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
 import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 import com.licence.serban.farmcompanion.misc.StringDateFormatter;
 import com.licence.serban.farmcompanion.misc.Utilities;
@@ -53,6 +54,8 @@ public class TaskDetailsFragment extends Fragment {
   private Button startTaskButton;
   private LinearLayout taskHistoryLayout;
   private LinearLayout taskHistoryViews;
+  private ValueEventListener taskListener;
+  private OnDrawerMenuLock drawerMenuLock;
 
   public TaskDetailsFragment() {
     // Required empty public constructor
@@ -67,6 +70,12 @@ public class TaskDetailsFragment extends Fragment {
       throw new ClassCastException(context.toString()
               + " must implement OnFragmentStart");
     }
+    try {
+      drawerMenuLock = (OnDrawerMenuLock) context;
+    } catch (ClassCastException ex) {
+      throw new ClassCastException(context.toString()
+              + " must implement OnDrawerMenuLock");
+    }
   }
 
   @Override
@@ -75,6 +84,7 @@ public class TaskDetailsFragment extends Fragment {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_task_details, container, false);
 
+    drawerMenuLock.lockDrawer();
     Bundle args = getArguments();
     if (args != null) {
       userID = args.getString(Utilities.Constants.USER_ID);
@@ -90,7 +100,7 @@ public class TaskDetailsFragment extends Fragment {
   }
 
   private void fillViews() {
-    taskReference.addValueEventListener(new ValueEventListener() {
+    taskListener = new ValueEventListener() {
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
         Task task = dataSnapshot.getValue(Task.class);
@@ -115,7 +125,8 @@ public class TaskDetailsFragment extends Fragment {
       public void onCancelled(DatabaseError databaseError) {
 
       }
-    });
+    };
+    taskReference.addValueEventListener(taskListener);
   }
 
   private void showTaskHistory(Task task) {
@@ -241,5 +252,11 @@ public class TaskDetailsFragment extends Fragment {
     startFragmentCallback.startFragment(trackingFragment, true);
   }
 
-
+  @Override
+  public void onDetach() {
+    super.onDetach();
+    drawerMenuLock.unlockDrawerMenu();
+    if (taskReference != null)
+      taskReference.removeEventListener(taskListener);
+  }
 }

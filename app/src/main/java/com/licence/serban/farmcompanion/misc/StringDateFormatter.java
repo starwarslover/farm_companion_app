@@ -15,6 +15,10 @@ public class StringDateFormatter {
     return dateFormat.parse(date);
   }
 
+  public static String formatDate(Date date, String format) {
+    return new SimpleDateFormat(format).format(date);
+  }
+
   public static String dateToString(Date date) {
     return dateFormat.format(date);
   }

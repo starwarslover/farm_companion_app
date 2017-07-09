@@ -19,10 +19,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
+import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
+import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 import com.licence.serban.farmcompanion.misc.Utilities;
 import com.licence.serban.farmcompanion.tasks.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.tasks.models.Task;
-import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,109 +31,123 @@ import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 public class EmpTaskDetailsFragment extends Fragment {
 
 
-    private String employerID;
-    private String taskID;
-    private DatabaseReference taskReference;
-    private Task currentTask;
-    private Button startTaskButton;
-    private OnFragmentStart startFragmentCallback;
+  private String employerID;
+  private String taskID;
+  private DatabaseReference taskReference;
+  private Task currentTask;
+  private Button startTaskButton;
+  private OnFragmentStart startFragmentCallback;
+  private ValueEventListener taskListener;
+  private OnDrawerMenuLock drawerLock;
 
-    public EmpTaskDetailsFragment() {
-        // Required empty public constructor
+  public EmpTaskDetailsFragment() {
+    // Required empty public constructor
+  }
+
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
+    // Inflate the layout for this fragment
+    View view = inflater.inflate(R.layout.fragment_emp_task_details, container, false);
+    drawerLock.lockDrawer();
+    Bundle args = getArguments();
+    if (args != null) {
+      employerID = args.getString(Utilities.Constants.DB_EMPLOYER_ID);
+      taskID = args.getString(Utilities.Constants.TASK_ID_EXTRA);
     }
 
+    setViews(view);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_emp_task_details, container, false);
+    setDatabaseListener();
 
-        Bundle args = getArguments();
-        if (args != null) {
-            employerID = args.getString(Utilities.Constants.DB_EMPLOYER_ID);
-            taskID = args.getString(Utilities.Constants.TASK_ID_EXTRA);
+
+    return view;
+  }
+
+  @Override
+  public void onDetach() {
+    super.onDetach();
+    drawerLock.unlockDrawerMenu();
+    taskReference.removeEventListener(taskListener);
+  }
+
+  private void setDatabaseListener() {
+    taskReference = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(employerID).child(taskID);
+    taskListener = new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
+        currentTask = dataSnapshot.getValue(Task.class);
+        if (currentTask != null) {
+          setViewsContent();
         }
+      }
 
-        setViews(view);
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
 
-        setDatabaseListener();
+      }
+    };
+    taskReference.addValueEventListener(taskListener);
+  }
 
-
-        return view;
-    }
-
-    private void setDatabaseListener() {
-        taskReference = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(employerID).child(taskID);
-        taskReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                currentTask = dataSnapshot.getValue(Task.class);
-                if (currentTask != null) {
-                    setViewsContent();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void setViews(View view) {
-        startTaskButton = (Button) view.findViewById(R.id.empTaskDetailsStartTaskButton);
-        startTaskButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isGpsProviderEnabled()) {
-                    startTrackingFragment();
-                } else {
-                    requestGpsEnable();
-                }
-            }
-        });
-    }
-
-    private void requestGpsEnable() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-        builder.setTitle(R.string.gps_not_found_title);  // GPS not found
-        builder.setMessage(R.string.gps_not_found_message); // Want to enable?
-        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }
-        });
-        builder.setNegativeButton(R.string.no, null);
-        builder.create().show();
-    }
-
-    private boolean isGpsProviderEnabled() {
-        LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
-
-    private void startTrackingFragment() {
-        EmpTaskTrackingFragment trackingFragment = new EmpTaskTrackingFragment();
-        Bundle args = new Bundle();
-        args.putString(Utilities.Constants.DB_EMPLOYER_ID, employerID);
-        args.putString(Utilities.Constants.TASK_ID_EXTRA, taskID);
-        trackingFragment.setArguments(args);
-        startFragmentCallback.startFragment(trackingFragment, true);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            startFragmentCallback = (OnFragmentStart) context;
-        } catch (Exception ex) {
-
+  private void setViews(View view) {
+    startTaskButton = (Button) view.findViewById(R.id.empTaskDetailsStartTaskButton);
+    startTaskButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (isGpsProviderEnabled()) {
+          startTrackingFragment();
+        } else {
+          requestGpsEnable();
         }
-    }
+      }
+    });
+  }
 
-    private void setViewsContent() {
+  private void requestGpsEnable() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+    builder.setTitle(R.string.gps_not_found_title);  // GPS not found
+    builder.setMessage(R.string.gps_not_found_message); // Want to enable?
+    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialogInterface, int i) {
+        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+      }
+    });
+    builder.setNegativeButton(R.string.no, null);
+    builder.create().show();
+  }
+
+  private boolean isGpsProviderEnabled() {
+    LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
+    return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+  }
+
+  private void startTrackingFragment() {
+    EmpTaskTrackingFragment trackingFragment = new EmpTaskTrackingFragment();
+    Bundle args = new Bundle();
+    args.putString(Utilities.Constants.DB_EMPLOYER_ID, employerID);
+    args.putString(Utilities.Constants.TASK_ID_EXTRA, taskID);
+    trackingFragment.setArguments(args);
+    startFragmentCallback.startFragment(trackingFragment, true);
+  }
+
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    try {
+      startFragmentCallback = (OnFragmentStart) context;
+    } catch (Exception ex) {
 
     }
+    try {
+      drawerLock = (OnDrawerMenuLock) context;
+    } catch (Exception ex) {
+
+    }
+  }
+
+  private void setViewsContent() {
+
+  }
 
 }

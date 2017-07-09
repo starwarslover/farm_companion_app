@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+  <TextView
+      android:id="@+id/forecastItemHourTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:gravity="center_horizontal"
+      android:text="8:00"
+      android:textSize="16sp"/>
+
+  <ImageView
+      android:layout_gravity="center"
+      android:id="@+id/forecastImage"
+      android:layout_width="80dp"
+      android:layout_marginStart="10dp"
+      android:layout_marginEnd="10dp"
+      android:backgroundTint="@color/colorAccent"
+      android:layout_height="80dp"/>
+
+  <TextView
+      android:id="@+id/forecastItemTempTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:text="12 °C"
+      android:textSize="16sp"/>
+</LinearLayout>

@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,7 +37,6 @@ import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.consumables.fragments.InputsFragment;
 import com.licence.serban.farmcompanion.dashboard.fragments.DashboardFragment;
 import com.licence.serban.farmcompanion.emp_account.fragments.EmpTaskTrackingFragment;
-import com.licence.serban.farmcompanion.emp_account.fragments.EmployeeDashboardFragment;
 import com.licence.serban.farmcompanion.emp_account.fragments.EmployeeTasksFragment;
 import com.licence.serban.farmcompanion.employees.fragments.AddEmployeeFragment;
 import com.licence.serban.farmcompanion.employees.fragments.EmployeesFragment;
@@ -71,8 +71,7 @@ public class MainActivity extends AppCompatActivity
   private FirebaseAuth firebaseAuth;
   private FragmentManager fragmentManager;
   public static String adminID;
-
-
+  public static boolean isAdmin;
   private String userID;
   private User currentUser;
 
@@ -99,10 +98,15 @@ public class MainActivity extends AppCompatActivity
 
     if (firebaseUser != null) {
       userID = firebaseUser.getUid();
+      getInfo();
+    } else {
+      logout();
     }
 
     setViews();
+  }
 
+  private void getInfo() {
     databaseReference = FirebaseDatabase.getInstance().getReference();
     DatabaseReference usersDatabaseReference = databaseReference.child(Utilities.Constants.DB_USERS);
     usersDatabaseReference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -116,6 +120,7 @@ public class MainActivity extends AppCompatActivity
           } else {
             adminID = currentUser.getEmployerID();
           }
+          getCompanyInfo();
           navNameTextView.setText(currentUser.getName());
           navEmailTextView.setText(currentUser.getEmail());
           showMenu(navigationView);
@@ -123,15 +128,20 @@ public class MainActivity extends AppCompatActivity
         } else {
           logout();
         }
-
       }
 
       @Override
       public void onCancelled(DatabaseError databaseError) {
-
+        Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
       }
     });
-    usersDatabaseReference.child(userID).child(Utilities.Constants.DB_COMPANY).addValueEventListener(new ValueEventListener() {
+
+
+  }
+
+  private void getCompanyInfo() {
+    DatabaseReference companyRef = databaseReference.child(CompanyInfoFragment.DB_COMPANIES).child(adminID);
+    companyRef.addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
         if (dataSnapshot != null) {
@@ -147,8 +157,6 @@ public class MainActivity extends AppCompatActivity
 
       }
     });
-
-
   }
 
   private void loadDashboard() {
@@ -178,11 +186,7 @@ public class MainActivity extends AppCompatActivity
     Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_main);
     if (currentFragment == null) {
       FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-      if (currentUser.isAdmin()) {
-        fragmentTransaction.add(R.id.content_main, new DashboardFragment()).commit();
-      } else {
-        fragmentTransaction.add(R.id.content_main, new EmployeeDashboardFragment()).commit();
-      }
+      fragmentTransaction.add(R.id.content_main, new DashboardFragment()).commit();
       requestPermissions(this);
     }
   }
@@ -279,7 +283,7 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.replace(R.id.content_main, workFragment).commit();
         break;
       case R.id.nav_emp_dashboard:
-        EmployeeDashboardFragment dashboardFragment = new EmployeeDashboardFragment();
+        Fragment dashboardFragment = new DashboardFragment();
         dashboardFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.content_main, dashboardFragment).commit();
         break;
@@ -459,6 +463,8 @@ public class MainActivity extends AppCompatActivity
   }
 
   public boolean isUserAdmin() {
-    return currentUser.isAdmin();
+    if (currentUser != null)
+      return currentUser.isAdmin();
+    return false;
   }
 }

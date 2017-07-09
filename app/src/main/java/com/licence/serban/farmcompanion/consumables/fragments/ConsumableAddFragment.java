@@ -16,6 +16,7 @@ import com.licence.serban.farmcompanion.consumables.adapters.ConsumableDatabaseA
 import com.licence.serban.farmcompanion.consumables.models.Consumable;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 import com.licence.serban.farmcompanion.interfaces.OnDatePickerSelectedListener;
+import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
 import com.licence.serban.farmcompanion.interfaces.OnElementAdded;
 import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 import com.licence.serban.farmcompanion.misc.ConsumableEnum;
@@ -43,6 +44,7 @@ public class ConsumableAddFragment extends Fragment implements OnDatePickerSelec
   private String userID;
   private OnFragmentStart fragmentStart;
   private OnElementAdded employeeAddedListener;
+  private OnDrawerMenuLock drawerLockListener;
 
 
   public ConsumableAddFragment() {
@@ -72,6 +74,18 @@ public class ConsumableAddFragment extends Fragment implements OnDatePickerSelec
       throw new ClassCastException(context.toString()
               + " must implement OnElementAdded");
     }
+    try {
+      drawerLockListener = (OnDrawerMenuLock) context;
+    } catch (ClassCastException ex) {
+      throw new ClassCastException(context.toString()
+              + " must implement OnDrawerMenuLock");
+    }
+  }
+
+  @Override
+  public void onDetach() {
+    super.onDetach();
+    drawerLockListener.unlockDrawerMenu();
   }
 
   @Override
@@ -79,6 +93,7 @@ public class ConsumableAddFragment extends Fragment implements OnDatePickerSelec
                            Bundle savedInstanceState) {
     this.setRetainInstance(true);
 
+    drawerLockListener.lockDrawer();
     View view = inflater.inflate(R.layout.fragment_consumable_add, container, false);
 
     this.updateTitleCallback.updateTitle(getResources().getString(R.string.add_cons));

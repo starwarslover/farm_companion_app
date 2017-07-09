@@ -9,34 +9,39 @@ import com.google.android.gms.maps.model.LatLng;
  */
 
 public class Coordinates {
-    private double latitude;
-    private double longitude;
+  private double latitude;
+  private double longitude;
 
-    public Coordinates() {
-    }
+  public Coordinates() {
+  }
 
-    public Coordinates(Location location) {
-        this.latitude = location.getLatitude();
-        this.longitude = location.getLongitude();
-    }
+  public Coordinates(Location location) {
+    this.latitude = location.getLatitude();
+    this.longitude = location.getLongitude();
+  }
 
-    public double getLatitude() {
-        return latitude;
-    }
+  public Coordinates(double latitude, double longitude) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+  }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
+  public double getLatitude() {
+    return latitude;
+  }
 
-    public double getLongitude() {
-        return longitude;
-    }
+  public void setLatitude(double latitude) {
+    this.latitude = latitude;
+  }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
+  public double getLongitude() {
+    return longitude;
+  }
 
-    public LatLng toLatLng() {
-        return new LatLng(getLatitude(), getLongitude());
-    }
+  public void setLongitude(double longitude) {
+    this.longitude = longitude;
+  }
+
+  public LatLng toLatLng() {
+    return new LatLng(getLatitude(), getLongitude());
+  }
 }

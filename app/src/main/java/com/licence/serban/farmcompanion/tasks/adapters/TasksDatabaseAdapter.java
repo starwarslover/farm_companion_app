@@ -25,6 +25,8 @@ public class TasksDatabaseAdapter {
   private static DatabaseReference tasksReference;
   private static DatabaseReference mainReference;
 
+  private static ChildEventListener childEventListener;
+
   private TasksDatabaseAdapter() {
 
   }
@@ -76,7 +78,7 @@ public class TasksDatabaseAdapter {
   }
 
   public void setListener(final TaskAdapter adapter) {
-    tasksReference.addChildEventListener(new ChildEventListener() {
+    childEventListener = new ChildEventListener() {
       @Override
       public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Task task = dataSnapshot.getValue(Task.class);
@@ -108,11 +110,12 @@ public class TasksDatabaseAdapter {
       public void onCancelled(DatabaseError databaseError) {
 
       }
-    });
+    };
+    tasksReference.addChildEventListener(childEventListener);
   }
 
   public void setListener(final EmpTasksAdapter adapter, final String empID) {
-    tasksReference.addChildEventListener(new ChildEventListener() {
+    childEventListener = new ChildEventListener() {
       @Override
       public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Task task = dataSnapshot.getValue(Task.class);
@@ -144,7 +147,12 @@ public class TasksDatabaseAdapter {
       public void onCancelled(DatabaseError databaseError) {
 
       }
-    });
+    };
+    tasksReference.addChildEventListener(childEventListener);
+  }
+
+  public void removeListeners() {
+    tasksReference.removeEventListener(childEventListener);
   }
 
   public void deleteTask(String taskId) {

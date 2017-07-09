@@ -32,6 +32,7 @@ import com.licence.serban.farmcompanion.equipment.adapters.EquipmentDatabaseAdap
 import com.licence.serban.farmcompanion.equipment.models.Equipment;
 import com.licence.serban.farmcompanion.fields.models.CompanyField;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
+import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
 import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 import com.licence.serban.farmcompanion.interfaces.OnTaskCreatedListener;
 import com.licence.serban.farmcompanion.misc.Utilities;
@@ -77,6 +78,7 @@ public class NewTaskFragment extends Fragment {
   private ArrayList<CheckBox> consumableCheckBoxes;
   private ArrayList<CheckBox> employeeCheckBoxes;
   private OnFragmentStart onFragmentStartCallback;
+  private OnDrawerMenuLock drawerMenuLock;
 
   public NewTaskFragment() {
     // Required empty public constructor
@@ -104,6 +106,18 @@ public class NewTaskFragment extends Fragment {
       throw new ClassCastException(context.toString()
               + " must implement OnFragmentStart");
     }
+    try {
+      drawerMenuLock = (OnDrawerMenuLock) context;
+    } catch (ClassCastException ex) {
+      throw new ClassCastException(context.toString()
+              + " must implement OnDrawerMenuLock");
+    }
+  }
+
+  @Override
+  public void onDetach() {
+    super.onDetach();
+    drawerMenuLock.unlockDrawerMenu();
   }
 
   @Override
@@ -112,6 +126,7 @@ public class NewTaskFragment extends Fragment {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_new_task, container, false);
 
+    drawerMenuLock.lockDrawer();
     updateTitleCallback.updateTitle(getResources().getString(R.string.new_activity));
 
     equipmentCheckBoxes = new ArrayList<>();

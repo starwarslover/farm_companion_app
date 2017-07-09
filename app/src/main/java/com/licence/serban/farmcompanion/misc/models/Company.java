@@ -5,62 +5,106 @@ package com.licence.serban.farmcompanion.misc.models;
  */
 
 public class Company {
-    private String name;
-    private String city;
-    private String country;
-    private String zipCode;
-    private long createdAt;
+  private String id;
+  private String name;
+  private String adminArea;
+  private String subAdminArea;
+  private String locality;
+  private String sublocality;
+  private String fullAddress;
+  private String country;
+  private String zipCode;
+  private Coordinates coordinates;
+  private long createdAt;
 
-    public long getCreatedAt() {
-        return createdAt;
-    }
+  public long getCreatedAt() {
+    return createdAt;
+  }
 
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
+  public void setCreatedAt(long createdAt) {
+    this.createdAt = createdAt;
+  }
 
-    public String getCity() {
-        return city;
-    }
+  public String getCountry() {
+    return country;
+  }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+  public void setCountry(String country) {
+    this.country = country;
+  }
 
-    public String getCountry() {
-        return country;
-    }
+  public String getZipCode() {
+    return zipCode;
+  }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
+  public void setZipCode(String zipCode) {
+    this.zipCode = zipCode;
+  }
 
-    public String getZipCode() {
-        return zipCode;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public Company() {
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getAdminArea() {
+    return adminArea;
+  }
 
-    public Company() {
-    }
+  public void setAdminArea(String adminArea) {
+    this.adminArea = adminArea;
+  }
 
-    @Override
-    public String toString() {
-        return "Company{" +
-                "name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                ", country='" + country + '\'' +
-                ", zipCode='" + zipCode + '\'' +
-                '}';
-    }
+  public String getSubAdminArea() {
+    return subAdminArea;
+  }
+
+  public void setSubAdminArea(String subAdminArea) {
+    this.subAdminArea = subAdminArea;
+  }
+
+  public String getLocality() {
+    return locality;
+  }
+
+  public void setLocality(String locality) {
+    this.locality = locality;
+  }
+
+  public String getSublocality() {
+    return sublocality;
+  }
+
+  public void setSublocality(String sublocality) {
+    this.sublocality = sublocality;
+  }
+
+  public String getFullAddress() {
+    return fullAddress;
+  }
+
+  public void setFullAddress(String fullAddress) {
+    this.fullAddress = fullAddress;
+  }
+
+  public Coordinates getCoordinates() {
+    return coordinates;
+  }
+
+  public void setCoordinates(Coordinates coordinates) {
+    this.coordinates = coordinates;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
 }

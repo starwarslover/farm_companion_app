@@ -147,6 +147,14 @@
   <string name="amount_kg">Cantitate (Kg)</string>
   <string name="amount_liters">Cantitate (Litri)</string>
   <string name="task_history">Task history</string>
+  <string name="pick_address">Pick address</string>
+  <string name="amin_area">Admin area</string>
+  <string name="subadmin_area">Subadmin area</string>
+  <string name="locality">Locality</string>
+  <string name="sublocality">Sublocality</string>
+  <string name="full_address">Full address</string>
+  <string name="loading_weather_forecast">Loading weather forecast...</string>
+  <string name="weather_forecast_for_next_hours">Weather forecast for next hours</string>
 
   <string-array name="ownership">
     <item>Own</item>

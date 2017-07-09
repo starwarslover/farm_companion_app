@@ -17,13 +17,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.licence.serban.farmcompanion.fields.models.CompanyField;
+import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.fields.adapters.FieldsAdapter;
-import com.licence.serban.farmcompanion.misc.Utilities;
+import com.licence.serban.farmcompanion.fields.models.CompanyField;
 import com.licence.serban.farmcompanion.interfaces.OnAddFieldListener;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
-import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
+import com.licence.serban.farmcompanion.misc.Utilities;
 
 import java.util.ArrayList;
 
@@ -33,135 +33,154 @@ import java.util.ArrayList;
  */
 public class FieldsFragment extends Fragment {
 
-    private String userID;
+  private String userID;
 
-    private FieldsAdapter fieldsAdapter;
-    private OnAppTitleChange updateTitleCallback;
-    private DatabaseReference databaseReference;
-    private DatabaseReference fieldsReference;
+  private FieldsAdapter fieldsAdapter;
+  private OnAppTitleChange updateTitleCallback;
+  private DatabaseReference databaseReference;
+  private DatabaseReference fieldsReference;
 
-    private LinearLayout noFieldLayout;
-    private ListView fieldsListView;
-    private Button addFieldButton;
-    private LinearLayout messageLayout;
-    private Button addFieldSecondButton;
+  private LinearLayout noFieldLayout;
+  private ListView fieldsListView;
+  private Button addFieldButton;
+  private LinearLayout messageLayout;
+  private Button addFieldSecondButton;
 
-    private OnAddFieldListener fieldListener;
-    private OnFragmentStart startFragmentCallback;
+  private OnAddFieldListener fieldListener;
+  private OnFragmentStart startFragmentCallback;
+  private ChildEventListener fieldDbListener;
+  private OnFragmentStart onFragmentStart;
 
-    public FieldsFragment() {
-        // Required empty public constructor
+  public FieldsFragment() {
+    // Required empty public constructor
+  }
+
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    try {
+      updateTitleCallback = (OnAppTitleChange) context;
+    } catch (ClassCastException ex) {
+      throw new ClassCastException(context.toString()
+              + " must implement OnHeadlineSelectedListener");
+    }
+    try {
+      fieldListener = (OnAddFieldListener) context;
+    } catch (ClassCastException e) {
+      throw new ClassCastException(context.toString() +
+              " must implement OnAddFieldListener");
+    }
+    try {
+      onFragmentStart = (OnFragmentStart) context;
+    } catch (ClassCastException e) {
+      throw new ClassCastException(context.toString() +
+              " must implement OnFragmentStart");
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            updateTitleCallback = (OnAppTitleChange) context;
-        } catch (ClassCastException ex) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnHeadlineSelectedListener");
+  }
+
+  @Override
+  public void onDetach() {
+    super.onDetach();
+    fieldsReference.removeEventListener(fieldDbListener);
+  }
+
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
+
+    View view = inflater.inflate(R.layout.fragment_fields, container, false);
+
+    updateTitleCallback.updateTitle(getResources().getString(R.string.nav_fields));
+
+    findViewsById(view);
+
+    Bundle arguments = getArguments();
+    if (arguments != null) {
+      userID = arguments.getString(Utilities.Constants.USER_ID);
+    }
+
+    databaseReference = FirebaseDatabase.getInstance().getReference();
+    fieldsReference = databaseReference.child(Utilities.Constants.DB_FIELDS).child(userID);
+
+    fieldsAdapter = new FieldsAdapter(getActivity(), R.layout.field_row, new ArrayList<CompanyField>());
+    fieldsListView.setAdapter(fieldsAdapter);
+
+    fieldDbListener = new ChildEventListener() {
+      @Override
+      public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        CompanyField field = dataSnapshot.getValue(CompanyField.class);
+        if (field != null) {
+          fieldsAdapter.add(field);
         }
-        try {
-            fieldListener = (OnAddFieldListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() +
-                    " must implement OnAddFieldListener");
+      }
+
+      @Override
+      public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        CompanyField field = dataSnapshot.getValue(CompanyField.class);
+        if (field != null) {
+          fieldsAdapter.updateField(field);
         }
+      }
 
-    }
+      @Override
+      public void onChildRemoved(DataSnapshot dataSnapshot) {
+        String fieldID = dataSnapshot.getKey();
+        fieldsAdapter.removeField(fieldID);
+      }
 
+      @Override
+      public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+      }
 
-        View view = inflater.inflate(R.layout.fragment_fields, container, false);
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
 
-        updateTitleCallback.updateTitle(getResources().getString(R.string.nav_fields));
+      }
+    };
+    fieldsReference.addChildEventListener(fieldDbListener);
 
-        findViewsById(view);
+    setOnClickListeners();
 
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            userID = arguments.getString(Utilities.Constants.USER_ID);
-        }
+    return view;
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        fieldsReference = databaseReference.child(Utilities.Constants.DB_FIELDS).child(userID);
+  }
 
-        fieldsAdapter = new FieldsAdapter(getActivity(), R.layout.field_row, new ArrayList<CompanyField>());
-        fieldsListView.setAdapter(fieldsAdapter);
+  private void findViewsById(View view) {
+    addFieldButton = (Button) view.findViewById(R.id.fieldsAddFieldButton);
+    fieldsListView = (ListView) view.findViewById(R.id.fieldsListView);
+    addFieldSecondButton = (Button) view.findViewById(R.id.fieldsAddFieldSecondButton);
+    messageLayout = (LinearLayout) view.findViewById(R.id.fieldsNoFieldLayout);
+  }
 
-        fieldsReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                CompanyField field = dataSnapshot.getValue(CompanyField.class);
-                if (field != null) {
-                    fieldsAdapter.add(field);
-                }
-            }
+  private void setOnClickListeners() {
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                CompanyField field = dataSnapshot.getValue(CompanyField.class);
-                if (field != null) {
-                    fieldsAdapter.updateField(field);
-                }
-            }
+    addFieldButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        fieldListener.openAddFieldUI();
+      }
+    });
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String fieldID = dataSnapshot.getKey();
-                fieldsAdapter.removeField(fieldID);
-            }
+    addFieldSecondButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        addFieldButton.callOnClick();
+      }
+    });
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        setOnClickListeners();
-
-        return view;
-
-    }
-
-    private void findViewsById(View view) {
-        addFieldButton = (Button) view.findViewById(R.id.fieldsAddFieldButton);
-        fieldsListView = (ListView) view.findViewById(R.id.fieldsListView);
-        addFieldSecondButton = (Button) view.findViewById(R.id.fieldsAddFieldSecondButton);
-        messageLayout = (LinearLayout) view.findViewById(R.id.fieldsNoFieldLayout);
-    }
-
-    private void setOnClickListeners() {
-
-        addFieldButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fieldListener.openAddFieldUI();
-            }
-        });
-
-        addFieldSecondButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addFieldButton.callOnClick();
-            }
-        });
-
-        fieldsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String fieldID = fieldsAdapter.getItem(position).getId();
-                fieldListener.openFieldDetailsFragment(fieldID);
-            }
-        });
-    }
+    fieldsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String fieldID = fieldsAdapter.getItem(position).getId();
+        FieldDetailsFragment fieldDetailsFragment = new FieldDetailsFragment();
+        Bundle arguments = new Bundle();
+        arguments.putString(Utilities.Constants.USER_ID, userID);
+        arguments.putString(Utilities.Constants.FIELD_ID, fieldID);
+        fieldDetailsFragment.setArguments(arguments);
+        onFragmentStart.startFragment(fieldDetailsFragment, true);
+      }
+    });
+  }
 }

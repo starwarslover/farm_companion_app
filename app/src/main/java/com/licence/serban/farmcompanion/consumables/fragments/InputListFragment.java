@@ -37,10 +37,15 @@ public class InputListFragment extends Fragment {
   }
 
   @Override
+  public void onDetach() {
+    super.onDetach();
+    ConsumableDatabaseAdapter.getInstance(userID).removeListeners();
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_input_list, container, false);
-//        titleTextView = (TextView) view.findViewById(R.id.inputListTitle);
     consListView = (ListView) view.findViewById(R.id.consListView);
     consAdapter = new ConsumableListAdapter(getActivity(), R.layout.consumable_row, new ArrayList<Consumable>());
     consListView.setAdapter(consAdapter);

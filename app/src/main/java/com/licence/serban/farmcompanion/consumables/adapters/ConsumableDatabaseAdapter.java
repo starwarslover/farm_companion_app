@@ -20,6 +20,7 @@ public class ConsumableDatabaseAdapter {
   private static ConsumableDatabaseAdapter instance;
   private static DatabaseReference consumablesReference;
   private static DatabaseReference mainReference;
+  private ChildEventListener consumableListener;
 
   private ConsumableDatabaseAdapter() {
 
@@ -56,7 +57,7 @@ public class ConsumableDatabaseAdapter {
 
   public void setListener(final ConsumableListAdapter adapter, ConsumableEnum consumableType) {
     Query consumableQuery = consumablesReference.orderByChild("type").equalTo(consumableType.toString());
-    consumableQuery.addChildEventListener(new ChildEventListener() {
+    consumableListener = new ChildEventListener() {
       @Override
       public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Consumable cons = dataSnapshot.getValue(Consumable.class);
@@ -87,7 +88,12 @@ public class ConsumableDatabaseAdapter {
       public void onCancelled(DatabaseError databaseError) {
 
       }
-    });
+    };
+    consumableQuery.addChildEventListener(consumableListener);
+  }
+
+  public void removeListeners() {
+    consumablesReference.removeEventListener(consumableListener);
   }
 
   public void deleteConsumable(String consId) {
