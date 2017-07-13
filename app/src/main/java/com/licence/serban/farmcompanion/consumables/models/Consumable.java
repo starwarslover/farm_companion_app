@@ -91,4 +91,10 @@ public class Consumable {
   public void setCreatedAt(long createdAt) {
     this.createdAt = createdAt;
   }
+
+  public String getUM() {
+    if (this.getType() == ConsumableEnum.IERBICIDE || this.getType() == ConsumableEnum.COMBUSTIBIL)
+      return "L";
+    return "Kg";
+  }
 }

@@ -5,5 +5,5 @@ package com.licence.serban.farmcompanion.employees.models;
  */
 
 public enum EEmployeeState {
-  AVAILABLE, UNAVAILABLE
+  DISPONIBIL, IN_LUCRU, INDISPONIBIL
 }

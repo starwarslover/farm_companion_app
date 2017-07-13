@@ -15,21 +15,24 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
+import com.licence.serban.farmcompanion.activities.MainActivity;
 import com.licence.serban.farmcompanion.consumables.adapters.ConsumableDatabaseAdapter;
 import com.licence.serban.farmcompanion.consumables.models.Consumable;
+import com.licence.serban.farmcompanion.emp_account.fragments.EmpTaskTrackingFragment;
 import com.licence.serban.farmcompanion.employees.models.EEmployeeState;
 import com.licence.serban.farmcompanion.employees.models.Employee;
 import com.licence.serban.farmcompanion.equipment.adapters.EquipmentDatabaseAdapter;
 import com.licence.serban.farmcompanion.equipment.models.Equipment;
+import com.licence.serban.farmcompanion.equipment.models.EquipmentState;
 import com.licence.serban.farmcompanion.fields.models.CompanyField;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
@@ -43,6 +46,7 @@ import com.licence.serban.farmcompanion.tasks.models.Task;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.licence.serban.farmcompanion.emp_account.fragments.EmpTaskDetailsFragment.TASK_TRACKING_TAG;
 import static com.licence.serban.farmcompanion.misc.Utilities.Constants.TASK_ID_EXTRA;
 
 /**
@@ -79,6 +83,8 @@ public class NewTaskFragment extends Fragment {
   private ArrayList<CheckBox> employeeCheckBoxes;
   private OnFragmentStart onFragmentStartCallback;
   private OnDrawerMenuLock drawerMenuLock;
+  private LinearLayout newTaskEmpsLayout;
+  private LayoutInflater inflater;
 
   public NewTaskFragment() {
     // Required empty public constructor
@@ -126,6 +132,7 @@ public class NewTaskFragment extends Fragment {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_new_task, container, false);
 
+    this.inflater = inflater;
     drawerMenuLock.lockDrawer();
     updateTitleCallback.updateTitle(getResources().getString(R.string.new_activity));
 
@@ -135,7 +142,7 @@ public class NewTaskFragment extends Fragment {
     equipments = new ArrayList<>();
     fields = new ArrayList<>();
 
-    isAdmin = FirebaseAuth.getInstance().getCurrentUser() != null;
+    isAdmin = ((MainActivity) NewTaskFragment.this.getActivity()).isUserAdmin();
     Bundle args = getArguments();
     if (args != null) {
       empID = args.getString(Utilities.Constants.USER_ID);
@@ -153,8 +160,9 @@ public class NewTaskFragment extends Fragment {
     equipmentReference = FirebaseDatabase.getInstance().getReference().child(EquipmentDatabaseAdapter.DB_EQUIPMENTS).child(employerId);
     fieldsReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_FIELDS).child(employerId);
     employeesReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_EMPLOYEES);
-    employeeReference = !isAdmin ? employeesReference.child(empID) : null;
     employeesReference = employeesReference.child(employerId);
+    if (empID != null)
+      employeeReference = employeesReference.child(empID);
     consumablesReference = FirebaseDatabase.getInstance().getReference().child(ConsumableDatabaseAdapter.DB_CONSUMABLES).child(employerId);
   }
 
@@ -205,7 +213,7 @@ public class NewTaskFragment extends Fragment {
 
   private CheckBox createEmptyCheckBox() {
     CheckBox checkBox = null;
-    if (this.getActivity() != null) {
+    if (NewTaskFragment.this.getActivity() != null) {
       checkBox = new CheckBox(this.getActivity());
       LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
       checkBox.setLayoutParams(params);
@@ -215,12 +223,15 @@ public class NewTaskFragment extends Fragment {
   }
 
   private CheckBox getConsCheckBox(Consumable cons) {
-    CheckBox checkBox = createEmptyCheckBox();
+    LinearLayout resourceItem = (LinearLayout) inflater.inflate(R.layout.resource_item, consLayout, false);
+    ResourceHolder holder = new ResourceHolder(resourceItem);
     String text = cons.getName() + " - " + cons.getType().toString();
-    checkBox.setText(text);
-    checkBox.setTag(cons);
-    consLayout.addView(checkBox);
-    return checkBox;
+    holder.mainCheckBox.setText(text);
+    holder.mainCheckBox.setTag(cons);
+    String amount = "Disponibil: " + String.valueOf(cons.getAmount()) + " " + cons.getUM();
+    holder.secondaryTextView.setText(amount);
+    consLayout.addView(resourceItem);
+    return holder.mainCheckBox;
   }
 
   private void fillEmployees() {
@@ -240,7 +251,7 @@ public class NewTaskFragment extends Fragment {
         }
       });
     } else {
-      employeesReference.orderByChild("state").equalTo(EEmployeeState.AVAILABLE.toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+      employeesReference.orderByChild("state").equalTo(EEmployeeState.DISPONIBIL.toString()).addListenerForSingleValueEvent(new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
           for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -268,7 +279,7 @@ public class NewTaskFragment extends Fragment {
   }
 
   private void fillEquipments() {
-    equipmentReference.addListenerForSingleValueEvent(new ValueEventListener() {
+    equipmentReference.orderByChild("state").equalTo(EquipmentState.DISPONIBIL.toString()).addListenerForSingleValueEvent(new ValueEventListener() {
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
         for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -286,12 +297,14 @@ public class NewTaskFragment extends Fragment {
   }
 
   private void createEquipmentCheckbox(Equipment equipment) {
-    CheckBox checkBox = createEmptyCheckBox();
+    LinearLayout resourceItem = (LinearLayout) inflater.inflate(R.layout.resource_item, consLayout, false);
+    ResourceHolder holder = new ResourceHolder(resourceItem);
     String cbText = equipment.getManufacturer() + " " + equipment.getModel();
-    checkBox.setText(cbText);
-    equipmentLayout.addView(checkBox);
-    checkBox.setTag(equipment);
-    equipmentCheckBoxes.add(checkBox);
+    holder.mainCheckBox.setText(cbText);
+    holder.mainCheckBox.setTag(equipment);
+    holder.secondaryTextView.setText(equipment.getType());
+    equipmentCheckBoxes.add(holder.mainCheckBox);
+    equipmentLayout.addView(resourceItem);
   }
 
   private void requestGpsEnable() {
@@ -313,6 +326,7 @@ public class NewTaskFragment extends Fragment {
   }
 
   private void setUpViews(View view) {
+    newTaskEmpsLayout = (LinearLayout) view.findViewById(R.id.newTaskEmpsLayout);
     typeSpinner = (Spinner) view.findViewById(R.id.tasksTypeSpinner);
     fieldsSpinner = (Spinner) view.findViewById(R.id.tasksFieldSpinner);
     fieldsSpinnerAdapter = new ArrayAdapter<String>(this.getActivity(), R.layout.support_simple_spinner_dropdown_item, new ArrayList<String>());
@@ -325,29 +339,35 @@ public class NewTaskFragment extends Fragment {
     consLayout = (LinearLayout) view.findViewById(R.id.tasksConsumablesLayout);
     consExpandButton = (Button) view.findViewById(R.id.tasksConsumablesExpandButton);
 
+    if (isAdmin)
+      newTaskEmpsLayout.setVisibility(View.VISIBLE);
+
     setButtonListeners();
 
   }
 
-  private void switchVisibility(View view) {
-    if (view.getVisibility() == View.VISIBLE)
+  private void switchVisibility(View view, Button caller) {
+    if (view.getVisibility() == View.VISIBLE) {
       view.setVisibility(View.GONE);
-    else
+      caller.setText(getResources().getString(R.string.expand));
+    } else {
       view.setVisibility(View.VISIBLE);
+      caller.setText(getResources().getString(R.string.collapse));
+    }
   }
 
   private void setButtonListeners() {
     expandEquipmentLayoutButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        switchVisibility(equipmentLayout);
+        switchVisibility(equipmentLayout, expandEquipmentLayoutButton);
       }
     });
 
     empExpandButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        switchVisibility(empsLayout);
+        switchVisibility(empsLayout, empExpandButton);
 
       }
     });
@@ -355,7 +375,7 @@ public class NewTaskFragment extends Fragment {
     consExpandButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        switchVisibility(consLayout);
+        switchVisibility(consLayout, consExpandButton);
       }
     });
 
@@ -405,13 +425,22 @@ public class NewTaskFragment extends Fragment {
           onFragmentStartCallback.startFragment(fragmentDetails, false);
         } else {
           if (isGpsProviderEnabled()) {
-            taskCreatedCallback.StartActivityTracking(id);
+            startTrackingFragment(id);
           } else {
             requestGpsEnable();
           }
         }
       }
     });
+  }
+
+  private void startTrackingFragment(String taskID) {
+    EmpTaskTrackingFragment trackingFragment = new EmpTaskTrackingFragment();
+    Bundle args = new Bundle();
+    args.putString(Utilities.Constants.DB_EMPLOYER_ID, empID);
+    args.putString(Utilities.Constants.TASK_ID_EXTRA, taskID);
+    trackingFragment.setArguments(args);
+    onFragmentStartCallback.startFragment(trackingFragment, true, TASK_TRACKING_TAG);
   }
 
   private List<ResourcePlaceholder> getEquipmentsList() {
@@ -466,6 +495,16 @@ public class NewTaskFragment extends Fragment {
     int pos = fieldsSpinner.getSelectedItemPosition();
     return fields.get(pos);
 
+  }
+
+  private class ResourceHolder {
+    public CheckBox mainCheckBox;
+    public TextView secondaryTextView;
+
+    public ResourceHolder(View view) {
+      mainCheckBox = (CheckBox) view.findViewById(R.id.resourceMainCheckBox);
+      secondaryTextView = (TextView) view.findViewById(R.id.resourceSecondaryTextView);
+    }
   }
 
 }

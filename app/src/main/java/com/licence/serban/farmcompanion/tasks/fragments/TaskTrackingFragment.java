@@ -63,6 +63,7 @@ public class TaskTrackingFragment extends Fragment {
 
   private TaskDetailsLayoutHolder holder;
   private OnDrawerMenuLock drawerMenuLock;
+  private ChildEventListener empsListener;
 
   public TaskTrackingFragment() {
     // Required empty public constructor
@@ -159,15 +160,13 @@ public class TaskTrackingFragment extends Fragment {
 
   private void renderTasks() {
 
-    tasksReference.addChildEventListener(new ChildEventListener() {
+    this.empsListener = new ChildEventListener() {
       @Override
       public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
           Coordinates coordinates = snapshot.child(Utilities.Constants.GPS_COORDINATES).getValue(Coordinates.class);
           if (coordinates != null && coordinates.toLatLng() != null) {
             LatLng latLng = coordinates.toLatLng();
-//                Marker marker = myGoogleMap.addMarker(new MarkerOptions().position(latLng));
-//                mapMarkers.put(dataSnapshot.getKey(), marker);
 
             Circle circle = myGoogleMap.addCircle(new CircleOptions().center(latLng).radius(150).fillColor(Color.BLACK));
             circle.setClickable(true);
@@ -179,14 +178,11 @@ public class TaskTrackingFragment extends Fragment {
               selectedEmployee = getHashKeyValue(circle);
               holder.showDetails();
             }
-
             if (taskID == null && !cameraPositioned) {
               cameraPositioned = true;
               CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(9).build();
               myGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
-//                myGoogleMap.addMarker(new MarkerOptions().position(latLng).title(dataSnapshot.getKey()));
-
           }
 
         }
@@ -226,9 +222,6 @@ public class TaskTrackingFragment extends Fragment {
 
       @Override
       public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                Marker marker = mapMarkers.get(dataSnapshot.getKey());
-//                marker.remove();
-//                mapMarkers.remove(dataSnapshot.getKey());
         Circle circle = empsCircles.get(dataSnapshot.getKey());
         if (circle != null) {
           circle.remove();
@@ -248,7 +241,8 @@ public class TaskTrackingFragment extends Fragment {
       public void onCancelled(DatabaseError databaseError) {
 
       }
-    });
+    };
+    tasksReference.addChildEventListener(this.empsListener);
   }
 
   @Override
@@ -267,6 +261,7 @@ public class TaskTrackingFragment extends Fragment {
   public void onDestroy() {
     super.onDestroy();
     mapView.onDestroy();
+    tasksReference.removeEventListener(this.empsListener);
   }
 
   @Override

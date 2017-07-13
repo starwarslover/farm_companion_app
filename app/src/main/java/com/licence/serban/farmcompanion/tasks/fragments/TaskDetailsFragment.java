@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
+import com.licence.serban.farmcompanion.emp_account.fragments.EmpTaskDetailsFragment;
 import com.licence.serban.farmcompanion.emp_account.fragments.EmpTaskTrackingFragment;
 import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
 import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
@@ -56,6 +57,7 @@ public class TaskDetailsFragment extends Fragment {
   private LinearLayout taskHistoryViews;
   private ValueEventListener taskListener;
   private OnDrawerMenuLock drawerMenuLock;
+  private LayoutInflater inflater;
 
   public TaskDetailsFragment() {
     // Required empty public constructor
@@ -83,6 +85,7 @@ public class TaskDetailsFragment extends Fragment {
                            Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_task_details, container, false);
+    this.inflater = inflater;
 
     drawerMenuLock.lockDrawer();
     Bundle args = getArguments();
@@ -96,6 +99,7 @@ public class TaskDetailsFragment extends Fragment {
     setDbReferences();
     setViews(view);
     fillViews();
+    
     return view;
   }
 
@@ -131,14 +135,15 @@ public class TaskDetailsFragment extends Fragment {
 
   private void showTaskHistory(Task task) {
     taskHistoryLayout.removeAllViews();
-    for (int i = 0; i < task.getStartDates().size(); i++) {
-      Long stopDate = i < task.getStopDates().size() ? task.getStopDates().get(i) : null;
-      taskHistoryLayout.addView(createHistoryItem(task.getStartDates().get(i), stopDate));
-    }
+    if (task.getStartDates() != null && task.getStopDates() != null)
+      for (int i = 0; i < task.getStartDates().size(); i++) {
+        Long stopDate = i < task.getStopDates().size() ? task.getStopDates().get(i) : null;
+        taskHistoryLayout.addView(createHistoryItem(task.getStartDates().get(i), stopDate));
+      }
   }
 
   private View createHistoryItem(Long startDate, Long stopDate) {
-    LayoutInflater inflater = LayoutInflater.from(TaskDetailsFragment.this.getActivity());
+
     View item = inflater.inflate(R.layout.activity_history_item, taskHistoryLayout, false);
     TextView startTextView = (TextView) item.findViewById(R.id.taskDetailsStartedAtTextView);
     TextView stoppedTextView = (TextView) item.findViewById(R.id.taskDetailsStoppedAtTextView);
@@ -249,7 +254,7 @@ public class TaskDetailsFragment extends Fragment {
     args.putString(Utilities.Constants.DB_EMPLOYER_ID, employerID);
     args.putString(Utilities.Constants.TASK_ID_EXTRA, taskID);
     trackingFragment.setArguments(args);
-    startFragmentCallback.startFragment(trackingFragment, true);
+    startFragmentCallback.startFragment(trackingFragment, true, EmpTaskDetailsFragment.TASK_TRACKING_TAG);
   }
 
   @Override

@@ -20,68 +20,74 @@ import java.util.List;
  */
 
 public class EquipmentListAdapter extends ArrayAdapter<Equipment> {
-    private Context myContext;
-    private int myResourceId;
-    private List<Equipment> myEquipments;
+  private Context myContext;
+  private int myResourceId;
+  private List<Equipment> myEquipments;
 
-    public EquipmentListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Equipment> objects) {
-        super(context, resource, objects);
-        this.myContext = context;
-        this.myResourceId = resource;
-        this.myEquipments = objects;
+  public EquipmentListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Equipment> objects) {
+    super(context, resource, objects);
+    this.myContext = context;
+    this.myResourceId = resource;
+    this.myEquipments = objects;
+  }
+
+  @NonNull
+  @Override
+  public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    View row = convertView;
+    EquipmentHolder holder = null;
+
+    if (row == null) {
+      LayoutInflater layoutInflater = LayoutInflater.from(myContext);
+      row = layoutInflater.inflate(myResourceId, parent, false);
+      holder = new EquipmentHolder();
+      holder.manufacturerTextView = (TextView) row.findViewById(R.id.equipmentRowManufacturerTextView);
+      holder.modelTextView = (TextView) row.findViewById(R.id.equipmentRowModelTextView);
+      holder.equipRowStatusTextView = (TextView) row.findViewById(R.id.equipRowStatusTextView);
+      row.setTag(holder);
+    } else {
+      holder = (EquipmentHolder) row.getTag();
     }
 
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View row = convertView;
-        EquipmentHolder holder = null;
+    Equipment currentEquipment = myEquipments.get(position);
 
-        if (row == null) {
-            LayoutInflater layoutInflater = LayoutInflater.from(myContext);
-            row = layoutInflater.inflate(myResourceId, parent, false);
-            holder = new EquipmentHolder();
-            holder.manufacturerTextView = (TextView) row.findViewById(R.id.equipmentRowManufacturerTextView);
-            holder.modelTextView = (TextView) row.findViewById(R.id.equipmentRowModelTextView);
-            row.setTag(holder);
-        } else {
-            holder = (EquipmentHolder) row.getTag();
-        }
+    holder.manufacturerTextView.setText(currentEquipment.getManufacturer());
+    holder.modelTextView.setText(currentEquipment.getModel());
+    holder.equipRowStatusTextView.setText(currentEquipment.getState() != null ? currentEquipment.getState().toString() : "N/A");
 
-        Equipment currentEquipment = myEquipments.get(position);
+    return row;
+  }
 
-        holder.manufacturerTextView.setText(currentEquipment.getManufacturer());
-        holder.modelTextView.setText(currentEquipment.getModel());
-
-        return row;
+  public void removeEquipment(String equipId) {
+    Equipment tempEequip = null;
+    for (Equipment equipment : myEquipments) {
+      if (equipId.equals(equipment.getId())) {
+        tempEequip = equipment;
+        break;
+      }
     }
-
-    public void removeEquipment(String equipId) {
-        Equipment tempEequip = null;
-        for (Equipment equipment : myEquipments) {
-            if (equipId.equals(equipment.getId())) {
-                tempEequip = equipment;
-                break;
-            }
-        }
-        if (tempEequip != null) {
-            myEquipments.remove(tempEequip);
-            this.notifyDataSetChanged();
-        }
+    if (tempEequip != null) {
+      myEquipments.remove(tempEequip);
+      this.notifyDataSetChanged();
     }
+  }
 
-    public void updateEquipment(Equipment equipment) {
-        for (Equipment equip : myEquipments) {
-            if (equipment.getId().equals(equip.getId())) {
-                equip = equipment;
-                break;
-            }
-        }
-        notifyDataSetChanged();
+  public void updateEquipment(Equipment equipment) {
+    int idx = -1;
+    for (Equipment equip : myEquipments) {
+      idx++;
+      if (equipment.getId().equals(equip.getId())) {
+        break;
+      }
     }
+    if (idx != -1)
+      this.myEquipments.set(idx, equipment);
+    notifyDataSetChanged();
+  }
 
-    private class EquipmentHolder {
-        public TextView manufacturerTextView;
-        public TextView modelTextView;
-    }
+  private class EquipmentHolder {
+    public TextView manufacturerTextView;
+    public TextView modelTextView;
+    public TextView equipRowStatusTextView;
+  }
 }

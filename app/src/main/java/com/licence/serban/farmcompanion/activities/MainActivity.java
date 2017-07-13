@@ -19,6 +19,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.consumables.fragments.InputsFragment;
 import com.licence.serban.farmcompanion.dashboard.fragments.DashboardFragment;
+import com.licence.serban.farmcompanion.emp_account.fragments.EmpTaskDetailsFragment;
 import com.licence.serban.farmcompanion.emp_account.fragments.EmpTaskTrackingFragment;
 import com.licence.serban.farmcompanion.emp_account.fragments.EmployeeTasksFragment;
 import com.licence.serban.farmcompanion.employees.fragments.AddEmployeeFragment;
@@ -157,9 +160,6 @@ public class MainActivity extends AppCompatActivity
 
       }
     });
-  }
-
-  private void loadDashboard() {
   }
 
   private void setViews() {
@@ -466,5 +466,17 @@ public class MainActivity extends AppCompatActivity
     if (currentUser != null)
       return currentUser.isAdmin();
     return false;
+  }
+
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if (keyCode == KeyEvent.KEYCODE_BACK) {
+      Fragment fragment = getSupportFragmentManager().findFragmentByTag(EmpTaskDetailsFragment.TASK_TRACKING_TAG);
+      Log.e("code", "code " + keyCode);
+      if (fragment != null) {
+        return false;
+      }
+    }
+    return super.onKeyDown(keyCode, event);
   }
 }

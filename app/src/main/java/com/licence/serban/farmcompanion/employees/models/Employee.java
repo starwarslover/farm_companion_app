@@ -1,5 +1,9 @@
 package com.licence.serban.farmcompanion.employees.models;
 
+import com.google.firebase.database.FirebaseDatabase;
+import com.licence.serban.farmcompanion.activities.MainActivity;
+import com.licence.serban.farmcompanion.misc.Utilities;
+
 /**
  * Created by Serban on 06.03.2017.
  */
@@ -100,25 +104,18 @@ public class Employee {
     this.contractNumber = contractNumber;
   }
 
-  @Override
-  public String toString() {
-    return "Employee{" +
-            "id='" + id + '\'' +
-            ", name='" + name + '\'' +
-            ", personalIdNumber='" + personalIdNumber + '\'' +
-            ", idNumber='" + idNumber + '\'' +
-            ", startDate=" + startDate +
-            ", position='" + position + '\'' +
-            ", baseSalary=" + baseSalary +
-            ", contractNumber='" + contractNumber + '\'' +
-            '}';
-  }
-
   public EEmployeeState getState() {
     return state;
   }
 
   public void setState(EEmployeeState state) {
     this.state = state;
+  }
+
+  public void onStateChanged(EEmployeeState state) {
+    this.state = state;
+    FirebaseDatabase.getInstance().getReference()
+            .child(Utilities.Constants.DB_EMPLOYEES).child(MainActivity.adminID)
+            .child(id).child("state").setValue(this.state);
   }
 }

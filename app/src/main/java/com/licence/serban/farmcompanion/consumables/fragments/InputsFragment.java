@@ -103,16 +103,16 @@ public class InputsFragment extends Fragment {
       inputTypeBundle.putSerializable(Utilities.Constants.USER_ID, userID);
       switch (position) {
         case 0:
-          inputTypeBundle.putSerializable(Utilities.Constants.BUNDLE_INPUT_TYPE, ConsumableEnum.SEED);
+          inputTypeBundle.putSerializable(Utilities.Constants.BUNDLE_INPUT_TYPE, ConsumableEnum.SEMINTE);
           break;
         case 1:
-          inputTypeBundle.putSerializable(Utilities.Constants.BUNDLE_INPUT_TYPE, ConsumableEnum.CHEMICAL);
+          inputTypeBundle.putSerializable(Utilities.Constants.BUNDLE_INPUT_TYPE, ConsumableEnum.IERBICIDE);
           break;
         case 2:
-          inputTypeBundle.putSerializable(Utilities.Constants.BUNDLE_INPUT_TYPE, ConsumableEnum.FERTILISER);
+          inputTypeBundle.putSerializable(Utilities.Constants.BUNDLE_INPUT_TYPE, ConsumableEnum.FERTILIZATORI);
           break;
         case 3:
-          inputTypeBundle.putSerializable(Utilities.Constants.BUNDLE_INPUT_TYPE, ConsumableEnum.FUEL);
+          inputTypeBundle.putSerializable(Utilities.Constants.BUNDLE_INPUT_TYPE, ConsumableEnum.COMBUSTIBIL);
           break;
       }
       inputListFragment.setArguments(inputTypeBundle);

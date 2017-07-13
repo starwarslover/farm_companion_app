@@ -105,7 +105,7 @@ public class EquipmentFragment extends Fragment {
     args.putString(Utilities.Constants.USER_ID, userID);
     fragment.setArguments(args);
 
-    startFragmentCallback.startFragment(fragment, true);
+    startFragmentCallback.startFragment(fragment, true, Utilities.Constants.DATE_FRAGMENT);
   }
 
 }

@@ -5,18 +5,18 @@ package com.licence.serban.farmcompanion.misc;
  */
 
 public enum ConsumableEnum {
-  SEED, CHEMICAL, FERTILISER, FUEL;
+  SEMINTE, IERBICIDE, FERTILIZATORI, COMBUSTIBIL;
 
   public static ConsumableEnum get(int idx) {
     switch (idx) {
       case 0:
-        return SEED;
+        return SEMINTE;
       case 1:
-        return CHEMICAL;
+        return IERBICIDE;
       case 2:
-        return FERTILISER;
+        return FERTILIZATORI;
       case 3:
-        return FUEL;
+        return COMBUSTIBIL;
       default:
         return null;
     }

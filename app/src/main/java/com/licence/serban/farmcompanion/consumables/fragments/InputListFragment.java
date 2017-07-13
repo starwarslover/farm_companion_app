@@ -60,19 +60,19 @@ public class InputListFragment extends Fragment {
     ConsumableDatabaseAdapter.getInstance(userID).setListener(consAdapter, inputType);
     if (inputType != null) {
       switch (inputType) {
-        case SEED: {
+        case SEMINTE: {
           seedBehaviour();
           break;
         }
-        case CHEMICAL: {
+        case IERBICIDE: {
           chemicalBehaviour();
           break;
         }
-        case FUEL: {
+        case COMBUSTIBIL: {
           fuelBehaviour();
           break;
         }
-        case FERTILISER: {
+        case FERTILIZATORI: {
           fertiliserBehaviour();
           break;
         }

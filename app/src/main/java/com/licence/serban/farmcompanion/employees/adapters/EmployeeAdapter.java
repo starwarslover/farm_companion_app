@@ -91,13 +91,16 @@ public class EmployeeAdapter extends ArrayAdapter<Employee> {
   }
 
   public void updateEmployee(Employee employee) {
-    Employee tempEmp = null;
+    int idx = -1;
     for (Employee emp : myEmployees) {
+      idx++;
       if (employee.getId().equals(emp.getId())) {
-        emp = employee;
         break;
       }
     }
+
+    if (idx != -1)
+      this.myEmployees.set(idx, employee);
     notifyDataSetChanged();
   }
 

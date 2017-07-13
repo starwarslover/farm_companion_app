@@ -3,6 +3,10 @@ package com.licence.serban.farmcompanion.tasks.models;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.licence.serban.farmcompanion.activities.MainActivity;
+import com.licence.serban.farmcompanion.employees.models.EEmployeeState;
+import com.licence.serban.farmcompanion.equipment.adapters.EquipmentDatabaseAdapter;
+import com.licence.serban.farmcompanion.equipment.models.EquipmentState;
+import com.licence.serban.farmcompanion.misc.Utilities;
 import com.licence.serban.farmcompanion.misc.WorkState;
 import com.licence.serban.farmcompanion.tasks.adapters.TasksDatabaseAdapter;
 
@@ -177,12 +181,25 @@ public class Task {
     if (this.startDates == null)
       this.startDates = new ArrayList<>();
     this.startDates.add(Calendar.getInstance().getTimeInMillis());
-    this.currentState = WorkState.STARTED;
+    this.currentState = WorkState.IN_DESFASURARE;
     this.canTrack = canTrack;
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(MainActivity.adminID).child(this.id);
     ref.child("startDates").setValue(this.startDates);
     ref.child("currentState").setValue(this.currentState);
     ref.child("canTrack").setValue(this.canTrack);
+    markResourcesAsUnavailable();
+  }
+
+  private void markResourcesAsUnavailable() {
+    DatabaseReference mainRef = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference secRef = mainRef.child(Utilities.Constants.DB_EMPLOYEES).child(MainActivity.adminID);
+    for (ResourcePlaceholder ph : this.employees) {
+      secRef.child(ph.getId()).child("state").setValue(EEmployeeState.IN_LUCRU);
+    }
+    secRef = mainRef.child(EquipmentDatabaseAdapter.DB_EQUIPMENTS).child(MainActivity.adminID);
+    for (ResourcePlaceholder ph : this.usedImplements) {
+      secRef.child(ph.getId()).child("state").setValue(EquipmentState.IN_LUCRU);
+    }
   }
 
   public void stopTask() {
@@ -190,11 +207,24 @@ public class Task {
       this.stopDates = new ArrayList<>();
     this.stopDates.add(Calendar.getInstance().getTimeInMillis());
     this.canTrack = false;
-    this.currentState = WorkState.FINISHED;
+    this.currentState = WorkState.INCHEIATA;
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(MainActivity.adminID).child(this.id);
     ref.child("currentState").setValue(this.currentState);
     ref.child("stopDates").setValue(this.stopDates);
     ref.child("canTrack").setValue(this.canTrack);
+    markResourcesAsAvailable();
+  }
+
+  private void markResourcesAsAvailable() {
+    DatabaseReference mainRef = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference secRef = mainRef.child(Utilities.Constants.DB_EMPLOYEES).child(MainActivity.adminID);
+    for (ResourcePlaceholder ph : this.employees) {
+      secRef.child(ph.getId()).child("state").setValue(EEmployeeState.DISPONIBIL);
+    }
+    secRef = mainRef.child(EquipmentDatabaseAdapter.DB_EQUIPMENTS).child(MainActivity.adminID);
+    for (ResourcePlaceholder ph : this.usedImplements) {
+      secRef.child(ph.getId()).child("state").setValue(EquipmentState.DISPONIBIL);
+    }
   }
 
   public boolean hasEmployee(String empId) {

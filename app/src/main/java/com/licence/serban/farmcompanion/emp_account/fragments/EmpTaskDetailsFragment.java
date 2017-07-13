@@ -31,6 +31,7 @@ import com.licence.serban.farmcompanion.tasks.models.Task;
 public class EmpTaskDetailsFragment extends Fragment {
 
 
+  public static final String TASK_TRACKING_TAG = "task_tracking";
   private String employerID;
   private String taskID;
   private DatabaseReference taskReference;
@@ -128,7 +129,7 @@ public class EmpTaskDetailsFragment extends Fragment {
     args.putString(Utilities.Constants.DB_EMPLOYER_ID, employerID);
     args.putString(Utilities.Constants.TASK_ID_EXTRA, taskID);
     trackingFragment.setArguments(args);
-    startFragmentCallback.startFragment(trackingFragment, true);
+    startFragmentCallback.startFragment(trackingFragment, true, TASK_TRACKING_TAG);
   }
 
   @Override

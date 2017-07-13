@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.consumables.models.Consumable;
-import com.licence.serban.farmcompanion.misc.ConsumableEnum;
 import com.licence.serban.farmcompanion.misc.StringDateFormatter;
 
 import java.util.Date;
@@ -55,16 +54,10 @@ public class ConsumableListAdapter extends ArrayAdapter<Consumable> {
       date = StringDateFormatter.dateToString(new Date(currentConsumable.getPurchaseDate()));
     }
     holder.purchaseDateTextView.setText(date);
-    String amount = String.valueOf(currentConsumable.getPurchasePrice()) + " " + getUM(currentConsumable);
+    String amount = String.valueOf(currentConsumable.getAmount()) + " " + currentConsumable.getUM();
     holder.amountTextView.setText(amount);
 
     return row;
-  }
-
-  private String getUM(Consumable currentConsumable) {
-    if (currentConsumable.getType() == ConsumableEnum.CHEMICAL || currentConsumable.getType() == ConsumableEnum.FUEL)
-      return "L";
-    return "Kg";
   }
 
   public void removeConsumable(String id) {

@@ -155,6 +155,10 @@
   <string name="full_address">Full address</string>
   <string name="loading_weather_forecast">Loading weather forecast...</string>
   <string name="weather_forecast_for_next_hours">Weather forecast for next hours</string>
+  <string name="expand">+</string>
+  <string name="collapse">-</string>
+  <string name="travel_speed">Travel speed</string>
+  <string name="total_distance">Total distance</string>
 
   <string-array name="ownership">
     <item>Own</item>

@@ -1,130 +1,159 @@
 package com.licence.serban.farmcompanion.equipment.models;
 
-import java.util.Date;
+import com.google.firebase.database.FirebaseDatabase;
+import com.licence.serban.farmcompanion.activities.MainActivity;
+import com.licence.serban.farmcompanion.equipment.adapters.EquipmentDatabaseAdapter;
 
 /**
  * Created by Serban on 25.04.2017.
  */
 
 public class Equipment {
-    private String id;
-    private String type;
-    private String manufacturer;
-    private String model;
-    private int manufacturingYear;
-    private Date purchaseDate;
-    private String serialNumber;
-    private String plateNumber;
-    private double purchasePrice;
-    private String ownership;
-    private EquipmentEngine engine;
-    private String transmissionType;
-    private long createdAt;
+  private String id;
+  private String type;
+  private String manufacturer;
+  private String model;
+  private int manufacturingYear;
+  private long purchaseDate;
+  private String serialNumber;
+  private String plateNumber;
+  private double purchasePrice;
+  private String ownership;
+  private EquipmentState state;
+  private String engineType;
+  private int engineCapacity;
+  private String transmissionType;
+  private long createdAt;
 
-    public Equipment() {
-    }
+  public Equipment() {
+  }
 
-    public long getCreatedAt() {
-        return createdAt;
-    }
+  public long getCreatedAt() {
+    return createdAt;
+  }
 
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
+  public void setCreatedAt(long createdAt) {
+    this.createdAt = createdAt;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public EquipmentEngine getEngine() {
-        return engine;
-    }
+  public String getTransmissionType() {
+    return transmissionType;
+  }
 
-    public void setEngine(EquipmentEngine engine) {
-        this.engine = engine;
-    }
+  public void setTransmissionType(String transmissionType) {
+    this.transmissionType = transmissionType;
+  }
 
-    public String getTransmissionType() {
-        return transmissionType;
-    }
+  public String getType() {
+    return type;
+  }
 
-    public void setTransmissionType(String transmissionType) {
-        this.transmissionType = transmissionType;
-    }
+  public void setType(String type) {
+    this.type = type;
+  }
 
-    public String getType() {
-        return type;
-    }
+  public String getManufacturer() {
+    return manufacturer;
+  }
 
-    public void setType(String type) {
-        this.type = type;
-    }
+  public void setManufacturer(String manufacturer) {
+    this.manufacturer = manufacturer;
+  }
 
-    public String getManufacturer() {
-        return manufacturer;
-    }
+  public String getModel() {
+    return model;
+  }
 
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
+  public void setModel(String model) {
+    this.model = model;
+  }
 
-    public String getModel() {
-        return model;
-    }
+  public int getManufacturingYear() {
+    return manufacturingYear;
+  }
 
-    public void setModel(String model) {
-        this.model = model;
-    }
+  public void setManufacturingYear(int manufacturingYear) {
+    this.manufacturingYear = manufacturingYear;
+  }
 
-    public int getManufacturingYear() {
-        return manufacturingYear;
-    }
+  public long getPurchaseDate() {
+    return purchaseDate;
+  }
 
-    public void setManufacturingYear(int manufacturingYear) {
-        this.manufacturingYear = manufacturingYear;
-    }
+  public void setPurchaseDate(long purchaseDate) {
+    this.purchaseDate = purchaseDate;
+  }
 
-    public Date getPurchaseDate() {
-        return purchaseDate;
-    }
+  public String getSerialNumber() {
+    return serialNumber;
+  }
 
-    public void setPurchaseDate(Date purchaseDate) {
-        this.purchaseDate = purchaseDate;
-    }
+  public void setSerialNumber(String serialNumber) {
+    this.serialNumber = serialNumber;
+  }
 
-    public String getSerialNumber() {
-        return serialNumber;
-    }
+  public String getPlateNumber() {
+    return plateNumber;
+  }
 
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
+  public void setPlateNumber(String plateNumber) {
+    this.plateNumber = plateNumber;
+  }
 
-    public String getPlateNumber() {
-        return plateNumber;
-    }
+  public double getPurchasePrice() {
+    return purchasePrice;
+  }
 
-    public void setPlateNumber(String plateNumber) {
-        this.plateNumber = plateNumber;
-    }
+  public void setPurchasePrice(double purchasePrice) {
+    this.purchasePrice = purchasePrice;
+  }
 
-    public double getPurchasePrice() {
-        return purchasePrice;
-    }
+  public String getOwnership() {
+    return ownership;
+  }
 
-    public void setPurchasePrice(double purchasePrice) {
-        this.purchasePrice = purchasePrice;
-    }
+  public void setOwnership(String ownership) {
+    this.ownership = ownership;
+  }
 
-    public String getOwnership() {
-        return ownership;
-    }
+  public EquipmentState getState() {
+    return state;
+  }
 
-    public void setOwnership(String ownership) {
-        this.ownership = ownership;
-    }
+  public void setState(EquipmentState state) {
+    this.state = state;
+  }
+
+  public String getEngineType() {
+    return engineType;
+  }
+
+  public void setEngineType(String engineType) {
+    this.engineType = engineType;
+  }
+
+  public int getEngineCapacity() {
+    return engineCapacity;
+  }
+
+  public void setEngineCapacity(int engineCapacity) {
+    this.engineCapacity = engineCapacity;
+  }
+
+  public void onTaskStatusChanged(EquipmentState state) {
+    this.state = state;
+    FirebaseDatabase.getInstance().getReference()
+            .child(EquipmentDatabaseAdapter.DB_EQUIPMENTS)
+            .child(MainActivity.adminID).child(id)
+            .child("state").setValue(this.state);
+  }
+
 }

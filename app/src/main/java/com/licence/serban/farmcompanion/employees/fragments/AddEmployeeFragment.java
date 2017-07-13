@@ -347,7 +347,7 @@ public class AddEmployeeFragment extends Fragment implements OnDatePickerSelecte
         employee.setIdNumber(idNumber);
         employee.setPosition(position);
         employee.setCreatedAt(System.currentTimeMillis());
-        employee.setState(EEmployeeState.AVAILABLE);
+        employee.setState(EEmployeeState.DISPONIBIL);
 
         final FirebaseUser user = firebaseAuth.getCurrentUser();
 

@@ -136,6 +136,8 @@
   <string name="create_employee_account">Creare cont angajat?</string>
   <string name="field">Camp</string>
   <string name="available">Disponibil</string>
+  <string name="expand">+</string>
+  <string name="collapse">-</string>
 
   <string-array name="ownership">
     <item>Propriu</item>
@@ -162,5 +164,11 @@
     <item>Arat</item>
     <item>Semanat</item>
     <item>Ierbicidare</item>
+  </string-array>
+  <string-array name="cons_type">
+    <item>Seminte</item>
+    <item>Ierbicid</item>
+    <item>Fertilizator</item>
+    <item>Combustibil</item>
   </string-array>
 </resources>

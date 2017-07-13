@@ -5,5 +5,5 @@ package com.licence.serban.farmcompanion.misc;
  */
 
 public enum WorkState {
-    NOT_STARTED, STARTED, PAUSED, FINISHED;
+  NEINCEPUTA, IN_DESFASURARE, OPRITA, INCHEIATA
 }
