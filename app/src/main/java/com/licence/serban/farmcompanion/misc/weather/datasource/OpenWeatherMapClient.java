@@ -50,7 +50,7 @@ public class OpenWeatherMapClient implements WeatherDataSource {
 
   @Override
   public void getForecast(LatLng latLng, final Callback<List<WeatherCondition>> callback) {
-    AsyncHttpClient httpClient = new AsyncHttpClient();
+    final AsyncHttpClient httpClient = new AsyncHttpClient();
     RequestParams params = new RequestParams();
     params.add("lat", String.valueOf(latLng.latitude));
     params.add("lon", String.valueOf(latLng.longitude));

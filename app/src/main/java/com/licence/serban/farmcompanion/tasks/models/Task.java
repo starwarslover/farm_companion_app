@@ -100,23 +100,6 @@ public class Task {
     this.currentState = WorkState.valueOf(currentState);
   }
 
-//  public long getStartDate() {
-//    return startDate;
-//  }
-//
-//  public void setStartDate(long startDate) {
-//    this.startDate = startDate;
-//  }
-//
-//  public long getStopDate() {
-//
-//    return stopDate;
-//  }
-//
-//  public void setStopDate(long date) {
-//    this.stopDate = date;
-//  }
-
   public List<Long> getIntermediaries() {
     return startDates;
   }
@@ -209,6 +192,8 @@ public class Task {
     this.canTrack = false;
     this.currentState = WorkState.INCHEIATA;
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(MainActivity.adminID).child(this.id);
+    ref.child("totalTime").setValue(this.totalTime);
+    ref.child("timeStopped").setValue(this.timeStopped);
     ref.child("currentState").setValue(this.currentState);
     ref.child("stopDates").setValue(this.stopDates);
     ref.child("canTrack").setValue(this.canTrack);
@@ -235,5 +220,13 @@ public class Task {
         }
       }
     return false;
+  }
+
+  public void setTimeStopped(long timeStopped) {
+    this.timeStopped = timeStopped;
+  }
+
+  public void setTotalTime(long totalTime) {
+    this.totalTime = totalTime;
   }
 }

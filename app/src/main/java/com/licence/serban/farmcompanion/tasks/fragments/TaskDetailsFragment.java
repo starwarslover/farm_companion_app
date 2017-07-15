@@ -4,12 +4,10 @@ package com.licence.serban.farmcompanion.tasks.fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +56,12 @@ public class TaskDetailsFragment extends Fragment {
   private ValueEventListener taskListener;
   private OnDrawerMenuLock drawerMenuLock;
   private LayoutInflater inflater;
+  private Button tasksDetailsEmployeesExpandButton;
+  private LinearLayout tasksDetailsEmployeesLayout;
+  private Button tasksDetailsConsumablesExpandButton;
+  private LinearLayout tasksDetailsConsumablesLayout;
+  private ValueEventListener listener;
+  private Task currentTask;
 
   public TaskDetailsFragment() {
     // Required empty public constructor
@@ -99,7 +103,7 @@ public class TaskDetailsFragment extends Fragment {
     setDbReferences();
     setViews(view);
     fillViews();
-    
+
     return view;
   }
 
@@ -107,20 +111,28 @@ public class TaskDetailsFragment extends Fragment {
     taskListener = new ValueEventListener() {
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
-        Task task = dataSnapshot.getValue(Task.class);
-        if (task != null) {
+        currentTask = dataSnapshot.getValue(Task.class);
+        if (currentTask != null) {
           taskNameTextView.setText("Task " + (position + 1));
-          showTaskHistory(task);
-          ResourcePlaceholder field = task.getField();
+          showTaskHistory(currentTask);
+          ResourcePlaceholder field = currentTask.getField();
           if (field != null) {
             taskFieldTextView.setText(field.getName());
           }
-          taskTypeTextView.setText(task.getType());
-          List<ResourcePlaceholder> equips = task.getUsedImplements();
-          if (equips != null) {
-            for (ResourcePlaceholder equip : equips) {
-              addEquipment(equip);
-            }
+          taskTypeTextView.setText(currentTask.getType());
+          tasksDetailsEmployeesLayout.removeAllViews();
+          if (currentTask.getEmployees() != null) {
+            createResourceItems(currentTask.getEmployees(), tasksDetailsEmployeesLayout);
+          }
+
+          taskEquipLayout.removeAllViews();
+          if (currentTask.getUsedImplements() != null) {
+            createResourceItems(currentTask.getUsedImplements(), taskEquipLayout);
+          }
+
+          tasksDetailsConsumablesLayout.removeAllViews();
+          if (currentTask.getInputs() != null) {
+            createResourceItems(currentTask.getInputs(), tasksDetailsConsumablesLayout);
           }
         }
       }
@@ -158,27 +170,13 @@ public class TaskDetailsFragment extends Fragment {
     return item;
   }
 
-  private void addEquipment(ResourcePlaceholder equip) {
-    TextView textView = new TextView(this.getActivity());
-    textView.setPadding(0, 5, 0, 5);
-    textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-    textView.setText(equip.getName());
-    textView.setTag(equip);
-
-    textView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        ResourcePlaceholder e = (ResourcePlaceholder) v.getTag();
-        if (e != null) {
-          startEquipmentDetails(e);
-        }
-      }
-    });
-    taskEquipLayout.addView(textView);
-  }
-
-  private void startEquipmentDetails(ResourcePlaceholder e) {
+  private void createResourceItems(List<ResourcePlaceholder> list, ViewGroup parent) {
+    for (ResourcePlaceholder placeholder : list) {
+      LinearLayout item = (LinearLayout) inflater.inflate(R.layout.item_task_details_resource, parent, false);
+      ResourceHolder holder = new ResourceHolder(item);
+      holder.primaryTextView.setText(placeholder.getName());
+      parent.addView(item);
+    }
   }
 
   private void setDbReferences() {
@@ -186,6 +184,16 @@ public class TaskDetailsFragment extends Fragment {
       taskReference = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(userID).child(taskID);
     } else {
       taskReference = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(employerID).child(taskID);
+    }
+  }
+
+  private void switchVisibility(View view, Button caller) {
+    if (view.getVisibility() == View.VISIBLE) {
+      view.setVisibility(View.GONE);
+      caller.setText(getResources().getString(R.string.expand));
+    } else {
+      view.setVisibility(View.VISIBLE);
+      caller.setText(getResources().getString(R.string.collapse));
     }
   }
 
@@ -198,22 +206,34 @@ public class TaskDetailsFragment extends Fragment {
     taskEquipLayout = (LinearLayout) view.findViewById(R.id.tasksDetailsEquipmentLayout);
     expandButton = (Button) view.findViewById(R.id.tasksDetailsEquipmentExpandButton);
     startTaskButton = (Button) view.findViewById(R.id.taskDetailsStartTaskButton);
+    tasksDetailsEmployeesExpandButton = (Button) view.findViewById(R.id.tasksDetailsEmployeesExpandButton);
+    tasksDetailsEmployeesLayout = (LinearLayout) view.findViewById(R.id.tasksDetailsEmployeesLayout);
+    tasksDetailsConsumablesExpandButton = (Button) view.findViewById(R.id.tasksDetailsConsumablesExpandButton);
+    tasksDetailsConsumablesLayout = (LinearLayout) view.findViewById(R.id.tasksDetailsConsumablesLayout);
 
     expandButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        if (taskEquipLayout.getVisibility() == View.VISIBLE) {
-          taskEquipLayout.setVisibility(View.GONE);
-          expandButton.setBackgroundColor(Color.TRANSPARENT);
-        } else {
-          taskEquipLayout.setVisibility(View.VISIBLE);
-          expandButton.setBackgroundColor(Color.LTGRAY);
-        }
+        switchVisibility(taskEquipLayout, expandButton);
+      }
+    });
+
+    tasksDetailsEmployeesExpandButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        switchVisibility(tasksDetailsEmployeesLayout, tasksDetailsEmployeesExpandButton);
+      }
+    });
+
+    tasksDetailsConsumablesExpandButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        switchVisibility(tasksDetailsConsumablesLayout, tasksDetailsConsumablesExpandButton);
       }
     });
 
     if (employerID != null) {
-      taskHistoryLayout.setVisibility(View.GONE);
+      taskHistoryViews.setVisibility(View.GONE);
       startTaskButton.setVisibility(View.VISIBLE);
       startTaskButton.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -263,5 +283,13 @@ public class TaskDetailsFragment extends Fragment {
     drawerMenuLock.unlockDrawerMenu();
     if (taskReference != null)
       taskReference.removeEventListener(taskListener);
+  }
+
+  private class ResourceHolder {
+    public TextView primaryTextView;
+
+    public ResourceHolder(View view) {
+      primaryTextView = (TextView) view.findViewById(R.id.resourceNameTextView);
+    }
   }
 }

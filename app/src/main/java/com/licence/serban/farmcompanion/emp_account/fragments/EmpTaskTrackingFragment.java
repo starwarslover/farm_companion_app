@@ -3,17 +3,20 @@ package com.licence.serban.farmcompanion.emp_account.fragments;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +24,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -53,10 +59,12 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, LocationListener {
+public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, LocationListener, ResultCallback<Status> {
 
 
   private static final int REQ_PERMISSION_LOCATION = 25;
+  public static final String BROADCAST_ACTION = "BROADCAST_ACTION";
+  private static final String TOTAL_STOP_TIME = "timeStopped";
   private String taskID;
   private DatabaseReference activeTasksReference;
   private GoogleApiClient googleApiClient;
@@ -83,6 +91,13 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
   private Context context;
   private long time = 0;
   private PendingIntent pendingIntent;
+  private TextView statusTextView;
+  private ActivityDetectionBroadcastReceiver detectionBroadcastReceiver;
+  private DetectedActivity lastRecordedActivity;
+  private long movingStartTime;
+  private long stillStartTime;
+  private boolean hasStopped;
+  private long totalStopTime = 0;
 
   public EmpTaskTrackingFragment() {
     // Required empty public constructor
@@ -97,6 +112,17 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     }
   }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+    LocalBroadcastManager.getInstance(context).registerReceiver(detectionBroadcastReceiver, new IntentFilter(BROADCAST_ACTION));
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    LocalBroadcastManager.getInstance(context).unregisterReceiver(detectionBroadcastReceiver);
+  }
 
   @Override
   public void onAttach(Context context) {
@@ -142,20 +168,25 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
       employerID = args.getString(Utilities.Constants.DB_EMPLOYER_ID);
     }
 
+    detectionBroadcastReceiver = new ActivityDetectionBroadcastReceiver();
+
     coordsSet = new ArrayList<>();
 
     employeeID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     setViews(view);
-
-    activeTasksReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_ACTIVE_TASKS).child(employerID).child(taskID);
-    currentTaskReference = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(employerID).child(taskID);
-    empReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_EMPLOYEES).child(employerID).child(employeeID);
+    setDbRefs();
     getInformation();
 
     setUpLocationApi();
 //    setOrientation();
     return view;
+  }
+
+  private void setDbRefs() {
+    activeTasksReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_ACTIVE_TASKS).child(employerID).child(taskID);
+    currentTaskReference = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(employerID).child(taskID);
+    empReference = FirebaseDatabase.getInstance().getReference().child(Utilities.Constants.DB_EMPLOYEES).child(employerID).child(employeeID);
   }
 
   private void setViews(View view) {
@@ -171,6 +202,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
         startFragment.popBackStack();
       }
     });
+    statusTextView = (TextView) view.findViewById(R.id.statusTextView);
 
   }
 
@@ -222,12 +254,23 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     @Override
     public void handleMessage(Message msg) {
       updateUi();
+      updateTaskTime();
     }
   };
+
+  private void updateTaskTime() {
+    if (hasStopped) {
+      this.totalStopTime += 1000;
+      activeTasksReference.child(employeeID).child(TOTAL_STOP_TIME).setValue(this.totalStopTime);
+    }
+  }
 
   private void stopBroadcasting() {
     activeTasksReference.child(employeeID).removeValue();
     if (currentTask != null) {
+      long totalTime = System.currentTimeMillis() - this.startTime;
+      currentTask.setTimeStopped(currentTask.getTimeStopped() + this.totalStopTime);
+      currentTask.setTotalTime(currentTask.getTotalTime() + totalTime);
       currentTask.stopTask();
     }
 
@@ -236,10 +279,6 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     googleApiClient.disconnect();
     timer.purge();
     timer.cancel();
-  }
-
-  private void setOrientation() {
-    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
   }
 
   private void startTask() {
@@ -272,9 +311,10 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     } else {
       //noinspection MissingPermission
       LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, mLocationRequest, EmpTaskTrackingFragment.this);
+
       Intent intent = new Intent(context, ActivityRecognizedService.class);
       pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-      ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(this.googleApiClient, 2000, pendingIntent);
+      ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(this.googleApiClient, 2000, pendingIntent).setResultCallback(this);
     }
   }
 
@@ -317,6 +357,67 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     totalDistanceTextView.setText(distanceString);
   }
 
-  //TODO: http://android-coding.blogspot.ro/2011/11/pass-data-from-service-to-activity.html - pass activityResult trough broadcastReceiver
-}
+  @Override
+  public void onResult(@NonNull Status status) {
 
+  }
+
+  private class ActivityDetectionBroadcastReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      ActivityRecognizedService.DetectedActivityWrapper detected = (ActivityRecognizedService.DetectedActivityWrapper) intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY_RESULT);
+      if (detected != null && detected.detectedActivity != null)
+        handleDetectedActivity(detected.detectedActivity);
+    }
+  }
+
+  private void handleDetectedActivity(DetectedActivity detectedActivity) {
+    if (detectedActivity.getConfidence() > 75 && (isMoving(detectedActivity) || isStill
+            (detectedActivity))) {
+      if (isMoving(detectedActivity)) {
+        statusTextView.setText(context.getResources().getString(R.string.on_move));
+        onDetectedActivityChanged(detectedActivity);
+      }
+      if (isStill(detectedActivity)) {
+        statusTextView.setText(context.getResources().getString(R.string.still));
+        onDetectedActivityChanged(detectedActivity);
+      }
+
+    }
+  }
+
+  private void onDetectedActivityChanged(DetectedActivity detectedActivity) {
+    if (this.lastRecordedActivity != null) {
+      if (isMoving(lastRecordedActivity) && isStill(detectedActivity)) {
+        this.stillStartTime = System.currentTimeMillis();
+        this.hasStopped = true;
+      }
+
+      if (isStill(lastRecordedActivity) && isMoving(detectedActivity)) {
+        this.hasStopped = false;
+      }
+    } else {
+      if (isStill(detectedActivity)) {
+        this.stillStartTime = System.currentTimeMillis();
+        this.hasStopped = true;
+      }
+
+      if (isMoving(detectedActivity)) {
+        this.hasStopped = false;
+      }
+    }
+  }
+
+  private boolean isStill(DetectedActivity detectedActivity) {
+    return detectedActivity.getType() == DetectedActivity.STILL;
+  }
+
+  private boolean isMoving(DetectedActivity detectedActivity) {
+    return detectedActivity.getType() == DetectedActivity.IN_VEHICLE ||
+            detectedActivity.getType() == DetectedActivity.WALKING ||
+            detectedActivity.getType() == DetectedActivity.ON_FOOT ||
+            detectedActivity.getType() == DetectedActivity.RUNNING;
+  }
+
+
+}

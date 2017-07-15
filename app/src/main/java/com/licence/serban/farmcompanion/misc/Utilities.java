@@ -1,6 +1,11 @@
 package com.licence.serban.farmcompanion.misc;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.util.Patterns;
+
+import com.google.android.gms.location.DetectedActivity;
+import com.licence.serban.farmcompanion.R;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,5 +60,29 @@ public final class Utilities {
     public static String EMAIL = "email";
     public static String PASSWORD = "password";
     public static int SPLASH_TIMEOUT = 1000;
+
+    public static String getActivityString(Context context, int detectedActivityType) {
+      Resources resources = context.getResources();
+      switch (detectedActivityType) {
+        case DetectedActivity.IN_VEHICLE:
+          return resources.getString(R.string.in_vehicle);
+        case DetectedActivity.ON_BICYCLE:
+          return resources.getString(R.string.on_bicycle);
+        case DetectedActivity.ON_FOOT:
+          return resources.getString(R.string.on_foot);
+        case DetectedActivity.RUNNING:
+          return resources.getString(R.string.running);
+        case DetectedActivity.STILL:
+          return resources.getString(R.string.still);
+        case DetectedActivity.TILTING:
+          return resources.getString(R.string.tilting);
+        case DetectedActivity.UNKNOWN:
+          return resources.getString(R.string.unknown);
+        case DetectedActivity.WALKING:
+          return resources.getString(R.string.walking);
+        default:
+          return resources.getString(R.string.unidentifiable_activity);
+      }
+    }
   }
 }

@@ -159,6 +159,16 @@
   <string name="collapse">-</string>
   <string name="travel_speed">Travel speed</string>
   <string name="total_distance">Total distance</string>
+  <string name="in_vehicle">In Vehicle</string>
+  <string name="on_bicycle">On bicycle</string>
+  <string name="on_foot">On foot</string>
+  <string name="running">Running</string>
+  <string name="still">Still</string>
+  <string name="tilting">Tilting</string>
+  <string name="unknown">Unknown</string>
+  <string name="walking">Walking</string>
+  <string name="unidentifiable_activity">Unidentifiable activity</string>
+  <string name="on_move">Moving</string>
 
   <string-array name="ownership">
     <item>Own</item>

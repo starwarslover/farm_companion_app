@@ -73,9 +73,9 @@
       </LinearLayout>
 
       <LinearLayout
-
           android:layout_width="match_parent"
-          android:layout_height="wrap_content">
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
@@ -86,21 +86,81 @@
             android:id="@+id/tasksDetailsEquipmentExpandButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:background="@android:color/transparent"
-            android:text="Expand"
-            android:textAllCaps="false"/>
+            android:minHeight="2dp"
+            android:minWidth="2dp"
+            android:text="@string/collapse"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary"
+            android:textSize="30sp"/>
       </LinearLayout>
 
       <LinearLayout
           android:id="@+id/tasksDetailsEquipmentLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:orientation="vertical"
-          android:visibility="gone">
+          android:orientation="vertical"/>
 
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/employees"/>
+
+        <Button
+            android:id="@+id/tasksDetailsEmployeesExpandButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
+            android:minHeight="2dp"
+            android:minWidth="2dp"
+            android:text="@string/collapse"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary"
+            android:textSize="30sp"/>
       </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/tasksDetailsEmployeesLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"/>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nav_inputs"/>
+
+        <Button
+            android:id="@+id/tasksDetailsConsumablesExpandButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
+            android:minHeight="2dp"
+            android:minWidth="2dp"
+            android:text="@string/collapse"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary"
+            android:textSize="30sp"/>
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/tasksDetailsConsumablesLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"/>
 
       <Button
           android:id="@+id/taskDetailsStartTaskButton"
@@ -111,9 +171,9 @@
 
       <LinearLayout
           android:id="@+id/taskDetailsHistoryViews"
-          android:orientation="vertical"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content">
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
@@ -121,11 +181,11 @@
             android:text="@string/task_history"/>
 
         <LinearLayout
-            android:layout_marginTop="10dp"
             android:id="@+id/taskHistoryLinearLayout"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
         </LinearLayout>
 
       </LinearLayout>

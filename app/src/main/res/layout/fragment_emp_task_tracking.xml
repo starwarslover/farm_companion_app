@@ -112,6 +112,25 @@
         android:layout_row="4"
         android:text="0 m"
         android:textSize="16sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_row="5"
+        android:padding="10dp"
+        android:text="@string/total_distance"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/statusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_row="5"
+        android:text="N/A"
+        android:textSize="16sp"/>
   </GridLayout>
 
   <Button
