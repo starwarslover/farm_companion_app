@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -24,7 +25,9 @@ import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.activities.MainActivity;
 import com.licence.serban.farmcompanion.emp_account.adapters.EmpTasksAdapter;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
+import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 import com.licence.serban.farmcompanion.misc.StringDateFormatter;
+import com.licence.serban.farmcompanion.misc.Utilities;
 import com.licence.serban.farmcompanion.misc.fragments.CompanyInfoFragment;
 import com.licence.serban.farmcompanion.misc.models.Company;
 import com.licence.serban.farmcompanion.misc.weather.WeatherHelper;
@@ -32,6 +35,7 @@ import com.licence.serban.farmcompanion.misc.weather.datasource.OpenWeatherMapCl
 import com.licence.serban.farmcompanion.misc.weather.datasource.WeatherDataSource;
 import com.licence.serban.farmcompanion.misc.weather.models.WeatherCondition;
 import com.licence.serban.farmcompanion.tasks.adapters.TasksDatabaseAdapter;
+import com.licence.serban.farmcompanion.tasks.fragments.TaskDetailsFragment;
 import com.licence.serban.farmcompanion.tasks.models.Task;
 
 import java.util.ArrayList;
@@ -50,6 +54,7 @@ public class DashboardFragment extends Fragment {
   private boolean isAdmin;
   private ListView empDashTasksListView;
   private EmpTasksAdapter taskAdapter;
+  private OnFragmentStart startFragmentCallback;
 
   public DashboardFragment() {
     // Required empty public constructor
@@ -63,6 +68,12 @@ public class DashboardFragment extends Fragment {
     } catch (ClassCastException ex) {
       throw new ClassCastException(context.toString()
               + " must implement OnHeadlineSelectedListener");
+    }
+    try {
+      startFragmentCallback = (OnFragmentStart) context;
+    } catch (ClassCastException ex) {
+      throw new ClassCastException(context.toString()
+              + " must implement OnFragmentStart");
     }
 
   }
@@ -105,8 +116,25 @@ public class DashboardFragment extends Fragment {
     empDashTasksListView = (ListView) view.findViewById(R.id.empDashTasksListView);
     taskAdapter = new EmpTasksAdapter(DashboardFragment.this.getActivity(), R.layout.emp_task_row, new ArrayList<Task>());
     empDashTasksListView.setAdapter(taskAdapter);
+    empDashTasksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Task task = taskAdapter.getItem(position);
+        startTaskDetails(task, position);
+      }
+    });
 
     TasksDatabaseAdapter.getInstance(MainActivity.adminID).setListener(taskAdapter, FirebaseAuth.getInstance().getCurrentUser().getUid());
+  }
+
+  private void startTaskDetails(Task task, int position) {
+    Fragment fragment = new TaskDetailsFragment();
+    Bundle args = new Bundle();
+    args.putString(Utilities.Constants.TASK_ID_EXTRA, task.getId());
+    args.putString(Utilities.Constants.DB_EMPLOYER_ID, MainActivity.adminID);
+    args.putInt("position", position);
+    fragment.setArguments(args);
+    startFragmentCallback.startFragment(fragment, true);
   }
 
   private void loadCompany(final View view) {

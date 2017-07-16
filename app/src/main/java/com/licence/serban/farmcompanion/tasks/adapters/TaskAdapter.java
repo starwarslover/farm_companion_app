@@ -85,11 +85,10 @@ public class TaskAdapter extends ArrayAdapter<Task> {
     } else {
       holder.showOnMapButton.setVisibility(View.GONE);
     }
-
-    holder.nameTextView.setText("Task " + (position + 1));
+    holder.nameTextView.setText(currentTask.getTitle());
     holder.typeTextView.setText(currentTask.getType());
     if (currentTask.getCurrentState() != null) {
-      holder.statusTextView.setText(currentTask.getCurrentState().toString());
+      holder.statusTextView.setText(Utilities.Constants.getTaskStatus(myContext, currentTask.getCurrentState()));
     }
     return row;
   }

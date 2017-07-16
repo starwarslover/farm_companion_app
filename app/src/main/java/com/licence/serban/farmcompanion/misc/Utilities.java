@@ -84,5 +84,21 @@ public final class Utilities {
           return resources.getString(R.string.unidentifiable_activity);
       }
     }
+
+    public static String getTaskStatus(Context context, WorkState workState) {
+      Resources resources = context.getResources();
+      switch (workState) {
+        case IN_DESFASURARE:
+          return resources.getString(R.string.ongoing);
+        case INCHEIATA:
+          return resources.getString(R.string.finished);
+        case NEINCEPUTA:
+          return resources.getString(R.string.not_started);
+        case OPRITA:
+          return resources.getString(R.string.stopped);
+        default:
+          return resources.getString(R.string.not_available);
+      }
+    }
   }
 }

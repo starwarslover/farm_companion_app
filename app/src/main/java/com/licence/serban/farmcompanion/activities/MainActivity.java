@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -455,6 +456,13 @@ public class MainActivity extends AppCompatActivity
       transaction.addToBackStack(null);
     }
     transaction.commit();
+  }
+
+  @Override
+  public void showDialog(DialogFragment dialogFragment) {
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    dialogFragment.show(fragmentTransaction, "dialog");
   }
 
   @Override

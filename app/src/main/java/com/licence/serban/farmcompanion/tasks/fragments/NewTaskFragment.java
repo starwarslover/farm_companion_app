@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -13,11 +14,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +42,7 @@ import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
 import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 import com.licence.serban.farmcompanion.interfaces.OnTaskCreatedListener;
 import com.licence.serban.farmcompanion.misc.Utilities;
+import com.licence.serban.farmcompanion.misc.WorkState;
 import com.licence.serban.farmcompanion.tasks.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.tasks.models.ResourcePlaceholder;
 import com.licence.serban.farmcompanion.tasks.models.Task;
@@ -55,6 +59,7 @@ import static com.licence.serban.farmcompanion.misc.Utilities.Constants.TASK_ID_
 public class NewTaskFragment extends Fragment {
 
 
+  public static final String FROM_CREATE = "from_create";
   public OnTaskCreatedListener taskCreatedCallback;
   private OnAppTitleChange updateTitleCallback;
   private Button newTaskButton;
@@ -85,6 +90,7 @@ public class NewTaskFragment extends Fragment {
   private OnDrawerMenuLock drawerMenuLock;
   private LinearLayout newTaskEmpsLayout;
   private LayoutInflater inflater;
+  private EditText taskTitleEditText;
 
   public NewTaskFragment() {
     // Required empty public constructor
@@ -326,6 +332,7 @@ public class NewTaskFragment extends Fragment {
   }
 
   private void setUpViews(View view) {
+    taskTitleEditText = (EditText) view.findViewById(R.id.taskTitleEditText);
     newTaskEmpsLayout = (LinearLayout) view.findViewById(R.id.newTaskEmpsLayout);
     typeSpinner = (Spinner) view.findViewById(R.id.tasksTypeSpinner);
     fieldsSpinner = (Spinner) view.findViewById(R.id.tasksFieldSpinner);
@@ -398,8 +405,14 @@ public class NewTaskFragment extends Fragment {
           return;
         }
         String type = typeSpinner.getSelectedItem().toString();
+        String taskTitle = taskTitleEditText.getText().toString();
+        if (taskTitle.isEmpty()) {
+          taskTitleEditText.setError(getResources().getString(R.string.required_error));
+          return;
+        }
 
         Task task = new Task(fieldPh);
+        task.setTitle(taskTitle);
         if (!isAdmin) {
           ResourcePlaceholder empPh = null;
           empPh = new ResourcePlaceholder();
@@ -413,23 +426,29 @@ public class NewTaskFragment extends Fragment {
         task.setUsedImplements(usedEquipments);
         task.setType(type);
         task.setInputs(getConsumablesList());
+        task.setCurrentState(WorkState.NEINCEPUTA.toString());
         TasksDatabaseAdapter adapter = TasksDatabaseAdapter.getInstance(employerId);
-        String id = adapter.insertTask(task);
-
-        if (isAdmin) {
-          Fragment fragmentDetails = new TaskDetailsFragment();
-          Bundle args = new Bundle();
-          args.putString(Utilities.Constants.USER_ID, employerId);
-          args.putString(TASK_ID_EXTRA, id);
-          fragmentDetails.setArguments(args);
-          onFragmentStartCallback.startFragment(fragmentDetails, false);
-        } else {
-          if (isGpsProviderEnabled()) {
-            startTrackingFragment(id);
-          } else {
-            requestGpsEnable();
+        final String id = adapter.getTasksReference().push().getKey();
+        adapter.insertTask(id, task, new OnCompleteListener<Void>() {
+          @Override
+          public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+            onFragmentStartCallback.popBackStack();
+            if (isAdmin) {
+              Fragment fragmentDetails = new TaskDetailsFragment();
+              Bundle args = new Bundle();
+              args.putString(Utilities.Constants.USER_ID, employerId);
+              args.putString(TASK_ID_EXTRA, id);
+              fragmentDetails.setArguments(args);
+              onFragmentStartCallback.startFragment(fragmentDetails, false);
+            } else {
+              if (isGpsProviderEnabled()) {
+                startTrackingFragment(id);
+              } else {
+                requestGpsEnable();
+              }
+            }
           }
-        }
+        });
       }
     });
   }
@@ -437,8 +456,9 @@ public class NewTaskFragment extends Fragment {
   private void startTrackingFragment(String taskID) {
     EmpTaskTrackingFragment trackingFragment = new EmpTaskTrackingFragment();
     Bundle args = new Bundle();
-    args.putString(Utilities.Constants.DB_EMPLOYER_ID, empID);
-    args.putString(Utilities.Constants.TASK_ID_EXTRA, taskID);
+    args.putString(Utilities.Constants.DB_EMPLOYER_ID, employerId);
+    args.putString(TASK_ID_EXTRA, taskID);
+    args.putBoolean(FROM_CREATE, true);
     trackingFragment.setArguments(args);
     onFragmentStartCallback.startFragment(trackingFragment, true, TASK_TRACKING_TAG);
   }

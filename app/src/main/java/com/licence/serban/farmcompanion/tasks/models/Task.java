@@ -20,6 +20,7 @@ import java.util.List;
 
 public class Task {
   private String id;
+  private String title;
   private String type;
   private List<ResourcePlaceholder> inputs;
   private List<ResourcePlaceholder> employees;
@@ -35,6 +36,7 @@ public class Task {
   private double area;
   private boolean canTrack;
   private long createdAt;
+  private double distanceTraveled;
 
   public List<Long> getStopDates() {
     return stopDates;
@@ -190,7 +192,6 @@ public class Task {
       this.stopDates = new ArrayList<>();
     this.stopDates.add(Calendar.getInstance().getTimeInMillis());
     this.canTrack = false;
-    this.currentState = WorkState.INCHEIATA;
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(TasksDatabaseAdapter.DB_TASKS).child(MainActivity.adminID).child(this.id);
     ref.child("totalTime").setValue(this.totalTime);
     ref.child("timeStopped").setValue(this.timeStopped);
@@ -228,5 +229,21 @@ public class Task {
 
   public void setTotalTime(long totalTime) {
     this.totalTime = totalTime;
+  }
+
+  public double getDistanceTraveled() {
+    return distanceTraveled;
+  }
+
+  public void setDistanceTraveled(double distanceTraveled) {
+    this.distanceTraveled = distanceTraveled;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 }

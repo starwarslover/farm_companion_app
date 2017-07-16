@@ -169,6 +169,22 @@
   <string name="walking">Walking</string>
   <string name="unidentifiable_activity">Unidentifiable activity</string>
   <string name="on_move">Moving</string>
+  <string name="stop_task">Stop task</string>
+  <string name="have_you_finished_your_work_n_or_you_just_pausing_the_task">Have you finished your work, or you just\npausing the task?</string>
+  <string name="finish_task">Finish task</string>
+  <string name="cancel">Cancel</string>
+  <string name="ongoing">Ongoing</string>
+  <string name="finished">Finished</string>
+  <string name="not_started">Not started</string>
+  <string name="stopped">Stopped</string>
+  <string name="not_available">N/A</string>
+  <string name="task_label">Task</string>
+  <string name="state">State</string>
+  <string name="total_stop_time">Total stop time</string>
+  <string name="used_resources">Used resources</string>
+  <string name="equipments">Equipments</string>
+  <string name="task_name">Task name*</string>
+  <string name="required_error">Field is required</string>
 
   <string-array name="ownership">
     <item>Own</item>
@@ -176,6 +192,7 @@
     <item>Cropshare</item>
   </string-array>
   <string-array name="activity_status">
+    <item>All</item>
     <item>Not started</item>
     <item>Ongoing</item>
     <item>Paused</item>

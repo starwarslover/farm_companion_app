@@ -1,5 +1,6 @@
 package com.licence.serban.farmcompanion.interfaces;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 
 /**
@@ -10,6 +11,8 @@ public interface OnFragmentStart {
   void startFragment(Fragment fragmentToStart, boolean addToBackStack);
 
   void startFragment(Fragment fragmentToStart, boolean addToBackStack, String tag);
+
+  void showDialog(DialogFragment dialogFragment);
 
   void popBackStack();
 }

@@ -10,12 +10,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.google.firebase.database.DatabaseReference;
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 import com.licence.serban.farmcompanion.misc.Utilities;
+import com.licence.serban.farmcompanion.misc.WorkState;
 import com.licence.serban.farmcompanion.tasks.adapters.TaskAdapter;
 import com.licence.serban.farmcompanion.tasks.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.tasks.models.Task;
@@ -41,6 +43,7 @@ public class TasksFragment extends Fragment {
   private OnFragmentStart startFragmentCallback;
   private Button newTaskButton;
   private TasksDatabaseAdapter tasksDatabaseAdapter;
+  private Spinner activityTypeSpinner;
 
   public TasksFragment() {
     // Required empty public constructor
@@ -83,9 +86,7 @@ public class TasksFragment extends Fragment {
     }
 
     tasksDatabaseAdapter = TasksDatabaseAdapter.getInstance(userID);
-    activitiesListView = (ListView) view.findViewById(R.id.activitiesListView);
-    taskAdapter = new TaskAdapter(getActivity(), R.layout.task_row, new ArrayList<Task>());
-    newTaskButton = (Button) view.findViewById(R.id.activitiesNewActivityButton);
+    setViews(view);
     activitiesListView.setAdapter(taskAdapter);
     tasksDatabaseAdapter.setListener(taskAdapter);
 
@@ -120,6 +121,49 @@ public class TasksFragment extends Fragment {
     });
 
     return view;
+  }
+
+  private void setViews(View view) {
+    activitiesListView = (ListView) view.findViewById(R.id.activitiesListView);
+    taskAdapter = new TaskAdapter(getActivity(), R.layout.task_row, new ArrayList<Task>());
+    newTaskButton = (Button) view.findViewById(R.id.activitiesNewActivityButton);
+    activityTypeSpinner = (Spinner) view.findViewById(R.id.activityTypeSpinner);
+
+    activityTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        onFilterChanged(position);
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> parent) {
+
+      }
+    });
+  }
+
+  private void onFilterChanged(int position) {
+    tasksDatabaseAdapter.removeListeners();
+    taskAdapter.clear();
+    if (position == 0)
+      tasksDatabaseAdapter.setListener(taskAdapter);
+    else
+      tasksDatabaseAdapter.setListener(taskAdapter, getWorkState(position));
+  }
+
+  private WorkState getWorkState(int position) {
+    switch (position) {
+      case 1:
+        return WorkState.NEINCEPUTA;
+      case 2:
+        return WorkState.IN_DESFASURARE;
+      case 3:
+        return WorkState.OPRITA;
+      case 4:
+        return WorkState.INCHEIATA;
+      default:
+        return WorkState.NEINCEPUTA;
+    }
   }
 
   private void startTaskDetails(Task task, int position) {

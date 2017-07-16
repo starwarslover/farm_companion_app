@@ -1,0 +1,43 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="20dp"
+    tools:context="com.licence.serban.farmcompanion.emp_account.fragments.StopTaskDialogFragment">
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/stop_task"
+      android:textSize="25sp"/>
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="20dp"
+      android:gravity="center"
+      android:text="@string/have_you_finished_your_work_n_or_you_just_pausing_the_task"
+      android:textSize="14sp"
+      />
+
+  <Button
+      android:id="@+id/stopTaskButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/finish_task"/>
+
+  <Button
+      android:id="@+id/pauseTaskButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/pause_task"/>
+
+  <Button
+      android:id="@+id/cancelButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/cancel"/>
+</LinearLayout>

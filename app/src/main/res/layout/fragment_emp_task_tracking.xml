@@ -39,7 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_column="1"
         android:layout_row="0"
-        android:text="02.02.2012 12:23"
         android:textSize="16sp"/>
 
     <Space
@@ -91,7 +90,7 @@
         android:layout_height="wrap_content"
         android:layout_column="1"
         android:layout_row="3"
-        android:text="3h: 20min: 23s"
+        android:text="00:00:00"
         android:textSize="16sp"/>
 
     <TextView
@@ -119,7 +118,7 @@
         android:layout_column="0"
         android:layout_row="5"
         android:padding="10dp"
-        android:text="@string/total_distance"
+        android:text="@string/state"
         android:textSize="18sp"
         android:textStyle="bold"/>
 

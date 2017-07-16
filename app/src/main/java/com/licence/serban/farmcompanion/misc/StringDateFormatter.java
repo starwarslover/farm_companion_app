@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 /**
  * Created by Serban on 15.03.2017.
  */
@@ -23,8 +25,15 @@ public class StringDateFormatter {
     return dateFormat.format(date);
   }
 
-  public static String milisToString(Long milis, String dateFormat) {
+  public static String millisToString(Long millis, String dateFormat) {
     SimpleDateFormat format = new SimpleDateFormat(dateFormat);
-    return format.format(new Date(milis));
+    return format.format(new Date(millis));
+  }
+
+  public static String millisToTime(Long millis) {
+    int hrs = (int) (MILLISECONDS.toHours(millis) % 24);
+    int min = (int) (MILLISECONDS.toMinutes(millis) % 60);
+    int sec = (int) (MILLISECONDS.toSeconds(millis) % 60);
+    return String.format("%02d:%02d:%02d", hrs, min, sec);
   }
 }

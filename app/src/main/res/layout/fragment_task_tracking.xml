@@ -1,96 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    tools:context=".tasks.fragments.TaskTrackingFragment">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:animateLayoutChanges="true"
+                tools:context=".tasks.fragments.TaskTrackingFragment">
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+  <com.google.android.gms.maps.MapView
+      android:id="@+id/mapView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+
+  <LinearLayout
+      android:id="@+id/taskTrackingInfoLayout"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_alignParentEnd="true"
+      android:background="#4b393939"
+      android:orientation="vertical"
+      android:paddingEnd="15dp"
+      android:paddingStart="15dp"
+      android:paddingTop="20sp"
+      android:visibility="visible">
+
+    <TextView
+        android:id="@+id/taskTrackingEmpNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"/>
 
     <LinearLayout
-        android:id="@+id/taskTrackingInfoLayout"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:background="#2e393939"
-        android:orientation="vertical"
-        android:paddingEnd="15dp"
-        android:paddingStart="15dp"
-        android:paddingTop="20sp"
-        android:visibility="gone">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/taskTrackingEmpNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp" />
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="5dp"
+          android:text="@string/started_at"
+          android:textSize="12sp"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
+      <TextView
+          android:id="@+id/taskTrackingEmpStartedAtTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/started_at"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/taskTrackingEmpStartedAtTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                 />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/total_elapsed_time"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/taskTrackingElapsedTimeTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/speed"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/taskTrackingInfoSpeedTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-
-        </LinearLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="5dp"
+          android:text="@string/total_elapsed_time"
+          android:textSize="12sp"/>
+
+      <TextView
+          android:id="@+id/taskTrackingElapsedTimeTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="5dp"
+          android:text="@string/total_distance"
+          android:textSize="12sp"/>
+
+      <TextView
+          android:id="@+id/taskTrackingInfoDistanceTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="5dp"
+          android:text="@string/speed"
+          android:textSize="12sp"/>
+
+      <TextView
+          android:id="@+id/taskTrackingInfoSpeedTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="5dp"
+          android:text="@string/state"
+          android:textSize="12sp"/>
+
+      <TextView
+          android:id="@+id/taskTrackingInfoStateTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="5dp"
+          android:text="@string/total_stop_time"
+          android:textSize="12sp"/>
+
+      <TextView
+          android:id="@+id/taskTrackingInfoStopTimeTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          />
+
+    </LinearLayout>
+  </LinearLayout>
 </RelativeLayout>

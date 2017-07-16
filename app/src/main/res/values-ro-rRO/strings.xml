@@ -105,10 +105,10 @@
   <string name="filter_by_status">Filtreaza dupa status:</string>
   <string name="new_task">Sarcina noua</string>
   <string name="create_task">Creaza sarcina</string>
-  <string name="fetching_user_data">Obtinerea datelor utilizator...</string>
+  <string name="fetching_user_data">Obtinerea datelor utilizatorului…</string>
   <string name="pause_task">Opreste activitatea</string>
   <string name="show_on_map">Arata pe harta</string>
-  <string name="start_task">Incepere activitatea</string>
+  <string name="start_task">Incepere activitate</string>
   <string name="total_elapsed_time">Timp total</string>
   <string name="started_at">Inceput la</string>
   <string name="speed">Viteza</string>
@@ -138,6 +138,51 @@
   <string name="available">Disponibil</string>
   <string name="expand">+</string>
   <string name="collapse">-</string>
+  <string name="cons_name">Nume</string>
+  <string name="amount">Cantitate</string>
+  <string name="purchased_from">Furnizor</string>
+  <string name="add_cons">Adauga consumabil</string>
+  <string name="cons_name_req">Nume*</string>
+  <string name="invalid_numeric_val_err">Valoare numerica invalida</string>
+  <string name="employees">Angajati</string>
+  <string name="purchase_price_ron">Pret achizitie (RON)</string>
+  <string name="amount_kg">Cantitate (Kg)</string>
+  <string name="amount_liters">Cantitate (Litri)</string>
+  <string name="task_history">Istoric activitate</string>
+  <string name="pick_address">Alege adresa</string>
+  <string name="amin_area">Judet</string>
+  <string name="subadmin_area">Oras</string>
+  <string name="locality">Localitate</string>
+  <string name="sublocality">Sublocalitate</string>
+  <string name="full_address">Adresa completa</string>
+  <string name="loading_weather_forecast">Se incarca prognoza meteo…</string>
+  <string name="weather_forecast_for_next_hours">Prognoza meteo pe urmatoarele ore</string>
+  <string name="travel_speed">Viteza de deplasare</string>
+  <string name="total_distance">Distanta parcursa</string>
+  <string name="in_vehicle">In vehicul</string>
+  <string name="on_bicycle">Pe bicicleta</string>
+  <string name="on_foot">Pe jos</string>
+  <string name="running">Alergare</string>
+  <string name="still">In repaus</string>
+  <string name="tilting">Inclinare</string>
+  <string name="unknown">Necunoscuta</string>
+  <string name="walking">Mers</string>
+  <string name="unidentifiable_activity">Activitate imposibil de identificat</string>
+  <string name="on_move">In miscare</string>
+  <string name="stop_task">Oprire activitate</string>
+  <string name="have_you_finished_your_work_n_or_you_just_pausing_the_task">Ai incehiat activitatea sau doar o\nintrerupi pe moment?</string>
+  <string name="finish_task">Finalizare activitate</string>
+  <string name="cancel">Anulare</string>
+  <string name="ongoing">In desfasurare</string>
+  <string name="finished">Finalizata</string>
+  <string name="not_started">Neinceputa</string>
+  <string name="stopped">Oprita</string>
+  <string name="not_available">N/A</string>
+  <string name="task_label">Sarcina</string>
+  <string name="state">Stare</string>
+  <string name="total_stop_time">Timp total repaus</string>
+  <string name="used_resources">Resurse implicate</string>
+  <string name="equipments">Echipamente</string>
 
   <string-array name="ownership">
     <item>Propriu</item>
@@ -145,9 +190,10 @@
     <item>Arenda</item>
   </string-array>
   <string-array name="activity_status">
+    <item>Toate</item>
     <item>Neinceputa</item>
     <item>In desfasurare</item>
-    <item>Intrerupta</item>
+    <item>Oprita</item>
     <item>Incheiata</item>
   </string-array>
   <string-array name="equipment_types">

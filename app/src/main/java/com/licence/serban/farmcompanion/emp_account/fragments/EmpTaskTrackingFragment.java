@@ -45,6 +45,7 @@ import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 import com.licence.serban.farmcompanion.misc.ActivityRecognizedService;
 import com.licence.serban.farmcompanion.misc.StringDateFormatter;
 import com.licence.serban.farmcompanion.misc.Utilities;
+import com.licence.serban.farmcompanion.misc.WorkState;
 import com.licence.serban.farmcompanion.misc.models.Coordinates;
 import com.licence.serban.farmcompanion.tasks.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.tasks.models.Task;
@@ -54,7 +55,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static com.licence.serban.farmcompanion.misc.Utilities.Constants.DB_STATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,6 +66,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
   private static final int REQ_PERMISSION_LOCATION = 25;
   public static final String BROADCAST_ACTION = "BROADCAST_ACTION";
   private static final String TOTAL_STOP_TIME = "timeStopped";
+  public static final String DB_TRAVEL_DISTANCE = "travelDistance";
   private String taskID;
   private DatabaseReference activeTasksReference;
   private GoogleApiClient googleApiClient;
@@ -98,6 +100,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
   private long stillStartTime;
   private boolean hasStopped;
   private long totalStopTime = 0;
+  private double distanceTraveled;
 
   public EmpTaskTrackingFragment() {
     // Required empty public constructor
@@ -199,11 +202,42 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     stopTaskButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        startFragment.popBackStack();
+        stopTask();
       }
     });
     statusTextView = (TextView) view.findViewById(R.id.statusTextView);
 
+  }
+
+  private void stopTask() {
+    final StopTaskDialogFragment dialogFragment = new StopTaskDialogFragment();
+    dialogFragment.addStopTaskListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        finishTask();
+        dialogFragment.dismiss();
+        startFragment.popBackStack();
+      }
+    });
+    dialogFragment.addOnPauseListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        pauseTask();
+        dialogFragment.dismiss();
+        startFragment.popBackStack();
+      }
+    });
+    startFragment.showDialog(dialogFragment);
+  }
+
+  private void pauseTask() {
+    currentTask.setCurrentState(WorkState.OPRITA.toString());
+    stopBroadcasting();
+  }
+
+  private void finishTask() {
+    currentTask.setCurrentState(WorkState.INCHEIATA.toString());
+    stopBroadcasting();
   }
 
   private void getInformation() {
@@ -225,8 +259,8 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
         employee = dataSnapshot.getValue(Employee.class);
-        activeTasksReference.child(employeeID).child("emp_name").setValue(employee.getName());
-
+        if (employee != null)
+          activeTasksReference.child(employeeID).child("emp_name").setValue(employee.getName());
       }
 
       @Override
@@ -271,10 +305,12 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
       long totalTime = System.currentTimeMillis() - this.startTime;
       currentTask.setTimeStopped(currentTask.getTimeStopped() + this.totalStopTime);
       currentTask.setTotalTime(currentTask.getTotalTime() + totalTime);
+      currentTask.setDistanceTraveled(currentTask.getDistanceTraveled() + distanceTraveled);
       currentTask.stopTask();
     }
 
-    ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(googleApiClient, pendingIntent);
+    if (googleApiClient.isConnected())
+      ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(googleApiClient, pendingIntent);
 
     googleApiClient.disconnect();
     timer.purge();
@@ -287,7 +323,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     if (currentTask != null) {
       currentTask.startTask(true);
     }
-    this.startedAtTextView.setText(StringDateFormatter.milisToString(startTime, "dd.MM.yyyy HH:mm"));
+    this.startedAtTextView.setText(StringDateFormatter.millisToString(startTime, "dd.MM.yyyy HH:mm"));
     time = 0;
     timer = new Timer();
     timer.schedule(new TimerTask() {
@@ -332,6 +368,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     Coordinates coords = new Coordinates(location);
     activeTasksReference.child(employeeID).child(Utilities.Constants.GPS_COORDINATES).setValue(coords);
     activeTasksReference.child(employeeID).child(Utilities.Constants.DB_SPEED).setValue(location.getSpeed());
+    activeTasksReference.child(employeeID).child(DB_TRAVEL_DISTANCE).setValue(distanceTraveled);
 
     this.lastLocation = location;
     this.coordsSet.add(new LatLng(location.getLatitude(), location.getLongitude()));
@@ -346,14 +383,11 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     }
 
     long elapsedTime = System.currentTimeMillis() - startTime;
-    int hrs = (int) (MILLISECONDS.toHours(elapsedTime) % 24);
-    int min = (int) (MILLISECONDS.toMinutes(elapsedTime) % 60);
-    int sec = (int) (MILLISECONDS.toSeconds(elapsedTime) % 60);
 
-    totalTimeTextView.setText(String.format("%02d:%02d:%02d", hrs, min, sec));
+    totalTimeTextView.setText(StringDateFormatter.millisToTime(elapsedTime));
 
-    double distance = SphericalUtil.computeLength(this.coordsSet);
-    String distanceString = new DecimalFormat("#0.0").format(distance) + " m";
+    distanceTraveled = SphericalUtil.computeLength(this.coordsSet);
+    String distanceString = new DecimalFormat("#0.0").format(distanceTraveled) + " m";
     totalDistanceTextView.setText(distanceString);
   }
 
@@ -382,7 +416,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
         statusTextView.setText(context.getResources().getString(R.string.still));
         onDetectedActivityChanged(detectedActivity);
       }
-
+      activeTasksReference.child(employeeID).child(DB_STATE).setValue(detectedActivity.getType());
     }
   }
 
@@ -408,11 +442,11 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
     }
   }
 
-  private boolean isStill(DetectedActivity detectedActivity) {
+  public static boolean isStill(DetectedActivity detectedActivity) {
     return detectedActivity.getType() == DetectedActivity.STILL;
   }
 
-  private boolean isMoving(DetectedActivity detectedActivity) {
+  public static boolean isMoving(DetectedActivity detectedActivity) {
     return detectedActivity.getType() == DetectedActivity.IN_VEHICLE ||
             detectedActivity.getType() == DetectedActivity.WALKING ||
             detectedActivity.getType() == DetectedActivity.ON_FOOT ||

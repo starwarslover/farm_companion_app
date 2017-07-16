@@ -27,10 +27,12 @@ import com.licence.serban.farmcompanion.interfaces.OnDrawerMenuLock;
 import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 import com.licence.serban.farmcompanion.misc.StringDateFormatter;
 import com.licence.serban.farmcompanion.misc.Utilities;
+import com.licence.serban.farmcompanion.misc.WorkState;
 import com.licence.serban.farmcompanion.tasks.adapters.TasksDatabaseAdapter;
 import com.licence.serban.farmcompanion.tasks.models.ResourcePlaceholder;
 import com.licence.serban.farmcompanion.tasks.models.Task;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -62,6 +64,11 @@ public class TaskDetailsFragment extends Fragment {
   private LinearLayout tasksDetailsConsumablesLayout;
   private ValueEventListener listener;
   private Task currentTask;
+  private TextView taskDetailsTaskStateTextView;
+  private Context context;
+  private TextView taskDetailsTotalTimeTextView;
+  private TextView taskDetailsStopTimeTextView;
+  private TextView taskDetailsTotalDistanceTextView;
 
   public TaskDetailsFragment() {
     // Required empty public constructor
@@ -70,6 +77,7 @@ public class TaskDetailsFragment extends Fragment {
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
+    this.context = context;
     try {
       startFragmentCallback = (OnFragmentStart) context;
     } catch (ClassCastException ex) {
@@ -113,27 +121,11 @@ public class TaskDetailsFragment extends Fragment {
       public void onDataChange(DataSnapshot dataSnapshot) {
         currentTask = dataSnapshot.getValue(Task.class);
         if (currentTask != null) {
-          taskNameTextView.setText("Task " + (position + 1));
+          fillTaskInfo();
+          fillTaskResourcesInfo();
+
           showTaskHistory(currentTask);
-          ResourcePlaceholder field = currentTask.getField();
-          if (field != null) {
-            taskFieldTextView.setText(field.getName());
-          }
-          taskTypeTextView.setText(currentTask.getType());
-          tasksDetailsEmployeesLayout.removeAllViews();
-          if (currentTask.getEmployees() != null) {
-            createResourceItems(currentTask.getEmployees(), tasksDetailsEmployeesLayout);
-          }
 
-          taskEquipLayout.removeAllViews();
-          if (currentTask.getUsedImplements() != null) {
-            createResourceItems(currentTask.getUsedImplements(), taskEquipLayout);
-          }
-
-          tasksDetailsConsumablesLayout.removeAllViews();
-          if (currentTask.getInputs() != null) {
-            createResourceItems(currentTask.getInputs(), tasksDetailsConsumablesLayout);
-          }
         }
       }
 
@@ -143,6 +135,40 @@ public class TaskDetailsFragment extends Fragment {
       }
     };
     taskReference.addValueEventListener(taskListener);
+  }
+
+  private void fillTaskResourcesInfo() {
+    ResourcePlaceholder field = currentTask.getField();
+    if (currentTask.getCurrentState() == WorkState.INCHEIATA) {
+      startTaskButton.setVisibility(View.GONE);
+    }
+    if (field != null) {
+      taskFieldTextView.setText(field.getName());
+    }
+    taskTypeTextView.setText(currentTask.getType());
+    tasksDetailsEmployeesLayout.removeAllViews();
+    if (currentTask.getEmployees() != null) {
+      createResourceItems(currentTask.getEmployees(), tasksDetailsEmployeesLayout);
+    }
+
+    taskEquipLayout.removeAllViews();
+    if (currentTask.getUsedImplements() != null) {
+      createResourceItems(currentTask.getUsedImplements(), taskEquipLayout);
+    }
+
+    tasksDetailsConsumablesLayout.removeAllViews();
+    if (currentTask.getInputs() != null) {
+      createResourceItems(currentTask.getInputs(), tasksDetailsConsumablesLayout);
+    }
+  }
+
+  private void fillTaskInfo() {
+    taskNameTextView.setText(currentTask.getTitle());
+    taskDetailsTaskStateTextView.setText(Utilities.Constants.getTaskStatus(context, currentTask.getCurrentState()));
+    String speedStr = new DecimalFormat("#0.0").format(currentTask.getDistanceTraveled()) + " km/h";
+    taskDetailsTotalDistanceTextView.setText(speedStr);
+    taskDetailsTotalTimeTextView.setText(StringDateFormatter.millisToTime(currentTask.getTotalTime()));
+    taskDetailsStopTimeTextView.setText(StringDateFormatter.millisToTime(currentTask.getTimeStopped()));
   }
 
   private void showTaskHistory(Task task) {
@@ -161,11 +187,11 @@ public class TaskDetailsFragment extends Fragment {
     TextView stoppedTextView = (TextView) item.findViewById(R.id.taskDetailsStoppedAtTextView);
     String startDateFormat = "N/A";
     if (startDate != null)
-      startDateFormat = StringDateFormatter.milisToString(startDate, "dd MMM yyyy\nHH:mm a");
+      startDateFormat = StringDateFormatter.millisToString(startDate, "dd MMM yyyy\nHH:mm a");
     startTextView.setText(startDateFormat);
     String stopDateFormat = "N/A";
     if (stopDate != null)
-      stopDateFormat = StringDateFormatter.milisToString(stopDate, "dd MMM yyyy\nHH:mm a");
+      stopDateFormat = StringDateFormatter.millisToString(stopDate, "dd MMM yyyy\nHH:mm a");
     stoppedTextView.setText(stopDateFormat);
     return item;
   }
@@ -198,6 +224,10 @@ public class TaskDetailsFragment extends Fragment {
   }
 
   private void setViews(View view) {
+    taskDetailsTotalTimeTextView = (TextView) view.findViewById(R.id.taskDetailsTotalTimeTextView);
+    taskDetailsStopTimeTextView = (TextView) view.findViewById(R.id.taskDetailsStopTimeTextView);
+    taskDetailsTotalDistanceTextView = (TextView) view.findViewById(R.id.taskDetailsTotalDistanceTextView);
+    taskDetailsTaskStateTextView = (TextView) view.findViewById(R.id.taskDetailsTaskStateTextView);
     taskHistoryViews = (LinearLayout) view.findViewById(R.id.taskDetailsHistoryViews);
     taskHistoryLayout = (LinearLayout) view.findViewById(R.id.taskHistoryLinearLayout);
     taskNameTextView = (TextView) view.findViewById(R.id.taskDetailsTaskNameTextView);
