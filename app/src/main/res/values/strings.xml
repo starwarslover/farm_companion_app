@@ -185,6 +185,9 @@
   <string name="equipments">Equipments</string>
   <string name="task_name">Task name*</string>
   <string name="required_error">Field is required</string>
+  <string name="confirm_delete">Confirm delete</string>
+  <string name="confirm_delete_message">Are you sure you want to delete this record?</string>
+  <string name="horse_power">BHP</string>
 
   <string-array name="ownership">
     <item>Own</item>

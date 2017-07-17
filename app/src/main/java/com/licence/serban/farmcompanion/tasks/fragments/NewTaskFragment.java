@@ -193,7 +193,6 @@ public class NewTaskFragment extends Fragment {
 
       @Override
       public void onCancelled(DatabaseError databaseError) {
-
       }
     });
 

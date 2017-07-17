@@ -31,6 +31,12 @@ public class EquipmentListAdapter extends ArrayAdapter<Equipment> {
     this.myEquipments = objects;
   }
 
+  @Nullable
+  @Override
+  public Equipment getItem(int position) {
+    return super.getItem(position);
+  }
+
   @NonNull
   @Override
   public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

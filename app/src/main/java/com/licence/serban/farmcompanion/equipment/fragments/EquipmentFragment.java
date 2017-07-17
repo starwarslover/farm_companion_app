@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -97,6 +98,24 @@ public class EquipmentFragment extends Fragment {
       }
     });
 
+    equipmentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        startEquipmentDetails(position);
+      }
+    });
+
+  }
+
+  private void startEquipmentDetails(int position) {
+    Fragment fragment = new EquipmentDetailsFragment();
+    Equipment equip = equipmentAdapter.getItem(position);
+    Bundle args = new Bundle();
+    args.putString(Utilities.Constants.EQUIP_ID_EXTRA, equip != null ? equip.getId() : null);
+    args.putString(Utilities.Constants.USER_ID, userID);
+    fragment.setArguments(args);
+
+    startFragmentCallback.startFragment(fragment, true);
   }
 
   private void startAddEquipmentFragment() {

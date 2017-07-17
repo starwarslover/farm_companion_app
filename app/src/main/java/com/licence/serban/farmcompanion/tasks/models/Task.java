@@ -198,6 +198,7 @@ public class Task {
     ref.child("currentState").setValue(this.currentState);
     ref.child("stopDates").setValue(this.stopDates);
     ref.child("canTrack").setValue(this.canTrack);
+    ref.child("distanceTraveled").setValue(this.distanceTraveled);
     markResourcesAsAvailable();
   }
 

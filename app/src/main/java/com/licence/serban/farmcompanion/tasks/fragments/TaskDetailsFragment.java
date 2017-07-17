@@ -125,7 +125,6 @@ public class TaskDetailsFragment extends Fragment {
           fillTaskResourcesInfo();
 
           showTaskHistory(currentTask);
-
         }
       }
 
@@ -165,8 +164,8 @@ public class TaskDetailsFragment extends Fragment {
   private void fillTaskInfo() {
     taskNameTextView.setText(currentTask.getTitle());
     taskDetailsTaskStateTextView.setText(Utilities.Constants.getTaskStatus(context, currentTask.getCurrentState()));
-    String speedStr = new DecimalFormat("#0.0").format(currentTask.getDistanceTraveled()) + " km/h";
-    taskDetailsTotalDistanceTextView.setText(speedStr);
+    String distStr = new DecimalFormat("#0.0").format(currentTask.getDistanceTraveled()) + " m";
+    taskDetailsTotalDistanceTextView.setText(distStr);
     taskDetailsTotalTimeTextView.setText(StringDateFormatter.millisToTime(currentTask.getTotalTime()));
     taskDetailsStopTimeTextView.setText(StringDateFormatter.millisToTime(currentTask.getTimeStopped()));
   }

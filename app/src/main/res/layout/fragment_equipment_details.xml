@@ -1,47 +1,302 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".equipment.fragments.EquipmentDetailsFragment">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".equipment.fragments.EquipmentDetailsFragment">
 
-    <LinearLayout
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:orientation="horizontal"
+      android:paddingEnd="@dimen/activity_horizontal_margin"
+      android:paddingStart="@dimen/activity_horizontal_margin">
+
+    <Space
+        android:id="@+id/equipDetailsEditButton"
+        android:layout_width="@dimen/detail_button_size"
+        android:layout_height="@dimen/detail_button_size"/>
+
+    <TextView
+        android:id="@+id/equipDetailsNameTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textSize="20sp"/>
+
+    <ImageButton
+        android:id="@+id/equipDetailsDeleteButton"
+        android:layout_width="@dimen/detail_button_size"
+        android:layout_height="@dimen/detail_button_size"
+        android:src="@drawable/ic_delete_forever_black_24dp"/>
+
+  </LinearLayout>
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+    <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:columnCount="2"
+        android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/equipDetailsEditButton"
-            android:layout_width="@dimen/detail_button_size"
-            android:layout_height="@dimen/detail_button_size"
-            android:src="@drawable/ic_edit_black_24dp" />
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="0"
+          android:layout_row="0"
+          android:gravity="center"
+          android:padding="10dp"
+          android:text="@string/type"
+          android:textSize="16sp"
+          android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/equipDetailsNameTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="Dummy text"
-            android:textSize="25sp" />
+      <TextView
+          android:id="@+id/equipDetailsTypeTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="1"
+          android:layout_row="0"
+          android:gravity="center"
+          android:padding="10dp"
+          android:textSize="14sp"/>
 
-        <ImageButton
-            android:id="@+id/equipDetailsDeleteButton"
-            android:layout_width="@dimen/detail_button_size"
-            android:layout_height="@dimen/detail_button_size"
-            android:src="@drawable/ic_delete_forever_black_24dp" />
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="0"
+          android:layout_row="1"
+          android:gravity="center"
+          android:padding="10dp"
+          android:text="@string/manufacturer"
+          android:textSize="16sp"
+          android:textStyle="bold"/>
 
-    </LinearLayout>
+      <TextView
+          android:id="@+id/equipDetailsManufTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="1"
+          android:layout_row="1"
+          android:gravity="center"
+          android:padding="10dp"
+          android:textSize="14sp"/>
 
-    <ListView
-        android:id="@+id/equipmentDetailsListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="0"
+          android:layout_row="2"
+          android:gravity="center"
+          android:padding="10dp"
+          android:text="@string/model"
+          android:textSize="16sp"
+          android:textStyle="bold"/>
 
-    </ListView>
+      <TextView
+          android:id="@+id/equipDetailsModelTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="1"
+          android:layout_row="2"
+          android:gravity="center"
+          android:padding="10dp"
+          android:textSize="14sp"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="0"
+          android:layout_row="3"
+          android:gravity="center"
+          android:padding="10dp"
+          android:text="@string/serial_number"
+          android:textSize="16sp"
+          android:textStyle="bold"/>
+
+      <TextView
+          android:id="@+id/equipDetailsSerialNrTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="1"
+          android:layout_row="3"
+          android:gravity="center"
+          android:padding="10dp"
+          android:textSize="14sp"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="0"
+          android:layout_row="4"
+          android:gravity="center"
+          android:padding="10dp"
+          android:text="@string/plate_number"
+          android:textSize="16sp"
+          android:textStyle="bold"/>
+
+      <TextView
+          android:id="@+id/equipDetailsPlateNrTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="1"
+          android:layout_row="4"
+          android:gravity="center"
+          android:padding="10dp"
+          android:textSize="14sp"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="0"
+          android:layout_row="5"
+          android:gravity="center"
+          android:padding="10dp"
+          android:text="@string/manufacturing_year"
+          android:textSize="16sp"
+          android:textStyle="bold"/>
+
+      <TextView
+          android:id="@+id/equipDetailsManufYearTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="1"
+          android:layout_row="5"
+          android:gravity="center"
+          android:padding="10dp"
+          android:textSize="14sp"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="0"
+          android:layout_row="6"
+          android:gravity="center"
+          android:padding="10dp"
+          android:text="@string/purchase_date"
+          android:textSize="16sp"
+          android:textStyle="bold"/>
+
+      <TextView
+          android:id="@+id/equipDetailsPurchaseDateTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="1"
+          android:layout_row="6"
+          android:gravity="center"
+          android:padding="10dp"
+          android:textSize="14sp"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="0"
+          android:layout_row="7"
+          android:gravity="center"
+          android:padding="10dp"
+          android:text="@string/purchase_price"
+          android:textSize="16sp"
+          android:textStyle="bold"/>
+
+      <TextView
+          android:id="@+id/equipDetailsPurchasedPriceTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="1"
+          android:layout_row="7"
+          android:gravity="center"
+          android:padding="10dp"
+          android:textSize="14sp"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="0"
+          android:layout_row="8"
+          android:gravity="center"
+          android:padding="10dp"
+          android:text="@string/ownership"
+          android:textSize="16sp"
+          android:textStyle="bold"/>
+
+      <TextView
+          android:id="@+id/equipDetailsOwnershipTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="1"
+          android:layout_row="8"
+          android:gravity="center"
+          android:padding="10dp"
+          android:textSize="14sp"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="0"
+          android:layout_row="9"
+          android:gravity="center"
+          android:padding="10dp"
+          android:text="@string/engine_type"
+          android:textSize="16sp"
+          android:textStyle="bold"/>
+
+      <TextView
+          android:id="@+id/equipDetailsEngineTypeTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="1"
+          android:layout_row="9"
+          android:gravity="center"
+          android:padding="10dp"
+          android:textSize="14sp"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="0"
+          android:layout_row="10"
+          android:gravity="center"
+          android:padding="10dp"
+          android:text="@string/engine_capacity"
+          android:textSize="16sp"
+          android:textStyle="bold"/>
+
+      <TextView
+          android:id="@+id/equipDetailsEngineCapacityTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="1"
+          android:layout_row="10"
+          android:gravity="center"
+          android:padding="10dp"
+          android:textSize="14sp"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="0"
+          android:layout_row="11"
+          android:gravity="center"
+          android:padding="10dp"
+          android:text="@string/transmission_type"
+          android:textSize="16sp"
+          android:textStyle="bold"/>
+
+      <TextView
+          android:id="@+id/equipDetailsTransmTypeTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_column="1"
+          android:layout_row="11"
+          android:gravity="center"
+          android:padding="10dp"
+          android:textSize="14sp"/>
+    </GridLayout>
+  </ScrollView>
 
 </LinearLayout>

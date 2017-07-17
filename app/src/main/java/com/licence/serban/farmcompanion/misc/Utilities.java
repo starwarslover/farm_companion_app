@@ -57,6 +57,7 @@ public final class Utilities {
     public static final String DB_CAN_TRACK = "canTrack";
     public static final String DB_STATE = "currentState";
     public static final String DATE_FRAGMENT = "date_fragment";
+    public static final String EQUIP_ID_EXTRA = "equip_id";
     public static String EMAIL = "email";
     public static String PASSWORD = "password";
     public static int SPLASH_TIMEOUT = 1000;
