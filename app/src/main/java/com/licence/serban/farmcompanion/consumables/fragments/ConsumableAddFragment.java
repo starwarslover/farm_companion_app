@@ -8,8 +8,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.consumables.adapters.ConsumableDatabaseAdapter;
@@ -45,6 +47,7 @@ public class ConsumableAddFragment extends Fragment implements OnDatePickerSelec
   private OnFragmentStart fragmentStart;
   private OnElementAdded employeeAddedListener;
   private OnDrawerMenuLock drawerLockListener;
+  private TextView consUMTextView;
 
 
   public ConsumableAddFragment() {
@@ -117,7 +120,7 @@ public class ConsumableAddFragment extends Fragment implements OnDatePickerSelec
     dateButton = (Button) view.findViewById(R.id.consAddPurchaseDatePickButton);
     sellerEditText = (TextInputEditText) view.findViewById(R.id.consAddPurchasedFrom);
     notesEditText = (TextInputEditText) view.findViewById(R.id.consAddNotesEditText);
-
+    consUMTextView = (TextView) view.findViewById(R.id.consUMTextView);
     setListeners();
   }
 
@@ -126,6 +129,21 @@ public class ConsumableAddFragment extends Fragment implements OnDatePickerSelec
       @Override
       public void onClick(View v) {
         createConsumable();
+      }
+    });
+
+    typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (position == 0 || position == 2)
+          consUMTextView.setText(R.string.kg);
+        else
+          consUMTextView.setText(R.string.liters);
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> parent) {
+
       }
     });
 
@@ -166,21 +184,37 @@ public class ConsumableAddFragment extends Fragment implements OnDatePickerSelec
       nameEditText.setError(getResources().getString(R.string.no_name_error));
       return null;
     }
-    double amount;
+    double amount = 0;
+    String amountStr = amountEditText.getText().toString();
+    if (amountStr.isEmpty()) {
+      amountEditText.setError(getResources().getString(R.string.required_error));
+      return null;
+    }
+
     try {
-      amount = Double.parseDouble(amountEditText.getText().toString());
+      amount = Double.parseDouble(amountStr);
     } catch (Exception ex) {
       System.out.println(ex.getMessage());
       amountEditText.setError(getResources().getString(R.string.invalid_numeric_val_err));
       return null;
     }
 
-    double price;
-    try {
-      price = Double.parseDouble(priceEditText.getText().toString());
-    } catch (Exception ex) {
-      System.out.println(ex.getMessage());
-      priceEditText.setError(getResources().getString(R.string.invalid_numeric_val_err));
+    double price = 0;
+    if (!priceEditText.getText().toString().isEmpty())
+      try {
+        price = Double.parseDouble(priceEditText.getText().toString());
+      } catch (Exception ex) {
+        System.out.println(ex.getMessage());
+        priceEditText.setError(getResources().getString(R.string.invalid_numeric_val_err));
+        return null;
+      }
+    if (price < 0) {
+      priceEditText.setError(getResources().getString(R.string.negative_number_err));
+      return null;
+    }
+
+    if (amount < 0) {
+      amountEditText.setError(getResources().getString(R.string.negative_number_err));
       return null;
     }
     String purchaseDateString = dateEditText.getText().toString();

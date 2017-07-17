@@ -29,7 +29,7 @@
   <string name="unmatching_passwords">Parolele nu corespund!</string>
   <string name="email_sample">email@domain.com*</string>
   <string name="invalid_email">Adresa de email introdusa este invalida!</string>
-  <string name="no_name_error">Trebuie sa introuci numele!</string>
+  <string name="no_name_error">Numele este obligatoriu!</string>
   <string name="no_email_error">Trebuie sa introduci adresa de email!</string>
   <string name="no_pass_error">Trebuie sa introduci parola!</string>
   <string name="register_error">A aparut o eroare la inregistrare…</string>
@@ -146,8 +146,8 @@
   <string name="invalid_numeric_val_err">Valoare numerica invalida</string>
   <string name="employees">Angajati</string>
   <string name="purchase_price_ron">Pret achizitie (RON)</string>
-  <string name="amount_kg">Cantitate (Kg)</string>
-  <string name="amount_liters">Cantitate (Litri)</string>
+  <string name="amount_kg">Cantitate (Kg)*</string>
+  <string name="amount_liters">Cantitate (Litri)*</string>
   <string name="task_history">Istoric activitate</string>
   <string name="pick_address">Alege adresa</string>
   <string name="amin_area">Judet</string>
@@ -183,6 +183,16 @@
   <string name="total_stop_time">Timp total repaus</string>
   <string name="used_resources">Resurse implicate</string>
   <string name="equipments">Echipamente</string>
+  <string name="task_name">Titlu activitate*</string>
+  <string name="required_error">Campul este obligatoriu</string>
+  <string name="confirm_delete">Confirmare stergere</string>
+  <string name="confirm_delete_message">Sunteti sigur ca doriti stergerea acestei inregistrari?</string>
+  <string name="horse_power">CP</string>
+  <string name="weather_warning">Selectati locatia companiei pentru a putea furniza prognoza meteo.</string>
+  <string name="kg">Kg</string>
+  <string name="liters">Litri</string>
+  <string name="negative_number_err">Valorile negative nu sunt permise</string>
+  <string name="no_emps_elected">O sarcina trebuie sa fie atribuita unuia sau mai multor angajati</string>
 
   <string-array name="ownership">
     <item>Propriu</item>

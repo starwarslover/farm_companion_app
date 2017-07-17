@@ -184,6 +184,8 @@ public class AddEmployeeFragment extends Fragment implements OnDatePickerSelecte
   }
 
   private void editEmployeeBehaviour(final String employeeID) {
+    employeeAccountCheckBox.setVisibility(View.GONE);
+    employeeAccountLayout.setVisibility(View.VISIBLE);
 
     empListener = new ValueEventListener() {
       @Override
@@ -198,7 +200,10 @@ public class AddEmployeeFragment extends Fragment implements OnDatePickerSelecte
           positionEditText.setText(currentEmployee.getPosition());
           salaryEditText.setText(String.valueOf(currentEmployee.getBaseSalary()));
           contractEditText.setText(currentEmployee.getContractNumber());
-          emailEditText.setText(currentEmployee.getAccountEmail());
+          if (currentEmployee.getAccountEmail().isEmpty())
+            emailEditText.setVisibility(View.GONE);
+          else
+            emailEditText.setText(currentEmployee.getAccountEmail());
         }
       }
 

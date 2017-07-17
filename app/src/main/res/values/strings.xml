@@ -29,7 +29,7 @@
   <string name="unmatching_passwords">Passwords don\'t match!</string>
   <string name="email_sample">email@domain.com*</string>
   <string name="invalid_email">The email you entered is invalid!</string>
-  <string name="no_name_error">You must insert your name!</string>
+  <string name="no_name_error">Name is required!</string>
   <string name="no_email_error">You must insert your email!</string>
   <string name="no_pass_error">Password required!</string>
   <string name="register_error">A error occurred while registering…</string>
@@ -144,8 +144,8 @@
   <string name="invalid_numeric_val_err">Invalid numeric value</string>
   <string name="employees">Employees</string>
   <string name="purchase_price_ron">Pret achizitie (RON)</string>
-  <string name="amount_kg">Cantitate (Kg)</string>
-  <string name="amount_liters">Cantitate (Litri)</string>
+  <string name="amount_kg">Cantitate (Kg)*</string>
+  <string name="amount_liters">Cantitate (Litri)*</string>
   <string name="task_history">Task history</string>
   <string name="pick_address">Pick address</string>
   <string name="amin_area">Admin area</string>
@@ -188,6 +188,11 @@
   <string name="confirm_delete">Confirm delete</string>
   <string name="confirm_delete_message">Are you sure you want to delete this record?</string>
   <string name="horse_power">BHP</string>
+  <string name="weather_warning">Please select your company location in order to display weather forecast.</string>
+  <string name="kg">Kg</string>
+  <string name="liters">Liters</string>
+  <string name="negative_number_err">Negative values are forbidden</string>
+  <string name="no_emps_elected">At least one employee needs to be asigned to a task</string>
 
   <string-array name="ownership">
     <item>Own</item>

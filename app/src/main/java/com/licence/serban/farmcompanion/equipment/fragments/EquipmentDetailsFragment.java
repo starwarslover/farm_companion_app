@@ -169,7 +169,7 @@ public class EquipmentDetailsFragment extends Fragment {
     equipDetailsDeleteButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        new AlertDialog.Builder(EquipmentDetailsFragment.this.getActivity())
+        new AlertDialog.Builder(EquipmentDetailsFragment.this.getActivity(), R.style.AlertDialogCustom)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(getResources().getString(R.string.confirm_delete))
                 .setMessage(getResources().getString(R.string.confirm_delete_message))

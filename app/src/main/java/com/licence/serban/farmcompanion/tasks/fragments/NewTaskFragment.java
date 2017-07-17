@@ -399,10 +399,6 @@ public class NewTaskFragment extends Fragment {
         fieldPh.setId(field.getId());
 
         List<ResourcePlaceholder> usedEquipments = getEquipmentsList();
-        if (usedEquipments.size() == 0) {
-          expandEquipmentLayoutButton.setError(getResources().getString(R.string.no_equip_selected));
-          return;
-        }
         String type = typeSpinner.getSelectedItem().toString();
         String taskTitle = taskTitleEditText.getText().toString();
         if (taskTitle.isEmpty()) {
@@ -420,6 +416,11 @@ public class NewTaskFragment extends Fragment {
           task.addEmployee(empPh);
         } else {
           task.setEmployees(getEmployeesList());
+        }
+
+        if (task.getEmployees().size() == 0) {
+          empExpandButton.setError(getResources().getString(R.string.no_emps_elected));
+          return;
         }
 
         task.setUsedImplements(usedEquipments);

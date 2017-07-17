@@ -1,150 +1,164 @@
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="15dp"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
     tools:context="com.licence.serban.farmcompanion.consumables.fragments.ConsumableAddFragment">
 
-  <LinearLayout
+  <ScrollView
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="20dp"
-      android:orientation="vertical">
+      android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="10dp">
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
 
-      <TextView
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="2"
-          android:text="@string/type"/>
-
-      <Spinner
-          android:id="@+id/consAddTypeSpinner"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="6"
-          android:entries="@array/cons_type"/>
-    </LinearLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-      <android.support.design.widget.TextInputEditText
-          android:id="@+id/consAddNameEditText"
+      <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:hint="@string/cons_name_req"/>
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:padding="10dp">
 
-    </android.support.design.widget.TextInputLayout>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/type"/>
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        <Spinner
+            android:id="@+id/consAddTypeSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:entries="@array/cons_type"/>
+      </LinearLayout>
 
       <android.support.design.widget.TextInputLayout
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1">
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/consAddPriceEditText"
+            android:id="@+id/consAddNameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:hint="@string/purchase_price_ron"
-            android:inputType="numberDecimal"/>
+            android:hint="@string/cons_name_req"/>
+
+      </android.support.design.widget.TextInputLayout>
+
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+          <android.support.design.widget.TextInputEditText
+              android:id="@+id/consAddPriceEditText"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginEnd="5dp"
+              android:hint="@string/purchase_price_ron"
+              android:inputType="numberDecimal"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1">
+
+          <android.support.design.widget.TextInputEditText
+              android:id="@+id/consAddAmountEditText"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="@string/amount"
+              android:inputType="numberDecimal"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/consUMTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/kg"
+            android:textSize="16sp"/>
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:weightSum="25">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="21">
+
+          <android.support.design.widget.TextInputEditText
+              android:id="@+id/consAddPurchaseDateEditText"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:enabled="false"
+              android:hint="@string/purchase_date"
+              android:inputType="date"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/consAddPurchaseDatePickButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:background="@drawable/ic_date_range_black_24dp"/>
+      </LinearLayout>
+
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="5dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/consAddPurchasedFrom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/purchased_from"/>
 
       </android.support.design.widget.TextInputLayout>
 
       <android.support.design.widget.TextInputLayout
-          android:layout_width="0dp"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginStart="5dp"
-          android:layout_weight="1">
+          android:layout_marginStart="5dp">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/consAddAmountEditText"
+            android:id="@+id/consAddNotesEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/amount_liters"
-            android:inputType="numberDecimal"/>
-
-      </android.support.design.widget.TextInputLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="25">
-
-      <android.support.design.widget.TextInputLayout
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="21">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/consAddPurchaseDateEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:hint="@string/purchase_date"
-            android:inputType="date"/>
+            android:hint="@string/purchased_from"
+            android:lines="5"/>
 
       </android.support.design.widget.TextInputLayout>
 
       <Button
-          android:id="@+id/consAddPurchaseDatePickButton"
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="4"
-          android:background="@drawable/ic_date_range_black_24dp"/>
+          android:id="@+id/consAddButton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="10dp"
+          android:text="@string/add_cons"/>
     </LinearLayout>
+  </ScrollView>
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp">
-
-      <android.support.design.widget.TextInputEditText
-          android:id="@+id/consAddPurchasedFrom"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:hint="@string/purchased_from"/>
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp">
-
-      <android.support.design.widget.TextInputEditText
-          android:id="@+id/consAddNotesEditText"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:hint="@string/purchased_from"
-          android:lines="5"/>
-
-    </android.support.design.widget.TextInputLayout>
-
-    <Button
-        android:id="@+id/consAddButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/add_cons"/>
-  </LinearLayout>
-</ScrollView>
+</LinearLayout>

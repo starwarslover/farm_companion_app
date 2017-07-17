@@ -62,7 +62,8 @@ public class EmployeeAdapter extends ArrayAdapter<Employee> {
     String empPos = currentEmployee.getPosition();
     if (empPos.isEmpty()) {
       empPos = " N/A";
-    }
+    } else
+      empPos = " " + empPos;
     holder.positionTextView.setText(empPos);
     EEmployeeState state = currentEmployee.getState();
     String stateString;

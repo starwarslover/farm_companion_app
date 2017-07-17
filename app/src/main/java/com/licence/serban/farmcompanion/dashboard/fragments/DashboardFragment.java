@@ -142,8 +142,10 @@ public class DashboardFragment extends Fragment {
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
         Company company = dataSnapshot.getValue(Company.class);
-        if (company != null)
+        if (company != null && company.getCoordinates() != null)
           loadForecast(company, view);
+        else
+          ((ViewAnimator) view.findViewById(R.id.switcher_forecast)).setDisplayedChild(2);
       }
 
       @Override

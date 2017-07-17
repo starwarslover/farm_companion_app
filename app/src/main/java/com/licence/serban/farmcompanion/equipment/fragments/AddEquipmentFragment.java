@@ -105,6 +105,7 @@ public class AddEquipmentFragment extends Fragment implements OnDatePickerSelect
     titleUpdateCallback.updateTitle(getResources().getString(R.string.add_equipment));
 
     this.year = Calendar.getInstance().get(Calendar.YEAR);
+
     View view = inflater.inflate(R.layout.fragment_add_equipment, container, false);
     drawerMenuLock.lockDrawer();
     Bundle args = getArguments();
@@ -113,6 +114,8 @@ public class AddEquipmentFragment extends Fragment implements OnDatePickerSelect
     }
 
     setViews(view);
+    if (this.year != 0)
+      manufYearSeekBarLabel.setText(String.valueOf(year));
 
     databaseAdapter = EquipmentDatabaseAdapter.getInstance(userID);
 
@@ -175,7 +178,7 @@ public class AddEquipmentFragment extends Fragment implements OnDatePickerSelect
     manufacturingYearSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        manufYearSeekBarLabel.setText(String.valueOf(1990 + progress));
+        manufYearSeekBarLabel.setText(String.valueOf(year - progress));
       }
 
       @Override
