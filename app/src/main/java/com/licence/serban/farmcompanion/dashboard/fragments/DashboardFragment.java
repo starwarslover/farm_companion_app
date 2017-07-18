@@ -176,17 +176,20 @@ public class DashboardFragment extends Fragment {
     ((ViewAnimator) view.findViewById(R.id.switcher_forecast)).setDisplayedChild(1);
     LinearLayout layout = (LinearLayout) view.findViewById(R.id.hourly_forecast_layout);
     for (WeatherCondition condition : arg) {
-      LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-      View forecast = LayoutInflater.from(DashboardFragment.this.getActivity()).inflate(R.layout.item_forecast, layout, false);
-      forecast.setLayoutParams(params);
-      TextView tv_hour = (TextView) forecast.findViewById(R.id.forecastItemHourTextView);
-      TextView tv_temp = (TextView) forecast.findViewById(R.id.forecastItemTempTextView);
-      ImageView forecastImg = (ImageView) forecast.findViewById(R.id.forecastImage);
+      if (this.getActivity() != null) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+        View forecast = LayoutInflater.from(DashboardFragment.this.getActivity()).inflate(R.layout.item_forecast, layout, false);
+        forecast.setLayoutParams(params);
+        TextView tv_hour = (TextView) forecast.findViewById(R.id.forecastItemHourTextView);
+        TextView tv_temp = (TextView) forecast.findViewById(R.id.forecastItemTempTextView);
+        ImageView forecastImg = (ImageView) forecast.findViewById(R.id.forecastImage);
 
-      forecastImg.setBackgroundResource(WeatherHelper.getIconForCondition(condition));
-      tv_hour.setText(StringDateFormatter.formatDate(condition.getDate(), "HH:mm"));
-      tv_temp.setText(WeatherHelper.getTemperatureString(condition.getTemp()));
-      layout.addView(forecast);
+        forecastImg.setBackgroundResource(WeatherHelper.getIconForCondition(condition));
+        tv_hour.setText(StringDateFormatter.formatDate(condition.getDate(), "HH:mm"));
+        tv_temp.setText(WeatherHelper.getTemperatureString(condition.getTemp()));
+        layout.addView(forecast);
+
+      }
     }
   }
 

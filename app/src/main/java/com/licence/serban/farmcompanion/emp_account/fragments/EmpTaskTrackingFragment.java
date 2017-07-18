@@ -43,6 +43,7 @@ import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.employees.models.Employee;
 import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 import com.licence.serban.farmcompanion.misc.ActivityRecognizedService;
+import com.licence.serban.farmcompanion.misc.DetectedActivityWrapper;
 import com.licence.serban.farmcompanion.misc.StringDateFormatter;
 import com.licence.serban.farmcompanion.misc.Utilities;
 import com.licence.serban.farmcompanion.misc.WorkState;
@@ -232,12 +233,12 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
 
   private void pauseTask() {
     currentTask.setCurrentState(WorkState.OPRITA.toString());
-    stopBroadcasting();
+//    stopBroadcasting();
   }
 
   private void finishTask() {
     currentTask.setCurrentState(WorkState.INCHEIATA.toString());
-    stopBroadcasting();
+//    stopBroadcasting();
   }
 
   private void getInformation() {
@@ -245,8 +246,10 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
         currentTask = dataSnapshot.getValue(Task.class);
-        if (currentTask != null)
+        if (currentTask != null) {
           startTask();
+          taskTrackTaskName.setText(currentTask.getTitle());
+        }
       }
 
       @Override
@@ -287,6 +290,8 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
   public Handler mhandler = new Handler() {
     @Override
     public void handleMessage(Message msg) {
+      time += 1000;
+      broadcastTaskDetails();
       updateUi();
       updateTaskTime();
     }
@@ -295,7 +300,6 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
   private void updateTaskTime() {
     if (hasStopped) {
       this.totalStopTime += 1000;
-      activeTasksReference.child(employeeID).child(TOTAL_STOP_TIME).setValue(this.totalStopTime);
     }
   }
 
@@ -305,7 +309,9 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
       long totalTime = System.currentTimeMillis() - this.startTime;
       currentTask.setTimeStopped(currentTask.getTimeStopped() + this.totalStopTime);
       currentTask.setTotalTime(currentTask.getTotalTime() + totalTime);
-      currentTask.setDistanceTraveled(currentTask.getDistanceTraveled() + distanceTraveled);
+      double traveledDist = currentTask.getDistanceTraveled();
+      traveledDist += distanceTraveled;
+      currentTask.setDistanceTraveled(traveledDist);
       currentTask.stopTask();
     }
 
@@ -361,17 +367,26 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
 
   @Override
   public void onLocationChanged(Location location) {
-    broadcastTaskDetails(location);
+    onLocationChangeDetected(location);
   }
 
-  private void broadcastTaskDetails(Location location) {
-    Coordinates coords = new Coordinates(location);
-    activeTasksReference.child(employeeID).child(Utilities.Constants.GPS_COORDINATES).setValue(coords);
-    activeTasksReference.child(employeeID).child(Utilities.Constants.DB_SPEED).setValue(location.getSpeed());
-    activeTasksReference.child(employeeID).child(DB_TRAVEL_DISTANCE).setValue(distanceTraveled);
-
+  private void onLocationChangeDetected(Location location) {
     this.lastLocation = location;
     this.coordsSet.add(new LatLng(location.getLatitude(), location.getLongitude()));
+  }
+
+  private void broadcastTaskDetails() {
+    if (lastLocation != null) {
+      Coordinates coords = new Coordinates(lastLocation);
+      activeTasksReference.child(employeeID).child(Utilities.Constants.GPS_COORDINATES).setValue(coords);
+      activeTasksReference.child(employeeID).child(Utilities.Constants.DB_SPEED).setValue(lastLocation.getSpeed());
+      activeTasksReference.child(employeeID).child(DB_TRAVEL_DISTANCE).setValue(distanceTraveled);
+    }
+    if (this.lastRecordedActivity != null) {
+      activeTasksReference.child(employeeID).child(DB_STATE).setValue(lastRecordedActivity.getType());
+    }
+
+    activeTasksReference.child(employeeID).child(TOTAL_STOP_TIME).setValue(this.totalStopTime);
   }
 
   private void updateUi() {
@@ -399,14 +414,14 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
   private class ActivityDetectionBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-      ActivityRecognizedService.DetectedActivityWrapper detected = (ActivityRecognizedService.DetectedActivityWrapper) intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY_RESULT);
+      DetectedActivityWrapper detected = (DetectedActivityWrapper) intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY_RESULT);
       if (detected != null && detected.detectedActivity != null)
         handleDetectedActivity(detected.detectedActivity);
     }
   }
 
   private void handleDetectedActivity(DetectedActivity detectedActivity) {
-    if (detectedActivity.getConfidence() > 75 && (isMoving(detectedActivity) || isStill
+    if (detectedActivity.getConfidence() > 95 && (isMoving(detectedActivity) || isStill
             (detectedActivity))) {
       if (isMoving(detectedActivity)) {
         statusTextView.setText(context.getResources().getString(R.string.on_move));
@@ -416,7 +431,7 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
         statusTextView.setText(context.getResources().getString(R.string.still));
         onDetectedActivityChanged(detectedActivity);
       }
-      activeTasksReference.child(employeeID).child(DB_STATE).setValue(detectedActivity.getType());
+      this.lastRecordedActivity = detectedActivity;
     }
   }
 
@@ -443,13 +458,13 @@ public class EmpTaskTrackingFragment extends Fragment implements GoogleApiClient
   }
 
   public static boolean isStill(DetectedActivity detectedActivity) {
-    return detectedActivity.getType() == DetectedActivity.STILL;
+    return detectedActivity.getType() == DetectedActivity.STILL ||
+            detectedActivity.getType() == DetectedActivity.ON_FOOT;
   }
 
   public static boolean isMoving(DetectedActivity detectedActivity) {
     return detectedActivity.getType() == DetectedActivity.IN_VEHICLE ||
             detectedActivity.getType() == DetectedActivity.WALKING ||
-            detectedActivity.getType() == DetectedActivity.ON_FOOT ||
             detectedActivity.getType() == DetectedActivity.RUNNING;
   }
 

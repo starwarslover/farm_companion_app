@@ -7,29 +7,39 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-  <TextView
-      android:id="@+id/forecastItemHourTextView"
+  <LinearLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:gravity="center_horizontal"
-      android:text="8:00"
-      android:textSize="16sp"/>
+      android:layout_margin="10dp"
+      android:orientation="vertical">
 
-  <ImageView
-      android:layout_gravity="center"
-      android:id="@+id/forecastImage"
-      android:layout_width="80dp"
-      android:layout_marginStart="10dp"
-      android:layout_marginEnd="10dp"
-      android:backgroundTint="@color/colorAccent"
-      android:layout_height="80dp"/>
+    <TextView
+        android:id="@+id/forecastItemHourTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:text="8:00"
+        android:textSize="16sp"/>
 
-  <TextView
-      android:id="@+id/forecastItemTempTextView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:text="12 °C"
-      android:textSize="16sp"/>
+    <ImageView
+        android:id="@+id/forecastImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:backgroundTint="@color/colorAccent"
+        android:scaleType="centerInside"/>
+
+    <TextView
+        android:id="@+id/forecastItemTempTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="12 °C"
+        android:textSize="16sp"/>
+  </LinearLayout>
+
+
 </LinearLayout>

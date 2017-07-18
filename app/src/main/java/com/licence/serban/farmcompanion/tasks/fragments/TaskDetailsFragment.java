@@ -69,6 +69,7 @@ public class TaskDetailsFragment extends Fragment {
   private TextView taskDetailsTotalTimeTextView;
   private TextView taskDetailsStopTimeTextView;
   private TextView taskDetailsTotalDistanceTextView;
+  private TextView taskDetailsTotalActiveTimeTextView;
 
   public TaskDetailsFragment() {
     // Required empty public constructor
@@ -168,6 +169,7 @@ public class TaskDetailsFragment extends Fragment {
     taskDetailsTotalDistanceTextView.setText(distStr);
     taskDetailsTotalTimeTextView.setText(StringDateFormatter.millisToTime(currentTask.getTotalTime()));
     taskDetailsStopTimeTextView.setText(StringDateFormatter.millisToTime(currentTask.getTimeStopped()));
+    taskDetailsTotalActiveTimeTextView.setText(StringDateFormatter.millisToTime(currentTask.getTotalTime() - currentTask.getTimeStopped()));
   }
 
   private void showTaskHistory(Task task) {
@@ -223,6 +225,7 @@ public class TaskDetailsFragment extends Fragment {
   }
 
   private void setViews(View view) {
+    taskDetailsTotalActiveTimeTextView = (TextView) view.findViewById(R.id.taskDetailsTotalActiveTimeTextView);
     taskDetailsTotalTimeTextView = (TextView) view.findViewById(R.id.taskDetailsTotalTimeTextView);
     taskDetailsStopTimeTextView = (TextView) view.findViewById(R.id.taskDetailsStopTimeTextView);
     taskDetailsTotalDistanceTextView = (TextView) view.findViewById(R.id.taskDetailsTotalDistanceTextView);

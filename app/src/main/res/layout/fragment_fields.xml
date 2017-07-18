@@ -1,50 +1,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".fields.fragments.FieldsFragment">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingEnd="10dp"
+              android:paddingStart="10dp"
+              tools:context=".fields.fragments.FieldsFragment">
 
-    <Button
-        android:id="@+id/fieldsAddFieldButton"
+  <Button
+      android:id="@+id/fieldsAddFieldButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="end"
+      android:text="@string/add_field"
+      android:textAllCaps="false"/>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1">
+
+    <ListView
+        android:id="@+id/fieldsListView"
+        android:dividerHeight="10dp"
+        android:divider="@color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/fieldsNoFieldLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="@string/add_field"
-        android:textAllCaps="false" />
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/no_field_message"/>
 
-        <ListView
-            android:id="@+id/fieldsListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </ListView>
-
-        <LinearLayout
-            android:id="@+id/fieldsNoFieldLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/no_field_message" />
-
-            <Button
-                android:id="@+id/fieldsAddFieldSecondButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add_field"
-                android:textAllCaps="false" />
-        </LinearLayout>
-    </RelativeLayout>
+      <Button
+          android:id="@+id/fieldsAddFieldSecondButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/add_field"
+          android:textAllCaps="false"/>
+    </LinearLayout>
+  </RelativeLayout>
 </LinearLayout>

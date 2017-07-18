@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp"
-    android:weightSum="25">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/colorPrimaryMoreTransparent"
+              android:orientation="horizontal"
+              android:padding="10dp"
+              android:weightSum="25">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="15"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/fieldRowNameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/fieldRowCropTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:textSize="15sp" />
-    </LinearLayout>
+  <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="15"
+      android:orientation="vertical">
 
     <TextView
-        android:id="@+id/fieldRowAreaTextView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="10"
-        android:gravity="center"
-        android:padding="5dp"
-        android:textSize="30sp" />
+        android:id="@+id/fieldRowNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/fieldRowCropTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:textSize="15sp"/>
+  </LinearLayout>
+
+  <TextView
+      android:id="@+id/fieldRowAreaTextView"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="10"
+      android:gravity="center"
+      android:padding="5dp"
+      android:textSize="30sp"/>
 </LinearLayout>

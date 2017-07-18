@@ -9,9 +9,6 @@ import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.licence.serban.farmcompanion.emp_account.fragments.EmpTaskTrackingFragment;
 
-import java.io.Serializable;
-import java.util.List;
-
 /**
  * Created by Serban on 13.07.2017.
  */
@@ -38,30 +35,19 @@ public class ActivityRecognizedService extends IntentService {
   protected void onHandleIntent(@Nullable Intent intent) {
     if (ActivityRecognitionResult.hasResult(intent)) {
       ActivityRecognitionResult activityRecognitionResult = ActivityRecognitionResult.extractResult(intent);
-      this.handleDetectedActivities(activityRecognitionResult.getProbableActivities());
+      this.handleDetectedActivities(activityRecognitionResult.getMostProbableActivity());
     }
   }
 
-  private void handleDetectedActivities(List<DetectedActivity> probableActivities) {
-    DetectedActivity detectedActivity;
-    if (probableActivities.size() != 0) {
-      detectedActivity = probableActivities.get(0);
-      for (DetectedActivity activity : probableActivities) {
-        if (activity.getConfidence() > detectedActivity.getConfidence())
-          detectedActivity = activity;
-      }
+  private void handleDetectedActivities(DetectedActivity detectedActivity) {
 
-      Intent localIntent = new Intent(EmpTaskTrackingFragment.BROADCAST_ACTION);
-      if (detectedActivity != null) {
-        DetectedActivityWrapper wrapper = new DetectedActivityWrapper();
-        wrapper.detectedActivity = detectedActivity;
-        localIntent.putExtra(ACTIVITY_RESULT, wrapper);
-      }
-      LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+    Intent localIntent = new Intent(EmpTaskTrackingFragment.BROADCAST_ACTION);
+    if (detectedActivity != null) {
+      DetectedActivityWrapper wrapper = new DetectedActivityWrapper();
+      wrapper.detectedActivity = detectedActivity;
+      localIntent.putExtra(ACTIVITY_RESULT, wrapper);
     }
-  }
-
-  public class DetectedActivityWrapper implements Serializable {
-    public DetectedActivity detectedActivity;
+    LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
   }
 }
+

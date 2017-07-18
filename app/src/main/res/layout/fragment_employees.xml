@@ -32,6 +32,8 @@
       <ListView
           android:id="@+id/employeesListView"
           android:layout_width="match_parent"
+          android:divider="@color/transparent"
+          android:dividerHeight="10dp"
           android:layout_height="match_parent">
 
       </ListView>

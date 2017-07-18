@@ -193,6 +193,7 @@
   <string name="liters">Litri</string>
   <string name="negative_number_err">Valorile negative nu sunt permise</string>
   <string name="no_emps_elected">O sarcina trebuie sa fie atribuita unuia sau mai multor angajati</string>
+  <string name="total_active_time">Total timp activ</string>
 
   <string-array name="ownership">
     <item>Propriu</item>
@@ -204,7 +205,7 @@
     <item>Neinceputa</item>
     <item>In desfasurare</item>
     <item>Oprita</item>
-    <item>Incheiata</item>
+    <item>Finalizata</item>
   </string-array>
   <string-array name="equipment_types">
     <item>Combina</item>

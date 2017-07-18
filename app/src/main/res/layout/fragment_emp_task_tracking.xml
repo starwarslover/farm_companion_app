@@ -12,7 +12,6 @@
       android:layout_height="wrap_content"
       android:gravity="center"
       android:padding="10dp"
-      android:text="DUMMY NAME"
       android:textSize="20sp"
       />
 

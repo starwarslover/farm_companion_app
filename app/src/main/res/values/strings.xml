@@ -193,6 +193,7 @@
   <string name="liters">Liters</string>
   <string name="negative_number_err">Negative values are forbidden</string>
   <string name="no_emps_elected">At least one employee needs to be asigned to a task</string>
+  <string name="total_active_time">Total active time</string>
 
   <string-array name="ownership">
     <item>Own</item>

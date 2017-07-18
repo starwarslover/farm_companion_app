@@ -8,7 +8,7 @@
     android:paddingEnd="10dp"
     android:paddingTop="15dp"
     android:paddingBottom="15dp"
-    android:background="#50dddddd"
+    android:background="@color/colorPrimaryMoreTransparent"
     android:layout_margin="10dp">
 
   <LinearLayout
@@ -32,14 +32,6 @@
 
   </LinearLayout>
 
-  <Button
-      android:id="@+id/taskRowShowButton"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
-      android:layout_weight="1"
-      android:text="@string/show_on_map"
-      android:visibility="gone"/>
 
   <TextView
       android:id="@+id/taskRowStatusTextView"
@@ -48,5 +40,15 @@
       android:layout_weight="1"
       android:gravity="center"
       android:text="StatusHere"/>
+
+  <ImageButton
+      android:src="@drawable/ic_map_black_24dp"
+      android:id="@+id/taskRowShowButton"
+      android:layout_width="wrap_content"
+      android:minWidth="1dp"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:tint="@color/white"
+      android:visibility="gone"/>
 
 </LinearLayout>

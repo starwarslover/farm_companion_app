@@ -4,19 +4,33 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
-  <CheckBox
-      android:id="@+id/resourceMainCheckBox"
+  <ImageView
+      android:layout_gravity="center_vertical"
       android:layout_width="wrap_content"
+      android:tint="@color/colorPrimary"
       android:layout_height="wrap_content"
-      android:text="dummy"/>
+      android:src="@drawable/ic_right_arrow"/>
 
-  <TextView
-      android:id="@+id/resourceSecondaryTextView"
+  <LinearLayout
+      android:orientation="vertical"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="35dp"
-      android:text="tummy"
-      android:textSize="12sp"/>
+      android:layout_height="wrap_content">
+
+    <CheckBox
+        android:id="@+id/resourceMainCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dummy"/>
+
+    <TextView
+        android:id="@+id/resourceSecondaryTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:text="tummy"
+        android:textSize="12sp"/>
+  </LinearLayout>
+
 </LinearLayout>

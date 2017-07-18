@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -70,7 +70,7 @@ public class TaskAdapter extends ArrayAdapter<Task> {
       holder.nameTextView = (TextView) row.findViewById(R.id.taskRowNameTextView);
       holder.typeTextView = (TextView) row.findViewById(R.id.taskRowTypeTextView);
       holder.statusTextView = (TextView) row.findViewById(R.id.taskRowStatusTextView);
-      holder.showOnMapButton = (Button) row.findViewById(R.id.taskRowShowButton);
+      holder.showOnMapButton = (ImageButton) row.findViewById(R.id.taskRowShowButton);
       row.setTag(holder);
     } else {
       holder = (TaskHolder) row.getTag();
@@ -150,6 +150,6 @@ public class TaskAdapter extends ArrayAdapter<Task> {
     private TextView nameTextView;
     private TextView typeTextView;
     private TextView statusTextView;
-    private Button showOnMapButton;
+    private ImageButton showOnMapButton;
   }
 }
