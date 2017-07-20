@@ -10,8 +10,8 @@
   <ListView
       android:id="@+id/fieldDetailsActivitiesListView"
       android:layout_width="match_parent"
-      android:divider="@color/transparent"
-      android:dividerHeight="10dp"
+      android:divider="@color/colorPrimaryTransparent"
+      android:dividerHeight="1dp"
       android:layout_height="wrap_content">
 
   </ListView>

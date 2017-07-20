@@ -194,6 +194,11 @@
   <string name="negative_number_err">Valorile negative nu sunt permise</string>
   <string name="no_emps_elected">O sarcina trebuie sa fie atribuita unuia sau mai multor angajati</string>
   <string name="total_active_time">Total timp activ</string>
+  <string name="ongoing_activities">Activitati in desfasurare</string>
+  <string name="available_implements">Echipamente disponibile</string>
+  <string name="employees_in_tasks">Angajati implicati in ativitati</string>
+  <string name="activity_reports">Rapoarte de activitate</string>
+
 
   <string-array name="ownership">
     <item>Propriu</item>

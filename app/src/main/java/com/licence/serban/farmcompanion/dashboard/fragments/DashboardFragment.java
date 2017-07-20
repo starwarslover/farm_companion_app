@@ -24,10 +24,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.licence.serban.farmcompanion.R;
 import com.licence.serban.farmcompanion.activities.MainActivity;
 import com.licence.serban.farmcompanion.emp_account.adapters.EmpTasksAdapter;
+import com.licence.serban.farmcompanion.employees.models.EEmployeeState;
+import com.licence.serban.farmcompanion.equipment.adapters.EquipmentDatabaseAdapter;
+import com.licence.serban.farmcompanion.equipment.models.EquipmentState;
 import com.licence.serban.farmcompanion.interfaces.OnAppTitleChange;
 import com.licence.serban.farmcompanion.interfaces.OnFragmentStart;
 import com.licence.serban.farmcompanion.misc.StringDateFormatter;
 import com.licence.serban.farmcompanion.misc.Utilities;
+import com.licence.serban.farmcompanion.misc.WorkState;
 import com.licence.serban.farmcompanion.misc.fragments.CompanyInfoFragment;
 import com.licence.serban.farmcompanion.misc.models.Company;
 import com.licence.serban.farmcompanion.misc.weather.WeatherHelper;
@@ -55,6 +59,16 @@ public class DashboardFragment extends Fragment {
   private ListView empDashTasksListView;
   private EmpTasksAdapter taskAdapter;
   private OnFragmentStart startFragmentCallback;
+  private TextView dashOngoingActivitiesTextView;
+  private TextView dashEmpsTextView;
+  private TextView dashEquipTextView;
+  private LinearLayout adminDashPanel;
+  private DatabaseReference tasksReference;
+  private DatabaseReference empsReference;
+  private DatabaseReference equipReference;
+  private ValueEventListener tasksListener;
+  private ValueEventListener empsListener;
+  private ValueEventListener equipListener;
 
   public DashboardFragment() {
     // Required empty public constructor
@@ -82,6 +96,13 @@ public class DashboardFragment extends Fragment {
   public void onDetach() {
     super.onDetach();
     mainRef.child(CompanyInfoFragment.DB_COMPANIES).child(MainActivity.adminID).removeEventListener(companyEventListener);
+
+    if (isAdmin) {
+      tasksReference.removeEventListener(tasksListener);
+      equipReference.removeEventListener(equipListener);
+      empsReference.removeEventListener(empsListener);
+    }
+
     if (this.taskAdapter != null)
       TasksDatabaseAdapter.getInstance(MainActivity.adminID).removeListeners();
   }
@@ -104,11 +125,86 @@ public class DashboardFragment extends Fragment {
   private void getViews(View view) {
     empTasksLayout = (RelativeLayout) view.findViewById(R.id.empTasksLayout);
 
-
     isAdmin = ((MainActivity) DashboardFragment.this.getActivity()).isUserAdmin();
     if (!isAdmin)
       setEmpLayouts(view);
+    else
+      setAdminLayout(view);
 
+  }
+
+  private void setAdminLayout(View view) {
+    dashOngoingActivitiesTextView = (TextView) view.findViewById(R.id.dashOngoingActivitiesTextView);
+    dashEmpsTextView = (TextView) view.findViewById(R.id.dashEmpsTextView);
+    dashEquipTextView = (TextView) view.findViewById(R.id.dashEquipTextView);
+    adminDashPanel = (LinearLayout) view.findViewById(R.id.adminDashPanel);
+    adminDashPanel.setVisibility(View.VISIBLE);
+
+    fillAdminDash();
+  }
+
+  private void fillAdminDash() {
+    DatabaseReference mainRef = FirebaseDatabase.getInstance().getReference();
+    setTasksListener(mainRef);
+    setEmpsListener(mainRef);
+    setEquipListener(mainRef);
+  }
+
+  private void setEquipListener(DatabaseReference mainRef) {
+    equipReference = mainRef.child(EquipmentDatabaseAdapter.DB_EQUIPMENTS).child(MainActivity.adminID);
+
+    equipListener = new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
+        long equipCount = dataSnapshot.getChildrenCount();
+        dashEquipTextView.setText(String.valueOf(equipCount));
+      }
+
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+
+      }
+    };
+
+    equipReference.orderByChild("state").equalTo(EquipmentState.DISPONIBIL.toString()).addValueEventListener(equipListener);
+  }
+
+
+  private void setEmpsListener(DatabaseReference mainRef) {
+    empsReference = mainRef.child(Utilities.Constants.DB_EMPLOYEES).child(MainActivity.adminID);
+
+    empsListener = new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
+        long empsCount = dataSnapshot.getChildrenCount();
+        dashEmpsTextView.setText(String.valueOf(empsCount));
+      }
+
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+
+      }
+    };
+
+    empsReference.orderByChild("state").equalTo(EEmployeeState.IN_LUCRU.toString()).addValueEventListener(empsListener);
+  }
+
+  private void setTasksListener(DatabaseReference mainRef) {
+    tasksReference = mainRef.child(TasksDatabaseAdapter.DB_TASKS).child(MainActivity.adminID);
+    tasksListener = new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
+        long activeTasks = dataSnapshot.getChildrenCount();
+        dashOngoingActivitiesTextView.setText(String.valueOf(activeTasks));
+      }
+
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+
+      }
+    };
+
+    tasksReference.orderByChild("currentState").equalTo(WorkState.IN_DESFASURARE.toString()).addValueEventListener(tasksListener);
   }
 
   private void setEmpLayouts(View view) {

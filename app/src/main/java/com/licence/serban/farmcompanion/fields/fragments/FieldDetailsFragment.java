@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -48,7 +49,7 @@ public class FieldDetailsFragment extends Fragment {
   private TextView fieldOwnershipTextView;
   private TextView fieldNotesTextView;
   private DatabaseReference databaseReference;
-  private Button editFieldButton;
+  private ImageButton editFieldButton;
   private Button deleteFieldButton;
 
   private OnElementAdded fieldAddedListener;
@@ -210,7 +211,7 @@ public class FieldDetailsFragment extends Fragment {
     fieldCropTextView = (TextView) detailsView.findViewById(R.id.fieldDetailsCropTextView);
     fieldOwnershipTextView = (TextView) detailsView.findViewById(R.id.fieldDetailsOwnershipTextView);
     fieldNotesTextView = (TextView) detailsView.findViewById(R.id.fieldDetailsNotesTextView);
-    editFieldButton = (Button) detailsView.findViewById(R.id.fieldDetailsEditButton);
+    editFieldButton = (ImageButton) detailsView.findViewById(R.id.fieldDetailsEditButton);
     deleteFieldButton = (Button) detailsView.findViewById(R.id.fieldDetailsDeleteButton);
   }
 

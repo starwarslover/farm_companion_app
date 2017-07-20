@@ -65,7 +65,7 @@ public class OpenWeatherMapClient implements WeatherDataSource {
 
       @Override
       public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject errorResponse) {
-        Log.e("err", e.getMessage());
+//        Log.e("err", e.getMessage());
         callback.onError();
       }
     });
