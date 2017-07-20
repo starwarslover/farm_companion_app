@@ -22,8 +22,8 @@
 
     <ListView
         android:id="@+id/fieldsListView"
-        android:dividerHeight="10dp"
-        android:divider="@color/transparent"
+        android:dividerHeight="1dp"
+        android:divider="@color/colorPrimaryTransparent"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
